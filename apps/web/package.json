@@ -1,0 +1,9 @@
+{
+  "name": "@ripdex/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "RIPDEX catalog surfaces: Pokedex, card detail, grails, pack odds.",
+  "scripts": { "dev": "node server.ts", "start": "node server.ts" },
+  "engines": { "node": ">=22.6" }
+}

@@ -4,13 +4,16 @@
   "version": "0.1.0",
   "type": "module",
   "description": "RIPDEX — onchain Pokemon pack ripping.",
-  "engines": { "node": ">=22.6" },
+  "engines": {
+    "node": ">=22.6"
+  },
   "scripts": {
     "test": "pnpm --filter @ripdex/pokemon-core test",
     "pokemon:sync:sets": "pnpm --filter @ripdex/pokemon-core pokemon:sync:sets",
     "pokemon:sync:cards": "pnpm --filter @ripdex/pokemon-core pokemon:sync:cards",
     "pokemon:sync:prices": "pnpm --filter @ripdex/pokemon-core pokemon:sync:prices",
     "pokemon:verify-assets": "pnpm --filter @ripdex/pokemon-core pokemon:verify-assets",
-    "demo": "node packages/pokemon-core/demo/server.mjs"
+    "demo": "node packages/pokemon-core/demo/server.mjs",
+    "web": "node apps/web/server.ts"
   }
 }

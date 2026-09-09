@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "ripdex-web",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["apps/web/server.ts"],
+      "port": 4179
+    },
+    {
       "name": "ripdex-demo",
       "runtimeExecutable": "node",
       "runtimeArgs": ["packages/pokemon-core/demo/server.mjs"],
