@@ -6,5 +6,5 @@ dist/
 *.log
 
 # Ingested catalog data — regenerate with pnpm pokemon:sync:*
-data/catalog/
-data/assets-report.json
+**/data/catalog/
+**/data/assets-report.json
