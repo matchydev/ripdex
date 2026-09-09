@@ -13,6 +13,7 @@ import type {
   PackConfig,
 } from '../../../packages/pokemon-core/src/index.ts';
 import { oddsTable, formatProbability } from '../../../packages/pokemon-core/src/index.ts';
+import { DESIGN_CSS, MOTION_JS } from './design.ts';
 
 export function esc(value: unknown): string {
   return String(value ?? '')
@@ -33,113 +34,65 @@ export const money = (n: number | null, currency = 'USD'): string =>
         maximumFractionDigits: 2,
       }).format(n);
 
-export const CSS = `
-:root{
-  --bg:#07070A; --surface:#0E0E13; --surface-2:#15151C;
-  --ink:#F5F3F0; --muted:#8A8894; --faint:#55535E;
-  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
-  --accent:#FF6B1A; --gold:#F2C14E; --em:#00DEA5;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:400 15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Inter,sans-serif;
-  -webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+/**
+ * Page-level styles that build on the design system. Tokens, surfaces, motion
+ * primitives and the tile treatment all live in design.ts; only what is
+ * genuinely specific to these pages belongs here.
+ */
+export const CSS = DESIGN_CSS + `
 
-header.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:26px;
-  padding:13px 22px;background:rgba(7,7,10,.86);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line)}
-.brand{font-weight:700;letter-spacing:.3em;font-size:13px}
-.brand span{color:var(--accent)}
-nav.links{display:flex;gap:20px;font-size:11px;letter-spacing:.18em;color:var(--muted)}
-nav.links a:hover,nav.links a.on{color:var(--ink)}
-.wrap{max-width:1360px;margin:0 auto;padding:26px 22px 80px}
-
-h1.page{font-size:clamp(24px,4vw,34px);letter-spacing:-.02em;margin:8px 0 4px;font-weight:800}
-.lede{color:var(--muted);font-size:13.5px;margin:0 0 22px}
-
-/* ---- controls ---- */
-.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:20px}
-input[type=search],select,input[type=number]{
-  background:var(--surface);border:1px solid var(--line);color:var(--ink);
-  border-radius:9px;padding:9px 11px;font:inherit;font-size:13px;outline:none}
-input[type=search]{min-width:230px}
-input[type=number]{width:96px}
-select{min-width:128px;cursor:pointer}
-input:focus,select:focus{border-color:var(--line-2)}
-.chk{display:flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.1em;
-  color:var(--muted);cursor:pointer;padding:9px 11px;border:1px solid var(--line);
-  border-radius:9px;background:var(--surface)}
-.chk input{accent-color:var(--accent)}
-.count{font-size:11.5px;color:var(--muted);letter-spacing:.1em;margin-left:auto}
-button.reset{background:none;border:1px solid var(--line);color:var(--muted);
-  border-radius:9px;padding:9px 13px;font:inherit;font-size:12px;cursor:pointer}
+/* ---- controls (Pokedex) ---- */
+.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:26px;
+  padding:14px;border:1px solid var(--line);border-radius:var(--r-md);
+  background:var(--glass);backdrop-filter:blur(14px)}
+.count{font-size:11.5px;color:var(--muted);letter-spacing:.12em;margin-left:auto;
+  font-variant-numeric:tabular-nums}
+button.reset{border:1px solid var(--line);color:var(--muted);border-radius:var(--r-sm);
+  padding:10px 14px;font-size:12px;transition:color .25s,border-color .25s}
 button.reset:hover{color:var(--ink);border-color:var(--line-2)}
-
-/* ---- grid ---- */
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
-.tile{position:relative;display:block}
-.shot{position:relative;aspect-ratio:734/1024;border-radius:9px;overflow:hidden;
-  background:linear-gradient(150deg,#161320,#0D0B12);
-  box-shadow:0 8px 22px -12px #000,0 0 0 1px var(--line);
-  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s}
-.tile:hover .shot{transform:translateY(-5px);
-  box-shadow:0 18px 34px -14px #000,0 0 0 1px var(--line-2)}
-.shot img{width:100%;height:100%;object-fit:contain;display:block}
-.rip{position:absolute;top:7px;left:7px;font-size:8px;letter-spacing:.14em;
-  background:linear-gradient(180deg,#FF8B3D,#E2510A);color:#180701;font-weight:800;
-  padding:4px 7px;border-radius:5px;box-shadow:0 3px 12px rgba(255,107,26,.5)}
-.vcount{position:absolute;top:7px;right:7px;font-size:8px;letter-spacing:.1em;
-  background:rgba(0,0,0,.72);color:#CFCBD8;padding:4px 7px;border-radius:5px;
-  border:1px solid var(--line)}
-.meta{padding:9px 2px 0}
-.meta .nm{font-size:13px;font-weight:600;line-height:1.25;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.meta .sub{font-size:10.5px;color:var(--faint);margin-top:3px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.meta .val{font-size:13px;font-weight:700;margin-top:5px;font-family:ui-monospace,Menlo,monospace}
-.val.t-GRAIL{color:var(--gold)} .val.t-TIER_4{color:#FFB067}
-.val.t-TIER_3{color:var(--em)} .val.none{color:var(--faint);font-weight:500}
-
-.empty{padding:64px 0;text-align:center;color:var(--muted)}
-.more{display:block;margin:30px auto 0;padding:12px 26px;border:1px solid var(--line);
-  border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;
-  font-size:12px;letter-spacing:.16em;cursor:pointer}
-.more:hover{border-color:var(--line-2)}
 .sentinel{height:1px}
 
-/* ---- detail ---- */
-.detail{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:44px;align-items:start}
-@media(max-width:820px){.detail{grid-template-columns:1fr;gap:26px}}
-.hero{position:relative;border-radius:12px;overflow:hidden;
-  box-shadow:0 30px 70px -26px #000,0 0 0 1px var(--line)}
-.hero img{width:100%;display:block}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));
-  gap:14px;margin:22px 0 26px}
+/* ---- card detail ---- */
+.detail{display:grid;grid-template-columns:minmax(280px,430px) 1fr;gap:52px;align-items:start}
+@media(max-width:860px){.detail{grid-template-columns:1fr;gap:30px}}
+.hero-card{position:relative;border-radius:var(--r-md);overflow:hidden;
+  box-shadow:var(--shadow-lg);transition:transform .45s var(--ease)}
+.hero-card img{width:100%;display:block}
+.hero-card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:radial-gradient(58% 42% at var(--mx,50%) var(--my,40%),rgba(255,255,255,.30),transparent 66%);
+  mix-blend-mode:overlay;transition:opacity .35s}
+.hero-card:hover::after{opacity:1}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:2px;
+  margin:24px 0 8px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;
+  background:var(--line)}
+.fact{padding:13px 15px;background:var(--bg-2)}
 .fact .k{font-size:9.5px;letter-spacing:.2em;color:var(--faint)}
-.fact .v{margin-top:4px;font-size:14px;font-weight:600}
-h2.sec{font-size:10.5px;letter-spacing:.24em;color:var(--muted);
-  margin:30px 0 12px;font-weight:600}
-table.variants{width:100%;border-collapse:collapse;font-size:13px}
-table.variants th{text-align:left;font-size:9.5px;letter-spacing:.16em;color:var(--faint);
-  font-weight:600;padding:0 12px 9px 0}
-table.variants td{padding:11px 12px 11px 0;border-top:1px solid var(--line)}
-table.variants td.num{font-family:ui-monospace,Menlo,monospace;font-weight:600}
-.pill{font-size:9px;letter-spacing:.12em;padding:3px 7px;border-radius:5px;
+.fact .v{margin-top:5px;font-size:14px;font-weight:650}
+table.variants,table.odds,table.pulls{width:100%;border-collapse:collapse;font-size:13px}
+table.variants th,table.odds th,table.pulls th{text-align:left;font-size:9.5px;
+  letter-spacing:.16em;color:var(--faint);font-weight:600;padding:0 12px 10px 0}
+table.variants td,table.odds td,table.pulls td{padding:12px 12px 12px 0;
+  border-top:1px solid var(--line)}
+table.variants tbody tr,table.pulls tbody tr{transition:background .25s}
+table.variants tbody tr:hover,table.pulls tbody tr:hover{background:var(--surface)}
+table.variants td.num,table.odds td.n,table.pulls td.n{font-family:ui-monospace,Menlo,monospace;
+  font-weight:650;font-variant-numeric:tabular-nums}
+table.odds td.n,table.pulls td.n{text-align:right}
+.pill{display:inline-block;font-size:9px;letter-spacing:.12em;padding:4px 8px;border-radius:6px;
   border:1px solid var(--line);color:var(--muted)}
-.pill.rep{color:var(--em);border-color:rgba(0,222,165,.32)}
-.pill.inf{color:#C99A4A;border-color:rgba(201,154,74,.32)}
-.note{font-size:12px;color:var(--muted);line-height:1.6;max-width:62ch}
-.src{font-size:11.5px;color:var(--faint);margin-top:8px}
+.pill.rep{color:var(--em);border-color:rgba(0,229,160,.34);background:rgba(0,229,160,.06)}
+.pill.inf{color:#D8A44E;border-color:rgba(216,164,78,.34);background:rgba(216,164,78,.06)}
+.note{font-size:12.5px;color:var(--muted);line-height:1.68;max-width:64ch}
+.src{font-size:11.5px;color:var(--faint);margin-top:10px}
 .src a{color:var(--muted);text-decoration:underline}
 
 /* ---- grails ---- */
-.grails{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.gcard .shot{box-shadow:0 0 0 1px rgba(242,193,78,.28),0 14px 40px -16px rgba(242,193,78,.22),0 18px 40px -20px #000}
-.gcard .rank{position:absolute;bottom:7px;left:7px;font-size:9px;letter-spacing:.14em;
-  background:rgba(0,0,0,.78);color:var(--gold);padding:4px 8px;border-radius:5px;
-  border:1px solid rgba(242,193,78,.3);font-weight:700}
+.grails{display:grid;gap:24px;grid-template-columns:repeat(auto-fill,minmax(216px,1fr))}
+.gcard .shot{box-shadow:0 0 0 1px rgba(255,209,102,.30),0 18px 46px -18px rgba(255,209,102,.28),var(--shadow)}
+.gcard:hover .shot{box-shadow:0 0 0 1px rgba(255,209,102,.55),0 26px 66px -20px rgba(255,209,102,.45),var(--shadow-lg)}
+.gcard .rank{position:absolute;bottom:8px;left:8px;z-index:2;font-size:9px;letter-spacing:.14em;
+  background:rgba(0,0,0,.78);backdrop-filter:blur(6px);color:var(--gold);padding:5px 9px;
+  border-radius:6px;border:1px solid rgba(255,209,102,.32);font-weight:800}
 `;
 
 export function layout(title: string, active: string, body: string, extraHead = ''): string {
@@ -159,25 +112,38 @@ export function layout(title: string, active: string, body: string, extraHead = 
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>${esc(title)}</title>
 <style>${CSS}</style>${extraHead}
 </head><body>
+<div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scrollbar-top" aria-hidden="true"></div>
 <header class="top">
-  <a class="brand" href="/cards">RIP<span>DEX</span></a>
+  <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
   <nav class="links">${nav}</nav>
 </header>
 <div class="wrap">${body}</div>
+${MOTION_JS}
 </body></html>`;
 }
 
-/** One grid tile. Uses the small image — the large one is for detail/reveal (§22). */
+/**
+ * One grid tile. Uses the small image — the large one is for detail/reveal (§22).
+ *
+ * The tilt lives on the tile rather than the image so the whole card, badges
+ * included, moves as one object; the sheen reads the same --mx/--my the tilt
+ * handler writes, so highlight and rotation stay in agreement.
+ */
 export function tile(c: CardListing): string {
   const href = `/pokemon/${encodeURIComponent(c.setId)}/${encodeURIComponent(c.number)}`;
   const tierClass = c.headlineValue === null ? 'none' : `t-${c.headlineTier}`;
-  return `<a class="tile" href="${href}">
+  return `<a class="tile" href="${href}" data-reveal data-tilt="0.7">
   <div class="shot">
     <img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy" decoding="async">
-    ${c.availableInPacks ? '<span class="rip">AVAILABLE TO RIP</span>' : ''}
+    ${c.availableInPacks ? '<span class="rip-badge">AVAILABLE TO RIP</span>' : ''}
     ${c.variants.length > 1 ? `<span class="vcount">${c.variants.length} VARIANTS</span>` : ''}
   </div>
   <div class="meta">
@@ -214,9 +180,13 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
   const inferred = c.variants.filter((v) => v.confidence === 'inferred');
 
   const body = `
-<div class="detail">
-  <div class="hero"><img src="${esc(c.imageLarge)}" alt="${esc(c.name)}"></div>
-  <div>
+<div class="detail" data-reveal-group="70">
+  <div class="tilt-wrap" data-reveal>
+    <div class="hero-card" data-tilt="0.8">
+      <img src="${esc(c.imageLarge)}" alt="${esc(c.name)}">
+    </div>
+  </div>
+  <div data-reveal>
     <h1 class="page">${esc(c.name)}</h1>
     <p class="lede">${esc(c.setSeries)} · ${esc(c.setName)} · ${esc(c.number)}</p>
     <div class="facts">
@@ -259,15 +229,20 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
 
 export function grailsPage(cards: CardListing[], minValue: number): string {
   const body = `
-<h1 class="page">The Grails</h1>
-<p class="lede">Every card in the catalog worth ${money(minValue)} or more, by reference value. ${cards.length} of them.</p>
-<div class="grails">
+<div class="eyebrow" data-reveal>THE VAULT</div>
+<h1 class="page" data-reveal>The Grails</h1>
+<p class="lede" data-reveal>Every card in the catalog worth ${money(
+    minValue,
+  )} or more, by reference value. <b class="mono" data-count="${cards.length}">0</b> of them.</p>
+<div class="grails" data-reveal-group="45">
   ${cards
     .map(
-      (c, i) => `<a class="tile gcard" href="/pokemon/${encodeURIComponent(c.setId)}/${encodeURIComponent(c.number)}">
+      (c, i) => `<a class="tile gcard halo" href="/pokemon/${encodeURIComponent(
+        c.setId,
+      )}/${encodeURIComponent(c.number)}" data-reveal data-tilt="0.8">
     <div class="shot">
       <img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy" decoding="async">
-      ${c.availableInPacks ? '<span class="rip">AVAILABLE TO RIP</span>' : ''}
+      ${c.availableInPacks ? '<span class="rip-badge">AVAILABLE TO RIP</span>' : ''}
       <span class="rank">#${i + 1}</span>
     </div>
     <div class="meta">
@@ -291,10 +266,14 @@ export function cardsPage(index: CatalogIndex): string {
     items.map((i) => `<option value="${esc(i)}">${esc(i)}</option>`).join('');
 
   const body = `
-<h1 class="page">Pokédex</h1>
-<p class="lede">${index.cards.length.toLocaleString()} cards across ${f.sets.length} sets. Prices are per variant.</p>
+<div class="eyebrow" data-reveal>THE CATALOG</div>
+<h1 class="page" data-reveal>Pokédex</h1>
+<p class="lede" data-reveal><b class="mono" data-count="${index.cards.length}">0</b> cards across
+  <b class="mono" data-count="${f.sets.length}">0</b> sets,
+  <b class="mono" data-count="${index.byVariantId.size}">0</b> tracked variants.
+  Every printing priced separately.</p>
 
-<div class="controls">
+<div class="controls" data-reveal>
   <input type="search" id="q" placeholder="Charizard, Pikachu, Mew…" autocomplete="off">
   <select id="setId"><option value="">ALL SETS</option>${f.sets
     .map((s) => `<option value="${esc(s.id)}">${esc(s.name)} (${s.count})</option>`)
@@ -319,7 +298,7 @@ export function cardsPage(index: CatalogIndex): string {
   <span class="count" id="count"></span>
 </div>
 
-<div class="grid" id="grid"></div>
+<div class="grid" id="grid" data-reveal-group="35"></div>
 <div class="sentinel" id="sentinel"></div>
 <div class="empty" id="empty" hidden>Nothing matches those filters.</div>
 
@@ -347,6 +326,8 @@ async function load(reset) {
   const data = await res.json();
 
   $('grid').insertAdjacentHTML('beforeend', data.html);
+  // Newly inserted tiles start at opacity 0; hand them to the motion runtime.
+  window.RIPDEX_MOTION?.scan($('grid'));
   $('count').textContent = data.totalCount.toLocaleString() + ' CARDS';
   $('empty').hidden = data.totalCount !== 0;
   done = !data.hasMore;
