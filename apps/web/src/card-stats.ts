@@ -87,27 +87,47 @@ export const CARD_STATS_CSS = `
   justify-content:space-between;gap:10px;padding:15px 16px 16px;
   border-radius:var(--r-lg)}
 
-/* The slab edge. Pushed back in Z and scaled just past the face so a sliver of
-   violet reads as the card's thickness at rest, and swings wide on turn. */
-.rx-under{pointer-events:none;transform:translateZ(-18px) scale(1.022);
-  background:linear-gradient(180deg,rgba(113,112,255,.3),rgba(113,112,255,.06));
-  box-shadow:0 0 0 1px rgba(113,112,255,.18);
+/* The slab edge: a base plane pushed back in Z and OUTSET by a fixed 6px, not
+   scaled. A uniform scale() is the wrong tool here — perspective foreshortening
+   at Z -16 shrinks the plane by very nearly as much as scale(1.022) grew it, so
+   the edge came out barely a pixel wide, and a scale also exposes proportionally
+   more edge on the long axis than the short one. Measured at rest, a 6px outset
+   leaves a 5px rim top and bottom and 2.5-9.5px at the sides — wider on the side
+   of each slab that faces the camera, which is what "seen from an angle" is
+   supposed to look like — and it widens further as the slab turns. 6px is also
+   the most the 16px grid gap can absorb without two neighbouring slabs' rims
+   touching. --r-xl is exactly --r-lg + 6, so the base stays concentric with the
+   face. */
+.rx-b .rx-under{pointer-events:none;inset:-6px;border-radius:var(--r-xl);
+  transform:translateZ(-16px);
+  background:linear-gradient(180deg,rgba(113,112,255,.34),rgba(113,112,255,.07));
+  box-shadow:0 0 0 1px rgba(113,112,255,.22);
   transition:background .3s var(--ease),box-shadow .3s var(--ease)}
-.rx-b:hover .rx-under{background:linear-gradient(180deg,rgba(113,112,255,.42),rgba(113,112,255,.10));
-  box-shadow:0 0 0 1px rgba(113,112,255,.3),0 0 30px rgba(113,112,255,.28)}
-/* The face is near-opaque on purpose. Left translucent, the violet edge plane
-   behind it tints the entire tile and the "thickness" reads as a purple wash
-   instead of as an edge. */
-.rx-face{background-color:rgba(13,14,17,.88);
+.rx-b:hover .rx-under{background:linear-gradient(180deg,rgba(113,112,255,.46),rgba(113,112,255,.12));
+  box-shadow:0 0 0 1px rgba(113,112,255,.34),0 0 34px rgba(113,112,255,.3)}
+/* The face is fully opaque on purpose. At 88% the violet base plane behind it
+   showed through the WHOLE face — the tile read as a purple wash and the edge,
+   being the thinner part of the effect, read as nothing at all. An edge only
+   reads as an edge when the face in front of it is solid. */
+.rx-face{background-color:var(--panel);
   background-image:linear-gradient(152deg,rgba(255,255,255,.07),rgba(255,255,255,.014))}
 .rx-b:hover .rx-face{box-shadow:0 0 0 1px rgba(113,112,255,.32),
   0 2px 4px rgba(0,0,0,.45),0 24px 54px -24px rgba(113,112,255,.7)}
 .rx-b [data-layer]{transition:transform .5s var(--ease)}
 
-.rx-k{position:relative;pointer-events:none;font-size:10px;font-weight:560;
+/* Resting Z for the type planes. The pointer handler only assigns a plane its
+   translateZ once the cursor has entered, so without these the label and the
+   value sat flat on the face until hovered — and never at all on a touch
+   screen. They also have to clear .plane-rim (Z 2) and, for the value,
+   .plane-gloss (Z 18), or the specular sweep passes in FRONT of the number.
+   Kept moderate: the camera is shared across the whole row, so a plane at high
+   Z in an outer tile projects far enough off-axis to overhang the face. */
+.rx-k{position:relative;pointer-events:none;transform:translateZ(12px);
+  font-size:10px;font-weight:560;
   letter-spacing:.055em;color:var(--text-4);transition:color .25s var(--ease)}
 .rx-b:hover .rx-k{color:var(--text-3)}
-.rx-v{position:relative;pointer-events:none;font-size:14.5px;font-weight:560;
+.rx-v{position:relative;pointer-events:none;transform:translateZ(22px);
+  font-size:14.5px;font-weight:560;
   letter-spacing:-.016em;line-height:1.34;color:var(--text-2);overflow-wrap:anywhere}
 .rx-v.big{font-size:clamp(27px,4.4vw,34px);font-weight:590;letter-spacing:-.042em;
   line-height:1;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
@@ -153,10 +173,17 @@ export const CARD_STATS_CSS = `
    best odds on this card: at absolute scale every row on a rare card would be
    an invisible sliver and the comparison would be unreadable. */
 .ob{display:flex;width:100%;align-items:center;gap:12px;justify-content:flex-end}
+/* No overflow:hidden on the track. The fill is a pill in its own right, and
+   clipping it also clipped its outer glow away entirely — the box-shadow below
+   painted nothing at all. */
 .ob-t{position:relative;flex:1 1 96px;min-width:64px;max-width:200px;height:6px;
-  border-radius:99px;background:rgba(255,255,255,.055);overflow:hidden;
+  border-radius:99px;background:rgba(255,255,255,.055);
   box-shadow:inset 0 0 0 1px var(--line)}
+/* The clip moves onto the fill itself: it keeps the specular sweep inside the
+   pill, and an element's own outer box-shadow is not clipped by its own
+   overflow, so the glow survives. */
 .ob-t i{position:absolute;top:0;left:0;bottom:0;width:0;border-radius:99px;
+  overflow:hidden;
   background:linear-gradient(90deg,#5451e6,var(--accent) 58%,var(--accent-hi));
   box-shadow:0 0 14px rgba(113,112,255,.55);
   transition:width 1.05s var(--ease);transition-delay:calc(var(--d,0ms) + 160ms)}
@@ -180,7 +207,9 @@ export const CARD_STATS_CSS = `
   background:var(--glass);box-shadow:0 0 0 1px var(--line)}
 
 @media(max-width:640px){
-  .rx{gap:12px}
+  /* Not tighter than 16px: the slab base is outset 6px per side, so a smaller
+     gap would let two neighbouring rims collide. */
+  .rx{gap:16px}
   .rxt{font-size:12px}
   .rxt td,.rxt th{padding-right:10px}
   .ob-t{min-width:48px}
@@ -222,7 +251,7 @@ export function ripdexDataSection(card: CardListing, data: CardPullData, now: nu
         <span class="plane plane-art card rx-face" data-spotlight aria-hidden="true"></span>
         <span class="plane plane-rim" aria-hidden="true"></span>
         <span class="plane plane-gloss" aria-hidden="true"></span>
-        <div class="rx-k" data-layer="20">${key}</div>
+        <div class="rx-k" data-layer="12">${key}</div>
         ${valueHtml}
       </div>
     </div>
@@ -235,19 +264,19 @@ export function ripdexDataSection(card: CardListing, data: CardPullData, now: nu
   ${slab(
     0,
     'TIMES PULLED',
-    `<div class="rx-v big" data-layer="36" data-count="${data.totalPulls}">${data.totalPulls.toLocaleString()}</div>`,
+    `<div class="rx-v big" data-layer="22" data-count="${data.totalPulls}">${data.totalPulls.toLocaleString()}</div>`,
   )}
   ${slab(
     1,
     'LAST PULLED',
-    `<div class="rx-v num${lastAt ? '' : ' off'}" data-layer="36">${
+    `<div class="rx-v num${lastAt ? '' : ' off'}" data-layer="22">${
       lastAt ? esc(relativeWhen(lastAt, now)) : 'Never'
     }</div>`,
   )}
   ${slab(
     2,
     'IN PACKS',
-    `<div class="rx-v${rippable.length ? '' : ' off'}" data-layer="36">${
+    `<div class="rx-v${rippable.length ? '' : ' off'}" data-layer="22">${
       // Deduped: two variants of one card commonly sit in the same pack, and
       // listing it twice reads as a rendering bug.
       rippable.length
@@ -258,7 +287,7 @@ export function ripdexDataSection(card: CardListing, data: CardPullData, now: nu
   ${slab(
     3,
     'BEST ODDS',
-    `<div class="rx-v num${bestOdds ? '' : ' off'}" data-layer="36">${
+    `<div class="rx-v num${bestOdds ? '' : ' off'}" data-layer="22">${
       bestOdds ? esc(bestOdds.label) : '—'
     }</div>`,
   )}

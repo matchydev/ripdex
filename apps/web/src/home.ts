@@ -37,10 +37,17 @@ const HOME_CSS = `
 .hero::before{content:"";position:absolute;left:50%;top:-180px;width:min(1180px,132%);height:680px;
   transform:translateX(-50%);pointer-events:none;z-index:-1;
   background:radial-gradient(ellipse at 50% 42%,rgba(113,112,255,.20),transparent 62%)}
-.hero h1{margin:16px 0 0;font-weight:590;letter-spacing:-.045em;line-height:.95;
-  font-size:clamp(2.6rem,8.2vw,6.1rem)}
-.hero h1 span{display:block;
-  background:linear-gradient(176deg,var(--text) 24%,#959cab 108%);
+/* flow-root, so the spans' negative top margins below cannot collapse out
+   through the heading and drag the whole lockup upward. */
+.hero h1{display:flow-root;margin:24px 0 0;font-weight:590;letter-spacing:-.045em;
+  line-height:.95;font-size:clamp(2.6rem,8.2vw,6.1rem)}
+/* background-clip:text paints inside the element box and clips to the glyphs, so
+   ink that rises above the box is simply never painted. At line-height .95 the
+   box top sits 0.83em over the baseline while the acute on the É of POKÉMON
+   reaches 0.95em — measured, 12px of the accent went unpainted. The padding
+   raises the paint area; the equal negative margin keeps the layout identical. */
+.hero h1 span{display:block;padding-top:.2em;margin-top:-.2em;
+  background:linear-gradient(176deg,var(--text) 22%,#959cab 106%);
   -webkit-background-clip:text;background-clip:text;color:transparent}
 .hero h1 span.em{
   background:linear-gradient(112deg,var(--accent-hi),var(--accent) 52%,#5b58e0);
@@ -79,8 +86,16 @@ const HOME_CSS = `
 .pack3d{position:absolute;inset:0;display:block;border-radius:var(--r-lg);
   transform-style:preserve-3d;cursor:pointer}
 .pack3d .plane{overflow:hidden}
-.plane-slab{transform:translateZ(-16px);background:#0a0b0c;
-  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 30px 60px -30px rgba(0,0,0,.9)}
+/* The back slab is what gives the pack thickness. Sitting at Z -16 it projects
+   NARROWER than the art in front of it, so flush with the front planes it hides
+   completely and the object reads as a single sheet. Outsetting it by 4px puts a
+   lit card edge permanently outside the artwork's silhouette — that edge is what
+   swings and changes width as the pack turns. Specificity has to beat the
+   design system's .card3d .plane inset:0, hence the .pack3d prefix. */
+.pack3d .plane-slab{inset:-4px;border-radius:calc(var(--r-lg) + 4px);
+  transform:translateZ(-16px);
+  background:linear-gradient(104deg,#191a1f,#0a0b0c 44%,#050607);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(0,0,0,.9)}
 .plane-art{background-size:176%;background-position:50% 32%;background-repeat:no-repeat;
   background-color:var(--panel)}
 .plane-veil{background:
@@ -245,8 +260,11 @@ section.band{padding:50px 0;box-shadow:inset 0 1px 0 var(--line)}
 .fair .f p{margin:0;font-size:13px;font-weight:460;letter-spacing:-.01em;color:var(--text-3);
   line-height:1.62}
 .fair .f p em{font-style:normal;color:var(--text-2);font-weight:540}
+/* Neutral code chip. Emerald is reserved for "a pricing provider confirmed
+   this" and gold for grail value; a hash string is neither. */
 .fair code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;letter-spacing:-.02em;
-  color:var(--em);word-break:break-all}
+  color:var(--text-2);word-break:break-all;padding:1px 5px;border-radius:5px;
+  background:var(--glass);box-shadow:0 0 0 1px var(--line)}
 
 /* ============================ dex outro ============================ */
 .dex-line{margin:0;font-size:clamp(1.05rem,2.3vw,1.5rem);font-weight:510;letter-spacing:-.028em;

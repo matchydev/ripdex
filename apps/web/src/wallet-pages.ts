@@ -72,6 +72,16 @@ const WALLET_CSS = `
 .rip .thumb .plane-gloss{background:linear-gradient(118deg,transparent 34%,
   rgba(255,255,255,.24) 50%,transparent 66%);background-size:280% 100%;
   background-position:var(--mx,50%) center}
+/* The feed is 80 rows deep, and the design system promotes every .depth and
+   every [data-layer] with will-change:transform. That is 240 permanently
+   composited layers for thumbnails that only ever turn under the cursor, so
+   promote a row's planes while it is being turned and let them go afterwards.
+   The planes themselves are leaves — nothing 3D sits inside one — so flattening
+   them costs no depth while removing 160 needless 3D rendering contexts. The
+   binder keeps the full treatment: it is the one hero object on its page. */
+.rip .thumb .depth,.rip .thumb .plane{will-change:auto}
+.rip .thumb .plane{transform-style:flat}
+.rip:hover .thumb .depth{will-change:transform}
 
 .rip .who{font-size:11px;font-weight:500;color:var(--text-4);letter-spacing:-.004em}
 .rip .who .mono{color:var(--text-3)}
@@ -137,7 +147,14 @@ const WALLET_CSS = `
 
 .binder-wrap{margin:8px 0 4px}
 .binder-scene{perspective-origin:26% 42%}
-.binder-stage{position:relative;max-width:660px;margin:0 auto}
+/* preserve-3d is load-bearing here, not decoration. A perspective only reaches
+   its own children, and it stops dead at the first descendant left flat: a flat
+   wrapper renders its whole subtree into one 2D plane. Without this the book,
+   the spine, the page turn and all nine sleeve plane stacks below composed
+   orthographically — rotateY(-9deg) collapsed to a 1.2% horizontal squash and
+   every translateZ did nothing at all, which is exactly the rotated-picture
+   look the plane stacks exist to avoid. */
+.binder-stage{position:relative;max-width:660px;margin:0 auto;transform-style:preserve-3d}
 .binder-book{position:relative;padding:22px 22px 22px 34px;border-radius:var(--r-xl);
   background:linear-gradient(152deg,rgba(255,255,255,.055),rgba(255,255,255,.012) 44%,
     rgba(255,255,255,.035));
@@ -255,17 +272,22 @@ const WALLET_CSS = `
   box-shadow:0 0 0 1px var(--line);
   transition:opacity .3s var(--ease),box-shadow .25s var(--ease),transform .25s var(--ease)}
 .a:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--line-hi)}
-.achv .a:not(.on).in{opacity:.66}
-.achv .a:not(.on).in:hover{opacity:.88}
+/* .66 over --text-4 landed the locked description and progress line at a 2.1:1
+   contrast ratio — dimmer than the .6 they had before the restyle, and past the
+   point where a locked achievement still tells you what it wants. A locked card
+   has to stay readable to be worth chasing, so the dim stops where the text is
+   still legible and the gold carries the rest of the distinction. */
+.achv .a:not(.on).in{opacity:.74}
+.achv .a:not(.on).in:hover{opacity:.92}
 .a.on{background:linear-gradient(150deg,rgba(245,196,81,.075),rgba(255,255,255,.02) 60%);
   box-shadow:0 0 0 1px rgba(245,196,81,.26),0 20px 46px -26px rgba(245,196,81,.45)}
 .a.on:hover{transform:translateY(-2px);
   box-shadow:0 0 0 1px rgba(245,196,81,.42),0 26px 60px -26px rgba(245,196,81,.6)}
 .a .nm{font-size:12.5px;font-weight:580;letter-spacing:-.014em;color:var(--text-3)}
 .a.on .nm{color:var(--gold)}
-.a .ds{font-size:11.5px;font-weight:480;color:var(--text-4);margin-top:6px;line-height:1.55}
-.a.on .ds{color:var(--text-3)}
-.a .pr{font-size:10.5px;font-weight:510;color:var(--text-4);margin-top:9px;letter-spacing:-.004em;
+.a .ds{font-size:11.5px;font-weight:480;color:var(--text-3);margin-top:6px;line-height:1.55}
+.a.on .ds{color:var(--text-2)}
+.a .pr{font-size:10.5px;font-weight:510;color:var(--text-3);margin-top:9px;letter-spacing:-.004em;
   font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 .a.on .pr{color:rgba(245,196,81,.72)}
 .abar{height:4px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:10px;

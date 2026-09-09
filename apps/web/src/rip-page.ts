@@ -241,7 +241,13 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
 .pack-hold{position:relative;width:var(--card-w);aspect-ratio:var(--card-ar);margin:30px auto 0}
 .pack{position:absolute;inset:0;cursor:pointer}
 .pack .plane{position:absolute;inset:0;border-radius:15px;backface-visibility:hidden}
-.pk-slab{inset:-5px;border-radius:17px;
+/* The slab is the wrapper's THICKNESS: it has to sit 5px proud of the body on
+   every side or the whole point of putting it at Z-18 is lost — perspective
+   shrinks a plane that far back to 98.7% of the body, so a coincident slab is
+   swallowed whole by .pk-base and the pack reads as one flat sheet again.
+   Qualified with .pack because a bare .pk-slab loses to .pack .plane above and
+   its inset silently does nothing. */
+.pack .pk-slab{inset:-5px;border-radius:17px;
   background:linear-gradient(160deg,#22213d,#13131f 46%,#0a0a11);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 34px 76px -30px rgba(0,0,0,.95)}
 .pk-base{overflow:hidden;
@@ -253,7 +259,7 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
 .pk-sheen{overflow:hidden;pointer-events:none;mix-blend-mode:screen}
 .pk-sheen::after{content:"";position:absolute;inset:-20%;
   background:linear-gradient(74deg,transparent 32%,rgba(113,112,255,.34) 46%,rgba(255,255,255,.62) 50%,rgba(150,140,255,.32) 55%,transparent 70%);
-  transform:translateX(-120%);animation:sweep 4.8s cubic-bezier(.4,0,.2,1) infinite}
+  transform:translateX(-120%);animation:sweep 4.8s var(--ease) infinite}
 @keyframes sweep{0%,56%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 .pk-rim{pointer-events:none;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.18),
@@ -831,6 +837,17 @@ function reset(){
 
 document.getElementById('ripBtn').onclick = rip;
 document.getElementById('packArt').onclick = rip;
+// The CTA prints a ↵ affordance, so Enter has to actually rip. Scoped to the
+// select step — an unguarded global would fire a second rip mid-reveal — and
+// yielded to focused controls so Enter on RIP ANOTHER still means that button.
+addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' || e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+  const t = e.target;
+  if (t instanceof Element && t.closest('a,button,input,textarea,select,[contenteditable]')) return;
+  if (!document.getElementById('s-select').classList.contains('on')) return;
+  e.preventDefault();
+  rip();
+});
 document.getElementById('retryBtn').onclick = () => { reset(); setTimeout(rip, 300); };
 document.getElementById('againBtn').onclick = () => { reset(); setTimeout(rip, 420); };
 new Image().src = ${JSON.stringify(hero)};
