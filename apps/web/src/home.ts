@@ -29,6 +29,9 @@ import type {
   PackConfig,
 } from '../../../packages/pokemon-core/src/index.ts';
 import { esc, money, layout, tile } from './render.ts';
+import { tokenSection } from './token.ts';
+import { ripMark } from './brand.ts';
+import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
 
 const HOME_CSS = `
 <style>
@@ -238,6 +241,33 @@ const HOME_CSS = `
  .hero-actions{gap:12px}.hero-actions .btn{font-size:12px;padding:0 16px;height:44px}
  .hero-actions .text-link{font-size:10px;gap:7px}.hero-copy{padding-bottom:18px}
 }
+
+/* Compact showcase and a useful activity column share the first viewport. */
+.lobby-stage{display:grid;grid-template-columns:minmax(0,1fr) 250px;max-width:1440px;margin:0 auto;box-shadow:0 1px 0 var(--line)}
+.hero{min-height:0;background:radial-gradient(ellipse at 70% 50%,rgba(113,112,255,.18),transparent 55%),linear-gradient(120deg,#11121b,#090a10)}
+.hero::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(113,112,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(113,112,255,.035) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(90deg,transparent,black)}
+.hero-inner{padding:30px 32px 22px;min-height:390px}.hero-top{font-size:9px;letter-spacing:.14em}.hero h1{font-size:100px;margin:16px 0 0;line-height:.9}.hero-main{display:block;min-height:200px}
+.hero-copy{width:47%;padding:24px 0 22px}.hero h2{font-size:25px;line-height:1.15;margin-bottom:12px}.hero-copy p{font-size:11px;line-height:1.8;margin-bottom:20px;max-width:none}.hero-actions{gap:14px}.hero-actions .btn{font-size:11px;height:40px;padding:0 18px}.hero-inspect{font-size:10px;color:var(--text-3);padding:12px 0}
+.hero-inspect:hover{color:var(--accent-hi)}
+.hero .pack-scene{position:absolute;right:0;top:78px;width:53%;height:276px;--pw:148px;--ph:208px;--spread:124px;margin:0}
+.hero-foot{font-size:8px;padding-top:16px}.hero .slot-c{transform:translate3d(0,-8px,95px)}
+.lobby-activity{background:rgba(15,16,22,.72);padding:22px 17px 14px;box-shadow:-1px 0 0 var(--line);min-width:0}
+.activity-head{display:flex;justify-content:space-between;align-items:center}.activity-head h2{font-size:12px;margin:0;font-weight:560}.activity-head>a{font-size:17px;color:var(--text-3)}.activity-caption{display:block;font-size:8px;letter-spacing:.08em;color:var(--text-4);margin:7px 0 12px}
+.activity-list{height:310px;overflow-y:auto;scrollbar-width:thin}.activity-row{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 0;box-shadow:0 1px 0 var(--line)}.activity-row img{width:32px;height:45px;border-radius:3px;object-fit:cover}.activity-row b{display:block;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.activity-row small{display:block;font-size:8px;color:var(--text-4);margin-top:3px}.activity-row em{display:block;font-size:8px;font-style:normal;color:var(--text-4);margin-top:2px}.activity-row strong{font:9px ui-monospace,monospace;color:var(--text-2)}.activity-footer{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:var(--text-3);padding-top:16px}.activity-empty{font-size:11px;color:var(--text-3)}
+.home-inner{max-width:1440px;padding:0 32px}.set-section{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:24px 0 30px}
+.set-door{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;min-height:106px;padding:18px;overflow:hidden;box-shadow:0 0 0 1px var(--line);border-radius:10px;background:linear-gradient(120deg,#151620,#0e0f14);transition:box-shadow .25s}
+.set-door:hover{box-shadow:0 0 0 1px rgba(113,112,255,.35)}.set-door>div:first-child{z-index:2}.set-door span{font-size:8px;letter-spacing:.06em;color:var(--text-4)}.set-door h2{font-size:17px;letter-spacing:-.03em;font-weight:590;margin:6px 0}.set-door small{font-size:9px;color:var(--text-3)}
+.set-door-art{position:absolute;right:-9px;top:14px;bottom:0;width:102px;z-index:0;opacity:.65;transition:transform .5s var(--ease)}.set-door-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#11121b,transparent)}.set-door-art img{position:absolute;width:62px;right:0;top:10px;border-radius:3px;transform:rotate(14deg)}.set-door-art img:first-child{right:42px;top:23px;transform:rotate(-13deg)}.set-door:hover .set-door-art{transform:translateY(-7px)}
+.discovery-section{padding-top:28px;scroll-margin-top:150px}.discovery-hint{font-size:11px;color:var(--text-4)}.discovery-section .section-head{margin-bottom:24px}.discovery-section h2{font-size:29px}.section{padding:42px 0}.section-index{font-size:9px;margin-bottom:10px}
+.rail-actions{display:flex;align-items:center;gap:8px}.rail-actions button{height:34px;width:34px;border-radius:7px;box-shadow:0 0 0 1px var(--line-hi);font-size:16px}.rail-actions button:hover{background:var(--accent-dim)}.rail-actions .text-link{margin-left:8px}
+html.dialog-open{overflow:hidden}
+@media(min-width:1500px){.hero-inner{padding-left:42px}.hero h1{font-size:112px}.hero .pack-scene{--pw:165px;--ph:230px;--spread:143px;top:70px}}
+@media(max-width:1150px){.lobby-stage{grid-template-columns:minmax(0,1fr) 220px}.hero-inner{padding:26px 24px 20px}.hero h1{font-size:88px}.hero .pack-scene{--pw:115px;--ph:162px;--spread:88px;top:76px}.hero-copy{width:50%}.hero-copy p br{display:none}.hero-actions{gap:3px}.home-inner{padding:0 24px}.set-door{padding:14px}.set-door h2{font-size:14px}.set-door-art{opacity:.4}}
+@media(max-width:850px){.lobby-stage{display:block}.lobby-activity{display:none}.hero-inner{min-height:360px}.hero .pack-scene{--pw:142px;--ph:199px;--spread:115px;top:60px}.hero-copy{width:48%}.set-section{grid-template-columns:repeat(2,minmax(0,1fr))}.set-door-art{opacity:.7}.set-door h2{font-size:17px}}
+@media(max-width:600px){
+ .hero-inner{padding:24px 20px 20px;min-height:0}.hero h1{font-size:24vw;line-height:.95;margin-top:18px}.hero-top{font-size:8px}.hero-main{display:flex;flex-direction:column-reverse;min-height:0}.hero .pack-scene{position:relative;top:auto;right:auto;width:100%;height:200px;--pw:107px;--ph:150px;--spread:98px;margin:12px 0 0}.hero-copy{width:100%;padding:8px 0 22px}.hero h2{font-size:27px}.hero-copy p{font-size:12px;max-width:38ch}.hero-actions{gap:15px}.hero-actions .btn{height:44px;font-size:12px}.hero-inspect{font-size:10px}.hero-foot{font-size:8px}.hero-foot span:last-child{display:block}.home-inner{padding:0 16px}.set-section{gap:10px;padding:18px 0 26px}.set-door{padding:12px;min-height:96px}.set-door h2{font-size:14px}.set-door span{font-size:7px}.set-door-art{opacity:.4;width:75px}.set-door-art img{width:52px}.discovery-hint{display:none}.section-head{align-items:center}.discovery-section h2{font-size:25px}.rail-actions .text-link{display:none}.section h2{font-size:25px}
+}
+@media(max-width:360px){.hero .pack-scene{height:175px;--pw:96px;--ph:135px;--spread:82px}.hero h2{font-size:25px}.hero-copy p{font-size:11px}.hero-actions{gap:8px}.hero-actions .btn{font-size:11px;padding:0 13px}.hero-inspect{font-size:9px}}
 </style>`;
 
 export interface HomeFeedItem {
@@ -345,57 +375,58 @@ export function homePage(
   ];
 
   const body = `
+<div class="lobby-stage">
 <section class="hero" aria-labelledby="home-title">
   <div class="hero-inner">
-    <div class="hero-top" data-reveal><span>THE COLLECTOR’S NEXT CHAPTER</span><span>POKÉMON / PACKS / POSSIBILITIES</span></div>
+    <div class="hero-top" data-reveal>${ripMark()}<span>THE POKÉMON COLLECTOR’S CLUB</span></div>
     <h1 id="home-title" data-reveal>RIP<span>DEX</span></h1>
     <div class="hero-main">
-      <div class="hero-copy" data-reveal-group="80">
-        <h2 data-reveal>The thrill of the pull.<br>The start of a collection.</h2>
-        <p data-reveal>From your first starter to your forever grail. Discover Pokémon packs with every outcome in view.</p>
+      <div class="hero-copy" data-reveal-group="70">
+        <h2 data-reveal>A whole world.<br>One card at a time.</h2>
+        <p data-reveal>Explore the packs. Inspect every possibility.<br>Find the cards that belong in your collection.</p>
         <div class="hero-actions" data-reveal>
-          <a class="btn btn-primary btn-lg" href="/packs">Explore packs <span aria-hidden="true">↗</span></a>
-          <a class="text-link" href="/cards">Browse the Pokédex <span aria-hidden="true">→</span></a>
+          <a class="btn btn-primary" href="#discover">Discover packs <span aria-hidden="true">↓</span></a>
+          ${featured ? `<button type="button" class="hero-inspect" data-preview="${esc(featured.id)}">Inspect featured pack ↗</button>` : ''}
         </div>
       </div>
-      <div class="pack-scene scene" aria-label="Featured packs">
-        <div class="stage-drift" data-parallax="0.025"><div class="stage">
-          ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c', wrappers[a.pack.id])).join('')}
-        </div></div>
-      </div>
+      <div class="pack-scene scene" aria-label="Featured packs"><div class="stage-drift" data-parallax="0.018"><div class="stage">
+        ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c', wrappers[a.pack.id])).join('')}
+      </div></div></div>
     </div>
-    <div class="hero-foot"><span><b>${index.cards.length.toLocaleString()}</b> CARDS TO DISCOVER</span><span><b>${index.facets.sets.length}</b> ICONIC SETS</span><span>EXACT ODDS. EVERY PACK.</span></div>
+    <div class="hero-foot"><span><b>${packs.length}</b> CURATED PACKS</span><span><b>${index.cards.length.toLocaleString()}</b> CARDS</span><span><b>${index.facets.sets.length}</b> SETS TO EXPLORE</span></div>
   </div>
 </section>
+<aside class="lobby-activity" aria-labelledby="activity-title">
+  <div class="activity-head"><h2 id="activity-title"><span class="pulse-dot"></span>Recent pulls</h2><a href="/live" aria-label="View all recent pulls">↗</a></div>
+  <span class="activity-caption">FROM THE RIPDEX LEDGER</span>
+  <div class="activity-list">${feed.length ? feed.slice(0, 6).map((e) => `<a href="${esc(e.href)}" class="activity-row"><img src="${esc(e.imageSmall)}" alt="" loading="lazy"><span><b>${esc(e.cardName)}</b><small>${esc(e.wallet)}</small><em>${esc(e.when)}</em></span><strong>${money(e.value)}</strong></a>`).join('') : '<p class="activity-empty">No pulls yet. Pack openings will appear here.</p>'}</div>
+  <a class="activity-footer" href="/live">Explore the feed <span aria-hidden="true">→</span></a>
+</aside>
+</div>
 <div class="home-inner">
-<section class="section" aria-labelledby="packs-title">
-  <div class="section-head" data-reveal>
-    <div><span class="section-index">01 / FIND YOUR NEXT PULL</span><h2 id="packs-title">Pick your pack.</h2><p>Old-school favorites. New obsessions.</p></div>
-    <a class="text-link" href="/packs">All packs &amp; odds <span aria-hidden="true">↗</span></a>
-  </div>
-  <div class="pack-grid" data-reveal-group="65">
-    ${packs.map((p, i) => `<a class="pack-card" href="/rip/${encodeURIComponent(p.id)}" data-reveal>
-      <div class="pack-visual"><span class="pack-no">PACK / ${String(i + 1).padStart(2, '0')}</span><span class="pack-arrow" aria-hidden="true">↗</span>
-        <img src="${esc(wrappers[p.id] ?? heroImage(p, index))}" alt="${esc(p.name)} artwork" loading="lazy" decoding="async">
-      </div>
-      <div class="pack-info"><h3>${esc(p.name)}</h3><span class="pack-price mono">${p.priceRip.toLocaleString()} <small>$RIP</small></span></div>
-      <p class="pack-detail">${p.pool.length} possible outcomes · ${p.cardsPerPack} ${p.cardsPerPack === 1 ? 'card' : 'cards'} per pack</p>
-    </a>`).join('')}
-  </div>
+<a class="token-announcement" href="#rip-token"><span>${ripMark()}<b>$RIP</b> The next chapter is coming.</span><span>Launch plan <span aria-hidden="true">↗</span></span></a>
+<section class="set-section" aria-label="Browse Pokémon sets">
+ ${index.facets.sets.map((set) => {
+   const cards = index.cards.filter((c) => c.setId === set.id);
+   const art = [...cards].sort((a, b) => (b.headlineValue ?? 0) - (a.headlineValue ?? 0)).slice(0, 2);
+   const year = cards[0]?.year;
+   return `<a class="set-door" href="/cards?setId=${encodeURIComponent(set.id)}"><div><span>${year ? year+' / ' : ''}${set.count} CARDS</span><h2>${esc(set.name)}</h2><small>Explore set ↗</small></div><div class="set-door-art" aria-hidden="true">${art.map((c) => `<img src="${esc(c.imageSmall)}" alt="" loading="lazy">`).join('')}</div></a>`;
+ }).join('')}
 </section>
+<section class="section discovery-section" id="discover" aria-labelledby="packs-title">
+  <div class="section-head" data-reveal><div><span class="section-index">THE PACK LIBRARY</span><h2 id="packs-title">Find your kind of pack.</h2></div><span class="discovery-hint">Preview contents. Compare possibilities.</span></div>
+  ${packExplorer(packs, index, wrappers)}
+</section>
+${tokenSection()}
 <section class="section" aria-labelledby="grails-title">
   <div class="section-head" data-reveal>
-    <div><span class="section-index">02 / THE WISHLIST</span><h2 id="grails-title">Worth the chase.</h2><p>The cards you never stopped thinking about.</p></div>
-    <a class="text-link" href="/grails">Explore grails <span aria-hidden="true">↗</span></a>
+    <div><span class="section-index">THE WISHLIST</span><h2 id="grails-title">Worth the chase.</h2><p>The cards you never stopped thinking about.</p></div>
+    <div class="rail-actions"><button type="button" data-rail-step="-1" aria-label="Previous featured cards">←</button><button type="button" data-rail-step="1" aria-label="Next featured cards">→</button><a class="text-link" href="/grails">All grails ↗</a></div>
   </div>
-  ${grails.length ? `<div class="rail grail-rail" data-reveal-group="45">${grails.slice(0, 8).map(tile).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
-</section>
-<section class="section home-live" aria-labelledby="live-title">
-  <div data-reveal><span class="section-index">03 / FROM THE COMMUNITY</span><h2 id="live-title"><span class="pulse-dot"></span>Fresh pulls.</h2><p>Every rip has a story.</p><a class="text-link" href="/live">View the live feed <span aria-hidden="true">→</span></a></div>
-  ${feed.length ? `<div class="pull-list">${feed.slice(0, 6).map((e) => `<a class="pull" href="${esc(e.href)}"><img src="${esc(e.imageSmall)}" alt="" loading="lazy"><span class="who"><span class="nm">${esc(e.cardName)}</span><span class="sub">${esc(e.wallet)} · ${esc(e.when)}</span></span><span class="v mono${e.prominence === 'major' ? ' major' : ''}">${money(e.value)}</span></a>`).join('')}</div>` : '<div class="empty-state">No packs opened yet. Recent pulls will appear here.</div>'}
+  ${grails.length ? `<div class="rail grail-rail" id="grail-rail" tabindex="0" aria-label="Featured cards, scroll horizontally" data-reveal-group="45">${grails.slice(0, 8).map(tile).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
 </section>
 <section class="section" aria-labelledby="how-title">
-  <div class="section-head" data-reveal><div><span class="section-index">04 / OPEN POSSIBILITIES</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>
+  <div class="section-head" data-reveal><div><span class="section-index">HOW IT WORKS</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>
   <ol class="steps" data-reveal-group="80">
     <li data-reveal><span class="ix">01</span><h3>Find your pack</h3><p>Explore the sets, possible pulls, and exact odds before you choose.</p></li>
     <li data-reveal><span class="ix">02</span><h3>Make the reveal</h3><p>Open your pack and discover the card waiting inside.</p></li>
@@ -409,7 +440,12 @@ export function homePage(
   <div data-reveal><span class="section-index">THE COLLECTION STARTS HERE</span><h2 id="dex-title">Meet your next favorite.</h2><p>${index.cards.length.toLocaleString()} cards. ${index.byVariantId.size.toLocaleString()} variants. Every printing priced separately.</p></div>
   <a class="btn btn-primary btn-lg" href="/cards">Explore the Pokédex <span aria-hidden="true">↗</span></a>
 </section>
-</div>`;
+</div><script>
+  document.querySelectorAll('[data-rail-step]').forEach(button => button.addEventListener('click', () => {
+    const rail = document.getElementById('grail-rail');
+    rail?.scrollBy({left: Number(button.dataset.railStep) * rail.clientWidth * .8, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  }));
+</script>`;
 
-  return layout('RIPDEX — The thrill of the pull.', '/', body, HOME_CSS);
+  return layout('RIPDEX — The thrill of the pull.', '/', body, HOME_CSS + EXPLORER_CSS);
 }
