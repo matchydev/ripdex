@@ -32,6 +32,7 @@ import { esc, money, layout, tile } from './render.ts';
 import { tokenSection } from './token.ts';
 import { ripMark } from './brand.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
+import { POKEMON_HERO_HTML, POKEMON_HERO_CSS, POKEMON_HERO_JS, POKEMON_HERO_TOGGLE } from './pokemon-hero.ts';
 
 const HOME_CSS = `
 <style>
@@ -44,8 +45,8 @@ const HOME_CSS = `
   transform:translateX(-50%);pointer-events:none;z-index:-1;
   background:radial-gradient(ellipse at 50% 50%,rgba(113,112,255,.22),transparent 70%);
   filter:blur(18px)}
-.stage-drift{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
-.stage{position:absolute;inset:0;transform-style:preserve-3d}
+.stage-drift{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform;pointer-events:none}
+.stage{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
 
 /* Placement only. Never animated by the runtime, so it can hold a transform. */
 .slot{position:absolute;left:50%;top:50%;width:var(--pw);height:var(--ph);
@@ -63,7 +64,7 @@ const HOME_CSS = `
 .bob{position:absolute;inset:0;transform-style:preserve-3d}
 
 .pack3d{position:absolute;inset:0;display:block;border-radius:var(--r-lg);
-  transform-style:preserve-3d;cursor:pointer}
+  transform-style:preserve-3d;cursor:pointer;pointer-events:auto}
 .pack3d .plane{overflow:hidden}
 /* The back slab is what gives the pack thickness. Sitting at Z -16 it projects
    NARROWER than the art in front of it, so flush with the front planes it hides
@@ -377,13 +378,15 @@ export function homePage(
   const body = `
 <div class="lobby-stage">
 <section class="hero" aria-labelledby="home-title">
+  ${POKEMON_HERO_HTML}
   <div class="hero-inner">
+    ${POKEMON_HERO_TOGGLE}
     <div class="hero-top" data-reveal>${ripMark()}<span>THE POKÉMON COLLECTOR’S CLUB</span></div>
     <h1 id="home-title" data-reveal>RIP<span>DEX</span></h1>
     <div class="hero-main">
       <div class="hero-copy" data-reveal-group="70">
-        <h2 data-reveal>A whole world.<br>One card at a time.</h2>
-        <p data-reveal>Explore the packs. Inspect every possibility.<br>Find the cards that belong in your collection.</p>
+        <h2 data-reveal>A world of Pokémon.<br>One card at a time.</h2>
+        <p data-reveal>From your first favorite to the iconic Charizard. <br>Explore the packs. Find your next addition.</p>
         <div class="hero-actions" data-reveal>
           <a class="btn btn-primary" href="#discover">Discover packs <span aria-hidden="true">↓</span></a>
           ${featured ? `<button type="button" class="hero-inspect" data-preview="${esc(featured.id)}">Inspect featured pack ↗</button>` : ''}
@@ -445,7 +448,7 @@ ${tokenSection()}
     const rail = document.getElementById('grail-rail');
     rail?.scrollBy({left: Number(button.dataset.railStep) * rail.clientWidth * .8, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
   }));
-</script>`;
+</script>${POKEMON_HERO_JS}`;
 
-  return layout('RIPDEX — The thrill of the pull.', '/', body, HOME_CSS + EXPLORER_CSS);
+  return layout('RIPDEX — The thrill of the pull.', '/', body, HOME_CSS + EXPLORER_CSS + POKEMON_HERO_CSS);
 }

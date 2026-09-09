@@ -575,7 +575,11 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   28%{transform:translate(-50%,0) scale(1)}
   76%{opacity:1}
   100%{opacity:0;transform:translate(-50%,-46px) scale(1)}}
-@media(prefers-reduced-motion:reduce){.coin,.profit-pop.on{animation-duration:.2s!important}}
+@keyframes profitStill{0%,90%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+  .coin{display:none}
+  .profit-pop.on{animation:profitStill 2.4s linear forwards!important;transform:translate(-50%,0)}
+}
 
 /* ========================== grail takeover =========================
    Deeper ground, a slow radial bloom behind the card, and a denser spark
@@ -886,6 +890,7 @@ function sCoins(){ // a jingle of coins + a chord, for a profitable sell
 // A burst of gold coins fountaining up from the sell area, and a big floating
 // profit number. Fires only when a pull sells for MORE than the pack cost.
 function coinBurst(count){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   let c = document.getElementById('coins');
   if (!c){ c = document.createElement('div'); c.className = 'coins'; c.id = 'coins'; document.body.appendChild(c); }
   c.innerHTML = '';
