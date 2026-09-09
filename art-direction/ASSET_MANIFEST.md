@@ -20,18 +20,21 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
 | Obsidian wrapper | Pack wrapper (ember orange) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/obsidian-flames-rip.png` | ✅ rip screen | |
 | Kanto wrapper | Pack wrapper (amber) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/kanto-starters-rip.png` | ✅ rip screen | |
 | Grail vault | Grail reveal environment | `grail-environment.md` | 1920×1088 | no (backdrop) | `public/art/environments/grail-vault.png` | ✅ grail takeover | Centre negative space for the card. |
-| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | (baked dark bg) | `public/art/achievements/medal-base.png` | ⏳ awaiting collection UI wiring | Gunmetal + violet enamel + gold facet. |
-| Grail Puller medal | Gold prestige medal | edit of medal-base | 1024×1024 | ✅ yes | `public/art/achievements/grail-puller.png` | ⏳ awaiting collection UI wiring | Full gold; for grail-tier achievements. |
+| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | (baked dark bg) | `public/art/achievements/medal-base.png` | ✅ collection achievements | Violet when unlocked; grey when locked, with explicit status text. |
+| Grail Puller medal | Gold prestige medal | edit of medal-base | 1254×1254 | ✅ yes | `public/art/achievements/grail-puller.png` | ✅ collection GRAIL_HUNTER | Stable achievement ID selects the gold medal, not its display name. |
+| RIP R v2 | Current token/site mark | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-r-v2.png` | ✅ shared headers, favicon, coin, footer, rip screen | Generated with Codex's built-in image tool; silver-lavender face and violet sides, no extra lettering. |
+| RIP full coin v2 | Main token artwork | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-token-coin-v2.png` | ✅ main $RIP section and download | Built-in image generation using the R v2 reference; complete silver/violet coin, no extra lettering. |
 
 ## Hand-off / remaining
 
-- **Achievement medals → collection/profile UI.** The medal family is generated
-  (`medal-base` for standard achievements, `grail-puller` for grail-tier). The
-  achievements render in `apps/web/src/wallet-pages.ts` (Codex's active lane), so
-  wiring the medal images onto the unlocked/locked badge states is best done
-  there. Suggested mapping: grail-related achievements → `grail-puller.png`, the
-  rest → `medal-base.png`, greyscaled/dimmed while locked. More distinct medals
-  can be edit-derived from `medal-base` per achievement if desired.
+- **Achievement integration complete.** `apps/web/src/wallet-pages.ts` displays
+  both medals with explicit locked/unlocked states and accessible progress.
+  Only `GRAIL_HUNTER` requires a Grail-tier pull, so only that definition gets
+  the gold variant. More distinct standard medals can be derived later without
+  changing achievement qualification logic.
+- **Delivery size remains the next art task.** Original pack PNGs total about
+  17 MB. Smaller WebP siblings are supported by the existing wrapper lookup;
+  retain PNG masters, the current compositions, and the shared RIP R v2 identity.
 - **Optional polish:** the pack wrappers and the base medal carry a baked dark
   studio background rather than true alpha; on the dark UI it blends, but a
   background-removal edit (`pnpm art:edit ... --transparent`) would let them
@@ -45,3 +48,7 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
   Wrappers wired into the rip screen + home pack scene; vault wired into the
   grail takeover. Medals awaiting collection-UI wiring (Codex's lane).
 - Credits ran out mid-session twice (429); auto-reload recovered each time.
+- **2026-09-09, collection integration** — Both achievement assets are now
+  wired into the binder. The current RIP R v2 is also recorded above. The
+  Charizard hero uses separate sourced artwork; its provenance lives in
+  `public/art/characters/README.md` and is not part of the generated-asset list.

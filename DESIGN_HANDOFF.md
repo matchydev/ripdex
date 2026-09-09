@@ -141,3 +141,22 @@ Validation: 12 web tests pass. All eight main page routes return 200, reference 
 The user requested Packs before Pokédex; the shared desktop/mobile navigation and footer now follow that order. They also requested CA directly below the large RIPDEX title. `tokenHeroContract()` renders that hero control using the same validated configuration and copy handler as the detailed token section. The hero now owns the single canonical `#rip-contract` target, so the persistent Buy button reaches it from every page. The lower contract details use `#rip-contract-details`. Both currently show Coming soon, and no placeholder is copied. Mobile artwork is repositioned to leave room below the title.
 
 Validation: 12 web tests pass. Browser checks confirm direct placement under the title, no horizontal overflow at 320/1440px, one canonical anchor, and header Buy navigation both within the homepage and from `/packs`, with the expected Coming soon notice. Full configured addresses can wrap; the complete value remains available for copying.
+
+## Eighth pass — collection and pack-inspection workflows
+
+The user asked to keep improving the site. This pass completes Claude's medal handoff and makes browsing existing information easier:
+
+- `wallet-pages.ts` displays the standard and Grail medals with explicit locked/unlocked text and accessible progress bars. Gold maps only to core achievement ID `GRAIL_HUNTER`. Collection sections have jump links, each set links to its catalog, unavailable binder pages use disabled controls, and empty collections retain their physical binder while explaining what appears there. Sort/pagination links return to the binder section. Upper-page spacing is tighter.
+- `pack-explorer.ts` adds search within each pack's outcomes and Probability / Value / Name sorting. Search includes card names, printings, sets, card numbers and variant IDs; counts and reset/empty states update in place. Null values sort last, zero remains a priced value, and displayed probabilities remain the original pack probabilities. Each newly opened preview starts fresh. Full odds and Go to pack remain in a persistent dialog footer on mobile and desktop.
+- `binder-lookup.ts` remembers the last five unique explicitly opened binders in local storage, offers direct links and Clear, validates stored addresses before rendering, and tolerates blocked/malformed storage. Pasted addresses are trimmed before validation. The shared lookup now focuses its address field immediately. This remains public, read-only lookup and does not connect a wallet.
+- `art-direction/ASSET_MANIFEST.md` now records the completed medal integration and the current RIP R v2. Smaller delivery assets remain the next independent task for Claude's art lane.
+
+Validation: 211 tests pass (186 core + 25 web), including 13 new tests for collection boundaries/medals/progress, preview filtering/sorting/reset, and recent-binder validation/privacy controls. Nine routes return 200 and all executable inline scripts parse. Both medal assets serve correctly. Browser checks covered populated and empty binders, real artwork/progress, section navigation, disabled pagination, pasted lookup addresses, remembered/cleared binders, filtered/sorted/reset pack previews, persistent action visibility, and 320px/1440px layouts with no horizontal overflow or console errors. No ledger or monetary calculation changed; browser QA did not open or sell any packs.
+
+Claude: pull the shared branch before your next changes. Preserve the user-requested Packs-before-Pokédex order, CA immediately below the RIPDEX title, R v2 branding, and Pokémon hero. The medal family is implemented now; use the asset manifest for remaining art tasks.
+
+## Follow-up — full main token artwork
+
+The user pointed out that the main token still needed updating. Replaced its CSS coin frame with a complete generated silver/violet metal coin using the R v2 identity, with no small lettering. `RIP_TOKEN_URL` in `brand.ts` is the full coin; `RIP_MARK_URL` remains the matching standalone site mark. The $RIP section and Download the RIP token image link now use the same full coin asset. Original transparent 1254px PNG and generation prompt are recorded in the brands README.
+
+Validation: all 25 web tests pass. Browser checks at 320px and 1440px confirm the full coin loads, the download points to it, no horizontal overflow, and no console errors. Existing reduced-motion rule still disables the coin animation. No launch configuration or financial behavior changed.

@@ -117,16 +117,22 @@ export const EXPLORER_CSS = `<style>
 .pack-dialog::backdrop{background:rgba(3,4,8,.82);backdrop-filter:blur(9px)}
 .pack-dialog[open]{animation:explorerIn .25s var(--ease)}
 .dialog-close{position:sticky;top:14px;float:right;margin:14px 14px -48px 0;z-index:5;width:34px;height:34px;border-radius:9px;background:#24252d;color:var(--text-2);font-size:25px}
+#pack-dialog{overflow:hidden}#pack-dialog>.dialog-close{position:absolute;right:14px;top:14px;margin:0;float:none}
+#pack-dialog-body{display:flex;flex-direction:column;max-height:calc(100dvh - 50px)}
+.preview-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:16px}
 .preview-hero{display:grid;grid-template-columns:180px minmax(0,1fr);gap:30px;align-items:center;padding:32px;background:radial-gradient(ellipse at 15% 50%,rgba(113,112,255,.16),transparent 60%);box-shadow:0 1px 0 var(--line)}
 .preview-hero>img{width:130px;height:182px;object-fit:cover;justify-self:center;transform:rotate(-6deg);border-radius:6px;box-shadow:0 16px 30px rgba(0,0,0,.5)}
 .preview-kicker{font-size:9px;color:var(--accent-hi);letter-spacing:.14em}.preview-hero h2{font-size:30px;line-height:1.1;letter-spacing:-.04em;margin:12px 0}.preview-hero p{font-size:12px;color:var(--text-3);margin:12px 0;line-height:1.6}
 .preview-price{font:600 19px ui-monospace,monospace;margin-top:18px}.preview-price span{font-size:10px;color:var(--text-4)}
 .preview-body{padding:28px 32px}.preview-body h3{font-size:16px;font-weight:580;letter-spacing:-.02em;margin:0 0 8px}
 .preview-sub{color:var(--text-3);font-size:11px;margin:0 0 18px}.preview-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:22px;margin-bottom:22px;box-shadow:0 1px 0 var(--line)}.preview-facts span{display:block;font-size:9px;color:var(--text-4);margin-bottom:6px}.preview-facts b{font:500 14px ui-monospace,monospace}
+.outcome-controls{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px}.outcome-controls label{font-size:10px;color:var(--text-3)}.outcome-controls input,.outcome-controls select{display:block;width:100%;min-width:0;height:42px;margin-top:7px;font-size:11px}
+.outcome-result-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;font-size:10px;color:var(--text-3)}.outcome-reset{font-size:11px;color:var(--accent-hi);padding:10px 0}.outcome-reset:hover{text-decoration:underline}
+.outcome-empty{text-align:center;padding:32px 16px;background:var(--glass);border-radius:8px}.outcome-empty h4{font-size:15px;margin:0 0 8px}.outcome-empty p{font-size:11px;line-height:1.6;color:var(--text-3);margin:0 0 14px}.outcome-empty .btn{font-size:11px}
 .outcome-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .outcome{display:grid;grid-template-columns:39px minmax(0,1fr) auto;gap:11px;align-items:center;padding:10px;background:var(--glass);border-radius:8px;box-shadow:0 0 0 1px var(--line)}
 .outcome img{width:39px;height:54px;object-fit:cover;border-radius:3px}.outcome strong{display:block;font-size:11px;font-weight:550}.outcome small{display:block;font-size:9px;color:var(--text-4);margin-top:3px;line-height:1.45}.outcome>b{text-align:right;font:11px ui-monospace,monospace;color:var(--text-2)}.outcome>b small{font:9px ui-monospace,monospace}
-.preview-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:24px}.preview-actions a{font-size:12px}.preview-actions .text-link{color:var(--text-3)}
+.preview-actions{display:flex;flex-shrink:0;justify-content:space-between;align-items:center;gap:12px;padding:16px 32px;background:#15161e;box-shadow:0 -1px 0 var(--line)}.preview-actions a{font-size:12px}.preview-actions .text-link{color:var(--text-3);padding:12px 0;white-space:nowrap}
 .comparison{padding:36px 30px}.comparison h2{font-size:28px;letter-spacing:-.04em;margin:0 0 12px}.comparison>p{font-size:12px;color:var(--text-3);max-width:60ch}
 .compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:25px}.compare-item{min-width:0;background:var(--glass);border-radius:12px;padding:20px}.compare-item>img{display:block;height:125px;width:90px;object-fit:cover;margin:0 auto 22px;transform:rotate(-5deg);border-radius:4px}.compare-item h3{font-size:15px;margin:10px 0 20px}.compare-item dl{margin:0}.compare-item dl div{padding:10px 0;box-shadow:0 1px 0 var(--line)}.compare-item dt{font-size:10px;color:var(--text-4)}.compare-item dd{font-size:12px;margin:5px 0 0;line-height:1.6}.compare-item .btn{margin-top:22px;width:100%;font-size:11px}
 @keyframes explorerIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -137,7 +143,7 @@ export const EXPLORER_CSS = `<style>
  .ep-info{padding:0 11px 13px}.ep-info h3{font-size:11px;min-height:28px}.ep-info p{font-size:8px;margin:5px 0 10px}.ep-range{display:block;font-size:8px;line-height:1.65;margin-bottom:12px}.ep-range b{display:block}.ep-bottom{align-items:stretch;flex-direction:column;gap:11px}.ep-price{font-size:12px}.ep-view{justify-content:space-between;min-height:36px}.compare-toggle{min-width:32px;min-height:32px}
  .explorer-toolbar{flex-wrap:wrap;gap:10px}.explorer-search{flex:1 1 100%;max-width:none}.explorer-toolbar select{max-width:220px;flex:1}.set-tab{font-size:10px;padding:12px}
  .compare-tray{bottom:10px;flex-wrap:wrap;padding:12px;gap:8px}.compare-tray>div{flex-basis:100%}.compare-tray .btn{flex:1}
- .pack-dialog{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:13px}.preview-hero{grid-template-columns:88px minmax(0,1fr);gap:18px;padding:54px 20px 22px}.preview-hero>img{width:80px;height:112px}.preview-hero h2{font-size:21px;margin-right:14px}.preview-hero p{font-size:10px}.preview-price{font-size:15px}.preview-body{padding:22px 18px}.preview-facts{gap:10px}.preview-facts b{font-size:11px}.preview-facts span{font-size:8px}.outcome-list{grid-template-columns:1fr}.preview-actions{flex-wrap:wrap}.preview-actions .btn{width:100%}.comparison{padding:30px 16px}.comparison h2{font-size:24px}.compare-grid{gap:10px}.compare-item{padding:12px}.compare-item h3{font-size:11px;min-height:28px}.compare-item dt{font-size:9px}.compare-item dd{font-size:10px}.compare-item .btn{padding:0 8px;font-size:9px}
+ .pack-dialog{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);border-radius:13px}#pack-dialog-body{max-height:calc(100dvh - 20px)}.preview-hero{grid-template-columns:88px minmax(0,1fr);gap:18px;padding:54px 20px 22px}.preview-hero>img{width:80px;height:112px}.preview-hero h2{font-size:21px;margin-right:14px}.preview-hero p{font-size:10px}.preview-price{font-size:15px}.preview-body{padding:22px 18px}.preview-facts{gap:10px}.preview-facts b{font-size:11px}.preview-facts span{font-size:8px}.outcome-controls{grid-template-columns:1fr}.outcome-controls select{max-width:220px}.outcome-list{grid-template-columns:1fr}.preview-actions{padding:14px 18px}.preview-actions a{font-size:11px}.preview-actions .btn{flex:1;min-height:44px;padding:0 12px}.comparison{padding:30px 16px}.comparison h2{font-size:24px}.compare-grid{gap:10px}.compare-item{padding:12px}.compare-item h3{font-size:11px;min-height:28px}.compare-item dt{font-size:9px}.compare-item dd{font-size:10px}.compare-item .btn{padding:0 8px;font-size:9px}
 }
 </style>`;
 
@@ -205,10 +211,35 @@ const EXPLORER_JS = `<script>
  function preview(id) {
   const p=byId.get(id);if(!p)return;
   document.getElementById('pack-dialog-body').innerHTML =
-   '<div class="preview-hero"><img src="'+esc(p.art)+'" alt=""><div><span class="preview-kicker">PACK CONTENTS / '+p.outcomes.length+' OUTCOMES</span><h2 id="pack-dialog-title">'+esc(p.name)+'</h2><p>Inspect every possible card and its exact probability.</p><div class="preview-price">'+esc(rip(p.price))+' <span>/ '+p.count+' '+(p.count===1?'card':'cards')+'</span></div></div></div>'+
-   '<div class="preview-body"><div class="preview-facts"><div><span>LOWEST REFERENCE</span><b>'+money(p.min)+'</b></div><div><span>HIGHEST REFERENCE</span><b>'+money(p.max)+'</b></div><div><span>MEAN PER DRAW</span><b>'+money(p.expected)+'</b></div></div><h3>What is inside</h3><p class="preview-sub">Most likely first. Each printing has its own price and probability.</p><div class="outcome-list">'+
-   p.outcomes.map(o=>'<a class="outcome" href="'+esc(o.href||'#')+'"><img src="'+esc(o.image)+'" alt="" loading="lazy"><span><strong>'+esc(o.name)+'</strong><small>'+esc(o.label)+' · '+esc(o.set)+' #'+esc(o.number)+'</small></span><b>'+esc(o.probabilityLabel)+'<small>'+money(o.value)+'</small></b></a>').join('')+
-   '</div><p class="preview-sub" style="margin-top:20px">USD figures are card reference values, not guaranteed resale proceeds or a conversion rate for $RIP. Probabilities come from the published pack weights.</p><div class="preview-actions"><a class="text-link" href="/packs#odds-'+encodeURIComponent(p.id)+'">Full odds table ↗</a><a class="btn btn-primary" href="/rip/'+encodeURIComponent(p.id)+'">Go to pack →</a></div></div>';
+   '<div class="preview-scroll"><div class="preview-hero"><img src="'+esc(p.art)+'" alt=""><div><span class="preview-kicker">PACK CONTENTS / '+p.outcomes.length+' OUTCOMES</span><h2 id="pack-dialog-title">'+esc(p.name)+'</h2><p>Inspect every possible card and its exact probability.</p><div class="preview-price">'+esc(rip(p.price))+' <span>/ '+p.count+' '+(p.count===1?'card':'cards')+'</span></div></div></div>'+
+   '<div class="preview-body"><div class="preview-facts"><div><span>LOWEST REFERENCE</span><b>'+money(p.min)+'</b></div><div><span>HIGHEST REFERENCE</span><b>'+money(p.max)+'</b></div><div><span>MEAN PER DRAW</span><b>'+money(p.expected)+'</b></div></div><h3>What is inside</h3><p class="preview-sub">Each printing has its own reference value and published probability.</p>'+
+   '<div class="outcome-controls"><label for="outcome-search">Search outcomes<input type="search" id="outcome-search" placeholder="Card, variant or number…" aria-controls="preview-outcomes" autocomplete="off"></label><label for="outcome-sort">Sort outcomes<select id="outcome-sort" aria-controls="preview-outcomes"><option value="probability">Probability: most likely</option><option value="value-desc">Value: high to low</option><option value="name">Name: A to Z</option></select></label></div>'+
+   '<div class="outcome-result-bar"><span id="outcome-count" role="status" aria-live="polite" aria-atomic="true"></span><button type="button" class="outcome-reset" id="outcome-reset" hidden>Reset</button></div><div class="outcome-list" id="preview-outcomes"></div><div class="outcome-empty" id="outcome-empty" hidden><h4>No matching outcomes</h4><p>Try a different card name, printing or card number.</p><button type="button" class="btn btn-ghost" id="outcome-empty-reset">Show all outcomes</button></div>'+
+   '<p class="preview-sub" style="margin-top:20px;margin-bottom:0">USD figures are card reference values, not guaranteed resale proceeds or a conversion rate for $RIP. Probabilities come from the published pack weights.</p></div></div><div class="preview-actions"><a class="text-link" href="/packs#odds-'+encodeURIComponent(p.id)+'">Full odds table ↗</a><a class="btn btn-primary" href="/rip/'+encodeURIComponent(p.id)+'">Go to pack →</a></div>';
+  const search=document.getElementById('outcome-search'), order=document.getElementById('outcome-sort');
+  const reset=document.getElementById('outcome-reset');
+  function renderOutcomes() {
+   const terms=search.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
+   const outcomes=p.outcomes.filter(o=>{const text=[o.name,o.label,o.set,o.number,'#'+o.number,o.id].join(' ').toLowerCase();return terms.every(term=>text.includes(term));});
+   outcomes.sort((a,b)=>{
+    const names=()=>a.name.localeCompare(b.name)||a.label.localeCompare(b.label)||a.id.localeCompare(b.id);
+    if(order.value==='name')return names();
+    if(order.value==='value-desc'){
+     if(a.value==null)return b.value==null?names():1;
+     if(b.value==null)return -1;
+     return b.value-a.value||names();
+    }
+    return b.probability-a.probability||names();
+   });
+   document.getElementById('preview-outcomes').innerHTML=outcomes.map(o=>'<a class="outcome" href="'+esc(o.href||'#')+'"><img src="'+esc(o.image)+'" alt="" loading="lazy"><span><strong>'+esc(o.name)+'</strong><small>'+esc(o.label)+' · '+esc(o.set)+' #'+esc(o.number)+'</small></span><b>'+esc(o.probabilityLabel)+'<small>'+money(o.value)+'</small></b></a>').join('');
+   document.getElementById('outcome-count').textContent=outcomes.length+' of '+p.outcomes.length+(p.outcomes.length===1?' outcome':' outcomes');
+   document.getElementById('outcome-empty').hidden=outcomes.length>0;
+   reset.hidden=!terms.length&&order.value==='probability';
+  }
+  function resetOutcomes(){search.value='';order.value='probability';renderOutcomes();search.focus();}
+  search.addEventListener('input',renderOutcomes);order.addEventListener('change',renderOutcomes);
+  reset.addEventListener('click',resetOutcomes);document.getElementById('outcome-empty-reset').addEventListener('click',resetOutcomes);
+  renderOutcomes();
   open(dialog);
  }
  document.querySelectorAll('[data-preview]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();preview(b.dataset.preview);}));
