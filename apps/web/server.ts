@@ -298,7 +298,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return html(res, grailsPage(topGrails(index, 120, GRAIL_MIN), GRAIL_MIN));
   }
 
-  if (path === '/packs') return html(res, packsPage(PACKS, index));
+  if (path === '/packs') return html(res, packsPage(PACKS, index, await packWrappers()));
 
   if (path === '/live') {
     const openings = await ledger.recent(80);

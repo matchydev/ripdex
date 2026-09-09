@@ -14,6 +14,8 @@ import type {
 } from '../../../packages/pokemon-core/src/index.ts';
 import { oddsTable, formatProbability } from '../../../packages/pokemon-core/src/index.ts';
 import { DESIGN_CSS, MOTION_JS } from './design.ts';
+import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
+import { WORKSPACE_UI, WORKSPACE_CSS } from './workspace-ui.ts';
 
 export function esc(value: unknown): string {
   return String(value ?? '')
@@ -209,7 +211,7 @@ export function layout(title: string, active: string, body: string, extraHead = 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>${esc(title)}</title>
-<style>${CSS}</style>${extraHead}
+<style>${CSS + WORKSPACE_CSS}</style>${extraHead}
 </head><body>
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -218,16 +220,18 @@ export function layout(title: string, active: string, body: string, extraHead = 
 <header class="top">
   <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
   <nav class="links" aria-label="Main navigation">${nav}</nav>
-  <a class="btn btn-ghost header-action" href="/packs">Explore packs ↗</a>
+  <div class="header-tools"><button type="button" class="header-search" id="open-search" aria-label="Search the Pokédex"><span aria-hidden="true">⌕</span><span class="search-label">Find a card</span><kbd aria-hidden="true">/</kbd></button><button type="button" class="header-binder" id="open-binder">▤ <span>Find a binder</span></button></div>
 </header>
 <div class="ticker" id="ripTicker" hidden aria-label="Live rips">
   <span class="ticker-tag"><span class="pulse-dot"></span>LIVE RIPS</span>
   <div class="ticker-view"><div class="ticker-track" id="ripTickerTrack"></div></div>
+  <button type="button" class="ticker-pause" id="ticker-pause" aria-pressed="false">Pause</button>
 </div>
 <main id="main-content" class="wrap${active === '/' ? ' home-wrap' : ''}">${body}</main>
 <footer class="site-footer"><a class="footer-wordmark" href="/">RIPDEX</a><div class="footer-links"><a href="/cards">Pokédex</a><a href="/packs#odds">Pack odds</a><a href="/live">Live pulls</a></div><span>For the love of the collection.</span></footer>
 ${MOTION_JS}
 ${TICKER_JS}
+${WORKSPACE_UI}
 </body></html>`;
 }
 
@@ -244,6 +248,9 @@ const TICKER_JS = `
   const track = document.getElementById('ripTickerTrack');
   if (!bar || !track) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let paused = false;
+  const pauseButton = document.getElementById('ticker-pause');
+  pauseButton.addEventListener('click', () => { paused = !paused; bar.classList.toggle('is-paused', paused); pauseButton.setAttribute('aria-pressed', String(paused)); pauseButton.textContent = paused ? 'Resume' : 'Pause'; });
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
     (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
   const money = (n) => n == null ? '—'
@@ -257,6 +264,7 @@ const TICKER_JS = `
       '<span class="tv">' + money(x.v) + '</span>' +
     '</a><span class="sep" aria-hidden="true"></span>';
   async function load() {
+    if (paused || document.hidden) return;
     try {
       const res = await fetch('/api/ticker');
       const data = await res.json();
@@ -266,6 +274,7 @@ const TICKER_JS = `
       // Two copies so the -50% scroll loops without a seam. Reduced motion shows
       // one static copy.
       track.innerHTML = reduced ? html : html + html;
+      if (!reduced) Array.from(track.children).slice(track.children.length / 2).forEach(el => { el.setAttribute('aria-hidden', 'true'); el.setAttribute('inert', ''); });
       track.style.setProperty('--tk-dur', Math.max(45, items.length * 3.1).toFixed(0) + 's');
       bar.hidden = false;
     } catch (e) { /* keep whatever is showing */ }
@@ -459,6 +468,14 @@ const $ = (id) => document.getElementById(id);
 const FIELDS = ['q','setId','type','rarity','artist','year','minPrice','maxPrice','sort'];
 let page = 1, loading = false, done = false, requestId = 0;
 let controller;
+const initialQuery = new URLSearchParams(location.search);
+for (const field of FIELDS) {
+  const key = field === 'q' ? 'search' : field;
+  if (initialQuery.has(key)) $(field).value = initialQuery.get(key);
+}
+$('inPacks').checked = initialQuery.get('availableInPacks') === '1';
+if (['type','rarity','artist','year','minPrice','maxPrice','availableInPacks'].some(key => initialQuery.has(key)))
+  document.querySelector('.filter-more').open = true;
 
 function params(p) {
   const u = new URLSearchParams();
@@ -475,6 +492,8 @@ async function load(reset) {
   if (reset) {
     controller?.abort();
     page = 1; done = false;
+    const url = params(1); url.delete('page');
+    history.replaceState(null,'',location.pathname + (url.size ? '?' + url.toString() : ''));
     $('grid').innerHTML = '';
     $('empty').hidden = true;
   }
@@ -574,132 +593,12 @@ table.odds td.n{font-family:ui-monospace,Menlo,monospace;text-align:right}
   background:var(--glass);font-size:13px;color:var(--text-3);line-height:1.68;max-width:74ch}
 .ev b{color:var(--text-2);font-weight:560}
 
-/* ============================= case gallery =========================
-   Each pack presented as a collectible case: its own theme colour (--ca, the
-   pack's artwork accent), the hero prize behind glass, the best cards peeking
-   out, and one action — OPEN CASE. The numbers still live below, anchored, for
-   anyone who wants the exact odds before they spend. */
-.cases{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));margin:6px 0 8px}
-.case{position:relative;display:flex;flex-direction:column;border-radius:var(--r-lg);overflow:hidden;
-  --ca:var(--accent);
-  background:linear-gradient(180deg,color-mix(in srgb,var(--ca) 11%,var(--panel)),var(--panel) 62%);
-  box-shadow:0 0 0 1px var(--line),0 18px 40px -26px rgba(0,0,0,.9);
-  transition:box-shadow .3s var(--ease),transform .3s var(--ease)}
-.case:hover{transform:translateY(-4px);
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--ca) 55%,var(--line-hi)),
-    0 26px 62px -22px color-mix(in srgb,var(--ca) 55%,transparent),0 10px 24px rgba(0,0,0,.55)}
-.case-art{position:relative;display:block;height:188px;overflow:hidden;background-color:#090a0d;
-  background-image:radial-gradient(120% 92% at 50% 0%,color-mix(in srgb,var(--ca) 42%,transparent),transparent 68%)}
-.case-art::before{content:"";position:absolute;inset:0;background-image:var(--hero);
-  background-size:cover;background-position:50% 20%;transition:transform .55s var(--ease)}
-.case:hover .case-art::before{transform:scale(1.06)}
-.case-art::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 28%,rgba(9,10,13,.55) 66%,var(--panel))}
-.case-sheen{position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:0;
-  background:linear-gradient(115deg,transparent 42%,color-mix(in srgb,var(--ca) 50%,#fff) 50%,transparent 58%);
-  background-size:250% 100%;transition:opacity .4s var(--ease)}
-.case:hover .case-sheen{opacity:.55;animation:caseSheen 1.15s var(--ease)}
-@keyframes caseSheen{from{background-position:130% 0}to{background-position:-130% 0}}
-.case-top{position:absolute;top:11px;left:11px;z-index:2;font-size:9px;font-weight:560;letter-spacing:.07em;
-  color:var(--text-3);background:rgba(8,9,10,.62);backdrop-filter:blur(8px);padding:5px 10px;border-radius:100px;
-  box-shadow:0 0 0 1px var(--line)}
-.case-top b{color:var(--gold);font-family:ui-monospace,Menlo,monospace;margin-left:6px;letter-spacing:-.02em}
-.case-thumbs{position:absolute;right:11px;bottom:11px;z-index:2;display:flex;gap:5px}
-.case-thumbs img{width:29px;height:41px;border-radius:4px;object-fit:cover;background:#0a0b0e;
-  box-shadow:0 0 0 1px var(--line-hi),0 5px 14px rgba(0,0,0,.7)}
-.case-body{position:relative;z-index:2;padding:13px 16px 16px;display:flex;flex-direction:column;gap:10px}
-.case-nm{font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.1;
-  color:color-mix(in srgb,var(--ca) 30%,var(--text))}
-.case-stats{display:flex;gap:15px;font-size:11.5px;color:var(--text-4);font-weight:500}
-.case-stats b{color:var(--text-2);font-variant-numeric:tabular-nums;font-weight:600}
-.case-stats b.g{color:var(--gold)}
-.case-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px}
-.case-price{font-family:ui-monospace,Menlo,monospace;font-weight:600;font-size:14.5px;color:var(--text);
-  font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.case-price .u{font-size:10px;color:var(--text-4);font-weight:520;margin-left:1px}
-.case-open{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 15px;border-radius:9px;
-  font-size:12.5px;font-weight:600;letter-spacing:-.006em;color:#fff;white-space:nowrap;background:var(--ca);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 10px 26px -12px color-mix(in srgb,var(--ca) 85%,transparent);
-  transition:transform .18s var(--spring),box-shadow .2s var(--ease),filter .2s var(--ease)}
-.case-open:hover{filter:brightness(1.08) saturate(1.05);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.24),0 14px 34px -12px var(--ca)}
-.case-open:active{transform:scale(.97)}
-.case-odds{align-self:flex-start;font-size:11px;font-weight:500;color:var(--text-4);
-  transition:color .2s var(--ease)}
-.case-odds:hover{color:color-mix(in srgb,var(--ca) 55%,var(--text))}
-.cases{gap:28px 24px;grid-template-columns:repeat(3,minmax(0,1fr))}
-.case{background:var(--panel);box-shadow:0 0 0 1px var(--line)}
-.case:hover{box-shadow:0 0 0 1px var(--line-max),0 20px 40px -25px rgba(113,112,255,.28)}
-.case-art{height:240px;background-image:radial-gradient(ellipse at 50% 80%,rgba(113,112,255,.16),transparent 65%)}
-.case-art::before{inset:26px 0 20px;background-size:contain;background-repeat:no-repeat;background-position:center;transform:rotate(-6deg)}
-.case:hover .case-art::before{transform:rotate(0deg) translateY(-5px)}
-.case-art::after{background:linear-gradient(0deg,var(--panel),transparent 35%)}
-.case-thumbs{bottom:14px}.case-thumbs img{width:25px;height:35px}
-.case-body{padding:18px 20px 20px;gap:14px}.case-nm{font-size:15px}.case-top{font-size:8px}
-.case-open{background:var(--accent);color:var(--text);box-shadow:none;font-size:10px}
-.case-odds:hover{color:var(--accent-hi)}
-.pack-head h1.page{font-size:30px}.pack-head{padding-top:22px}
-@media(max-width:1000px){.cases{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:600px){.cases{grid-template-columns:1fr}.case-art{height:230px}.case-art::before{inset:22px 0}.case-open{min-height:44px}.bar-wrap{flex-wrap:wrap}.bar{min-width:70px}.odds-row>div{min-width:0}.val-right{min-width:60px}.pack-head h1.page{font-size:28px}}
+.pack-head .page{font-size:30px;font-weight:590;letter-spacing:-.04em;margin:10px 0}.pack-head{padding-top:22px}
+@media(max-width:600px){.bar-wrap{flex-wrap:wrap}.bar{min-width:70px}.odds-row>div{min-width:0}.val-right{min-width:60px}.pack-head .page{font-size:28px}}
 
 </style>`;
 
-/** The hero prize art for a pack: its configured wrapper hero, else its top card. */
-function packHero(pack: PackConfig, index: CatalogIndex): string {
-  if (pack.artwork.heroImageUrl) return pack.artwork.heroImageUrl;
-  let best: CardListing | null = null;
-  for (const e of pack.pool) {
-    const hit = index.byVariantId.get(e.variantId);
-    if (hit && (hit.card.headlineValue ?? 0) > (best?.headlineValue ?? 0)) best = hit.card;
-  }
-  return best?.imageLarge ?? '';
-}
-
-/** Highest reference value obtainable from a pack, for sorting and the badge. */
-function packTopValue(pack: PackConfig, index: CatalogIndex): number {
-  return Math.max(
-    0,
-    ...pack.pool.map((e) => index.byVariantId.get(e.variantId)?.variant.referenceValue ?? 0),
-  );
-}
-
-/** One pack rendered as a collectible case for the gallery. */
-function caseCard(pack: PackConfig, index: CatalogIndex): string {
-  const resolved = oddsTable(pack.pool).map((r) => {
-    const hit = index.byVariantId.get(r.variantId);
-    return { probability: r.probability, card: hit?.card ?? null, value: hit?.variant.referenceValue ?? null };
-  });
-  const byValue = [...resolved].sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
-  const topValue = byValue[0]?.value ?? 0;
-  const grailChance = resolved.filter((r) => (r.value ?? 0) >= 500).reduce((s, r) => s + r.probability, 0);
-  const thumbs = byValue.filter((r) => r.card).slice(0, 4);
-  const accent = /^#[0-9a-fA-F]{3,8}$/.test(pack.artwork.accentColor) ? pack.artwork.accentColor : '#7170ff';
-  const hero = cssUrl(packHero(pack, index));
-  const id = encodeURIComponent(pack.id);
-  return `<div class="case" data-reveal data-spotlight style="--ca:${esc(accent)}">
-  <a class="case-art" href="/rip/${id}"${hero ? ` style="--hero:url(${hero})"` : ''} aria-label="Open ${esc(pack.name)}">
-    <span class="case-sheen" aria-hidden="true"></span>
-    <span class="case-top">TOP PRIZE<b>${money(topValue)}</b></span>
-    <span class="case-thumbs">${thumbs
-      .map((r) => `<img src="${esc(r.card!.imageSmall)}" alt="" loading="lazy" decoding="async">`)
-      .join('')}</span>
-  </a>
-  <div class="case-body">
-    <div class="case-nm">${esc(pack.name)}</div>
-    <div class="case-stats">
-      <span><b>${pack.pool.length}</b> outcomes</span>
-      <span>grail <b class="g">${grailChance > 0 ? formatProbability(grailChance) : '—'}</b></span>
-    </div>
-    <div class="case-foot">
-      <span class="case-price">${pack.priceRip.toLocaleString()}<span class="u"> $RIP</span></span>
-      <a class="case-open" href="/rip/${id}">OPEN CASE →</a>
-    </div>
-    <a class="case-odds" href="#odds-${id}">view odds ↓</a>
-  </div>
-</div>`;
-}
-
-export function packsPage(packs: PackConfig[], index: CatalogIndex): string {
+export function packsPage(packs: PackConfig[], index: CatalogIndex, wrappers: Record<string, string> = {}): string {
   const sections = packs.map((pack) => {
     const rows = oddsTable(pack.pool);
     const resolved = rows.map((r) => {
@@ -750,7 +649,7 @@ export function packsPage(packs: PackConfig[], index: CatalogIndex): string {
 
     return `
 <div class="pack-head" id="odds-${encodeURIComponent(pack.id)}" style="scroll-margin-top:116px">
-  <h1 class="page">${esc(pack.name)}</h1>
+  <h2 class="page">${esc(pack.name)}</h2>
   <a class="price" href="/rip/${encodeURIComponent(pack.id)}">${pack.priceRip.toLocaleString()} $RIP · OPEN →</a>
 </div>
 <p class="lede">${pack.cardsPerPack} card per pack · ${pack.pool.length} possible outcomes · config v${esc(pack.version)}</p>
@@ -785,24 +684,18 @@ ${grails.length ? band('GRAILS', grails, true) : ''}
 </div>`;
   });
 
-  const galleryPacks = [...packs].sort(
-    (a, b) => packTopValue(b, index) - packTopValue(a, index) || Number(b.priceRip - a.priceRip),
-  );
   const gallery = `
-<div class="eyebrow" data-reveal>THE CASES</div>
-<h1 class="page" data-reveal>Choose your case</h1>
-<p class="lede" data-reveal>Every case is a curated pool with published, exact odds. Pick one, tear it open,
-  keep what you pull. <b class="mono" data-count="${packs.length}">${packs.length}</b> cases live — the numbers for each are below.</p>
-<div class="cases" data-reveal-group="55">
-  ${galleryPacks.map((p) => caseCard(p, index)).join('')}
-</div>
-<h2 class="sec" id="odds" style="scroll-margin-top:116px;margin-top:56px">THE NUMBERS · EXACT ODDS</h2>
+<div class="eyebrow" data-reveal>THE PACK LIBRARY</div>
+<h1 class="page" data-reveal>Explore the possibilities.</h1>
+<p class="lede" data-reveal>Find a set you love. Inspect the contents. Compare packs side by side.</p>
+${packExplorer(packs, index, wrappers)}
+<h2 class="sec" id="odds" style="scroll-margin-top:160px;margin-top:56px">THE NUMBERS · EXACT ODDS</h2>
 `;
 
   return layout(
     'Cases — RIPDEX',
     '/packs',
     gallery + sections.join('<hr style="border:0;border-top:1px solid var(--line);margin:52px 0">'),
-    ODDS_CSS,
+    ODDS_CSS + EXPLORER_CSS,
   );
 }

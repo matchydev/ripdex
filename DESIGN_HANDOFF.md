@@ -34,3 +34,34 @@ New pack wrappers continue to work through the existing `packWrappers()` lookup.
 - Local QA uses 240 synthetic demo-wallet rips from the existing seed script. The ignored ledger is not committed or pushed.
 
 Wallet auth and chain settlement remain separate unfinished systems described in `HANDOFF.md`. No production deployment was performed.
+
+## Second pass — interactive discovery workspace
+
+The user requested a richer experience informed by established case-opening sites.
+
+### Reference review
+
+- [CSGORoll case catalog](https://www.csgoroll.gg/cases/): inspected its live UI and official catalog page. Useful patterns were adjacent search/filter controls, distinct case presentation, and the ability to inspect contents before opening.
+- [HypeDrop](https://www.hypedrop.com/): inspected the live homepage. Useful patterns were category navigation, visual catalog groupings, and a separate activity column.
+
+Applied those browsing and information patterns to RIPDEX's existing design language. No deposits, timed promotions, wagering streaks, automatic repeat openings, or gameplay changes were added.
+
+### Added
+
+- `pack-explorer.ts`: shared homepage/pack-page library with set filters, Pokémon search across pack contents, exact bigint price sorting, native content-preview dialogs, and a two-pack comparison tray/dialog. Every outcome includes the card number, variant, reference value, and published probability; most likely outcomes appear first. Comparison includes range and mean reference value per draw, with USD distinguished from the $RIP pack price.
+- `workspace-ui.ts`: shared live card search (`/` or Cmd/Ctrl-K), direct catalog-result links, and read-only binder lookup. Search is debounced and cancels stale requests.
+- Homepage: compact layered pack showcase, recent activity sidebar, illustrated set links, and manual controls for the card rail.
+- Catalog query parameters initialize the filters and persist in the URL, so search and set shortcuts are real deep links.
+- Ticker pause/resume stops movement and refresh while paused; duplicated ticker items do not add duplicate keyboard stops.
+- `server.ts`: only the `/packs` render call changed, passing the existing wrapper lookup into the shared explorer. Rip routes and API behavior are unchanged.
+- Removed the superseded case-gallery renderer. `pnpm test` now runs both the core suite and `test:web`.
+
+### Checks
+
+189 tests passed (186 core + 3 preview tests). New tests cover exact variant values/weights, missing-price behavior, bigint preservation, and escaping JSON embedded in script markup.
+
+Browser checks covered set and Pokémon pack filters, price sorting, empty/reset states, previews, comparison, global card search, query-param handoff, binder lookup, keyboard open/Escape, ticker pause/resume, and widths of 320, 390, and 1440 pixels. All eight page routes returned 200 and their executable scripts parsed. No browser console errors observed in the local review.
+
+The preview still uses the ignored local demo ledger. No production deployment or account/chain connection was performed. The shared branch remains `ripdex-upgrades`.
+
+Integration note: this pass was rebased cleanly onto Claude's `31020b2` (PSA grading + $RIP sell economy). The combined build passed all 189 tests and the eight-route/script checks again. Those gameplay changes remain Claude's work; this pass does not change their logic.
