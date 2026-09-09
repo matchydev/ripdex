@@ -195,8 +195,8 @@ table.odds td.n,table.pulls td.n{text-align:right}
 export function layout(title: string, active: string, body: string, extraHead = ''): string {
   const nav = [
     ['/', 'HOME'],
-    ['/cards', 'POKÉDEX'],
     ['/packs', 'PACKS'],
+    ['/cards', 'POKÉDEX'],
     ['/grails', 'GRAILS'],
     ['/live', 'LIVE'],
   ]
@@ -231,7 +231,7 @@ ${BRAND_HEAD}
   <button type="button" class="ticker-pause" id="ticker-pause" aria-pressed="false">Pause</button>
 </div>
 <main id="main-content" class="wrap${active === '/' ? ' home-wrap' : ''}">${body}</main>
-<footer class="site-footer"><a class="footer-wordmark" href="/">${ripMark()}RIPDEX</a><div class="footer-links"><a href="/cards">Pokédex</a><a href="/packs#odds">Pack odds</a><a href="/live">Live pulls</a><a href="/#rip-token">$RIP token</a><button type="button" data-footer-binder>Find a binder</button></div><span>For the love of the collection.</span></footer>
+<footer class="site-footer"><a class="footer-wordmark" href="/">${ripMark()}RIPDEX</a><div class="footer-links"><a href="/packs#odds">Pack odds</a><a href="/cards">Pokédex</a><a href="/live">Live pulls</a><a href="/#rip-token">$RIP token</a><button type="button" data-footer-binder>Find a binder</button></div><span>For the love of the collection.</span></footer>
 ${MOTION_JS}
 ${TICKER_JS}
 ${WORKSPACE_UI}
