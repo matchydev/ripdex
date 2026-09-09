@@ -63,9 +63,14 @@ button.reset:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
 @media(max-width:860px){.detail{grid-template-columns:1fr;gap:30px}}
 /* The hero card is a real slab: art at Z 0, gloss forward, so turning it
    parallaxes the highlight across the surface instead of sliding a gradient. */
-.hero-card{position:relative;border-radius:var(--r-md);overflow:hidden;
-  box-shadow:var(--sh-3);transform-style:preserve-3d}
-.hero-card img{width:100%;display:block}
+/* Same card-presentation rules as the grid tiles: true 63/88 ratio, cover,
+   percentage corner radius, and a violet-tinted ambient shadow with a lit top
+   edge so the card reads as lit by the page rather than cut out of it. */
+.hero-card{position:relative;aspect-ratio:63/88;border-radius:4.5% / 3.2%;overflow:hidden;
+  background:var(--panel);transform-style:preserve-3d;
+  box-shadow:0 26px 64px rgba(60,58,140,.42),0 6px 16px rgba(0,0,0,.55),
+    0 0 0 1px var(--line-hi),inset 0 1px 0 rgba(255,255,255,.18)}
+.hero-card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
 .hero-card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
   background:radial-gradient(58% 42% at var(--mx,50%) var(--my,40%),rgba(255,255,255,.26),transparent 66%);
   mix-blend-mode:overlay;transition:opacity .35s var(--ease)}

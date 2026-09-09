@@ -221,11 +221,34 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 /* =============================== tiles ============================= */
 .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(176px,1fr))}
 .tile{position:relative;display:block}
-.shot{position:relative;aspect-ratio:734/1024;border-radius:10px;overflow:hidden;
-  background:var(--panel);box-shadow:var(--sh-1);
+/* Card presentation.
+   Measured off cardboard.markets, which presents the same source scans far more
+   cleanly than we were. Four things matter, and we had all four wrong:
+
+   1. RATIO. 63/88 is the real physical card, and the container must match the
+      art or the card floats in dead space. We used 734/1024 against 600x825
+      art, so every card was letterboxed with slivers top and bottom.
+   2. object-fit COVER, not contain. With the ratio right, cover fills the frame
+      edge to edge; the ~1.5% it trims is outer scan margin, which tightens the
+      card rather than cutting into it.
+   3. PERCENTAGE radius, on the IMAGE. A fixed 10px is too round on a 60px feed
+      thumbnail and too square on a 430px hero. A percentage tracks the card's
+      real corner geometry at every size, and rounding the image itself means
+      the square scan corner is gone rather than merely clipped by a parent.
+   4. A COLOURED ambient shadow plus a lit top edge. Pure black makes a bright
+      card look like it is sitting in a hole punched out of the page. Tinting
+      the shadow with the page's own violet, and adding a 1px inner highlight
+      along the top, makes the card read as lit by the same room. */
+.shot{position:relative;aspect-ratio:63/88;border-radius:4.5% / 3.2%;overflow:hidden;
+  background:var(--panel);
+  box-shadow:0 12px 28px rgba(60,58,140,.34),0 2px 6px rgba(0,0,0,.5),
+    0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.16);
   transition:box-shadow .3s var(--ease),transform .35s var(--ease)}
-.tile:hover .shot{box-shadow:var(--sh-3);transform:translateY(-6px)}
-.shot img{width:100%;height:100%;object-fit:contain;display:block}
+.tile:hover .shot{transform:translateY(-6px);
+  box-shadow:0 22px 52px rgba(80,76,190,.46),0 4px 12px rgba(0,0,0,.55),
+    0 0 0 1px var(--line-hi),inset 0 1px 0 rgba(255,255,255,.22)}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;
+  border-radius:inherit;background:var(--panel)}
 /* Specular sheen tracking the same --mx/--my the tilt handler writes. */
 .shot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
   background:radial-gradient(58% 44% at var(--mx,50%) var(--my,40%),rgba(255,255,255,.22),transparent 66%);
