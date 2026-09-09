@@ -18,9 +18,13 @@ Node 22.6+ (TypeScript runs without a build step). No dependencies.
 
 ```
 packages/pokemon-core/   catalog model, variant identity, pricing, odds,
-                         snapshots, ingestion, and the reveal demo
-apps/                    (empty)
+                         snapshots, ingestion, read model, reveal demo
+apps/web/                Pokédex, card detail, grails, pack odds
 ```
+
+Catalog currently spans 4 sets, 603 cards, 848 variants. `pnpm pokemon:sync:*`
+pulls more; nothing is committed, so the first run on a clean checkout needs
+`pokemon:sync:sets` before anything else.
 
 `packages/pokemon-core/README.md` has the detail. The two load-bearing ideas:
 
