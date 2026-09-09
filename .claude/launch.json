@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ripdex-demo",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["packages/pokemon-core/demo/server.mjs"],
+      "port": 4178
+    }
+  ]
+}
