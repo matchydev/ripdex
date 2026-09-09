@@ -1,0 +1,20 @@
+[
+  {
+    "key": "sets",
+    "lastRunAt": "2026-09-09T00:30:15.008Z",
+    "lastCursor": null,
+    "note": "174 sets from pokemontcg.io"
+  },
+  {
+    "key": "cards:sv3pt5",
+    "lastRunAt": "2026-09-09T00:36:36.110Z",
+    "lastCursor": null,
+    "note": "207 cards"
+  },
+  {
+    "key": "prices:sv3pt5",
+    "lastRunAt": "2026-09-09T00:46:44.454Z",
+    "lastCursor": "2026-09-09",
+    "note": "336 priced, 0 unpriced, 15 failed"
+  }
+]

@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RIPDEX — CHARIZARD CHASE</title>
+<style>
+/* ------------------------------------------------------------------
+   RIPDEX pack-opening reference implementation (spec §4, §6, §7, §20, §21).
+
+   Card imagery is loaded from the configured image provider at its native
+   resolution and is never redrawn in markup. Every foil effect is an overlay
+   composited ON TOP of the source art, so the artwork underneath is untouched.
+
+   The card back below is RIPDEX's own geometric design occupying the slot an
+   authorized official back would fill; it is deliberately not a reproduction
+   of any existing card back. Swap it via --card-back-asset.
+   ------------------------------------------------------------------ */
+
+:root{
+  --bg:#07070A;
+  --ink:#F5F3F0;
+  --muted:#8A8894;
+  --line:rgba(255,255,255,.10);
+  --accent:#FF6B1A;
+  --gold:#F2C14E;
+  --card-w:min(66vw,332px);
+  --card-ar:734/1024;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:400 15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Inter,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+
+/* ambient ground */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(120% 70% at 50% -10%,rgba(255,107,26,.13),transparent 60%),
+    radial-gradient(80% 50% at 50% 110%,rgba(60,40,120,.10),transparent 60%);
+}
+
+/* Above #grailFx (z-index 1): the black ground and its sparks must sit BEHIND
+   the card, and #stage creates a stacking context its children cannot escape. */
+#stage{position:relative;z-index:2;height:100%;display:grid;place-items:center;padding:20px}
+.scene{position:absolute;inset:0;display:grid;place-items:center;
+  opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s;padding:20px}
+.scene.on{opacity:1;visibility:visible}
+
+/* ---------------- chrome ---------------- */
+#chrome{position:fixed;inset:14px 16px auto;z-index:5;display:flex;justify-content:space-between;
+  align-items:center;font-size:11px;letter-spacing:.16em;color:var(--muted);
+  transition:opacity .6s ease}
+#chrome.hide{opacity:0;pointer-events:none}
+.brand{color:var(--ink);font-weight:700;letter-spacing:.3em}
+.brand span{color:var(--accent)}
+
+/* ---------------- select ---------------- */
+.kicker{font-size:10.5px;letter-spacing:.34em;color:var(--muted);text-align:center}
+h1{margin:.5rem 0 0;font-size:clamp(26px,7vw,42px);letter-spacing:-.02em;line-height:1.02;
+  text-align:center;font-weight:800}
+.sub{margin:.55rem 0 0;text-align:center;color:var(--muted);font-size:13px}
+
+/* pack wrapper art (spec §5) */
+.pack{
+  --tone:var(--accent);
+  width:var(--card-w);aspect-ratio:var(--card-ar);position:relative;margin:26px auto 0;
+  border-radius:12px;overflow:hidden;cursor:pointer;
+  background:
+    linear-gradient(160deg,#1A0B06 0%,#2A0F08 38%,#120608 100%);
+  box-shadow:0 30px 70px -24px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.07),
+    inset 0 1px 0 rgba(255,255,255,.14);
+  transform:rotateX(8deg) rotateY(-9deg);
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.2,.8,.2,1);
+}
+.pack:hover{transform:rotateX(3deg) rotateY(-3deg) translateY(-6px)}
+/* foil sweep on the wrapper */
+.pack::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(74deg,transparent 30%,rgba(255,190,120,.42) 47%,
+    rgba(255,255,255,.7) 50%,rgba(255,150,60,.4) 53%,transparent 70%);
+  transform:translateX(-120%);animation:sweep 4.6s cubic-bezier(.4,0,.2,1) infinite;
+  mix-blend-mode:screen;
+}
+@keyframes sweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+/* Hero art is scaled past the frame so the wrapper reads as designed packaging
+   rather than a card sitting behind a window. */
+.pack-hero{position:absolute;inset:0;background-size:178%;background-position:50% 24%;
+  opacity:.62;filter:saturate(1.2) contrast(1.08)}
+.pack-hero::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,4,2,.25) 0%,rgba(10,4,2,.86) 72%,#0B0503 100%)}
+.pack-label{position:absolute;left:0;right:0;bottom:0;padding:16px 14px 18px;text-align:center}
+.pack-label .nm{font-size:clamp(15px,4.2vw,19px);font-weight:800;letter-spacing:.06em;
+  text-shadow:0 2px 18px rgba(0,0,0,.9)}
+.pack-label .set{margin-top:5px;font-size:9.5px;letter-spacing:.26em;color:#E8B98A}
+.pack-top{position:absolute;top:0;left:0;right:0;height:26px;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),transparent);
+  border-bottom:1px dashed rgba(255,255,255,.22)}
+
+.meta{display:flex;gap:26px;justify-content:center;margin-top:22px;text-align:center}
+.meta div{min-width:70px}
+.meta .k{font-size:9.5px;letter-spacing:.2em;color:var(--muted)}
+.meta .v{margin-top:5px;font-size:15px;font-weight:700}
+
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.cta{display:block;margin:26px auto 0;padding:15px 40px;border-radius:12px;
+  background:linear-gradient(180deg,#FF7E33,#E2510A);color:#180701;font-weight:800;
+  letter-spacing:.16em;font-size:13px;
+  box-shadow:0 14px 34px -12px rgba(255,107,26,.75),inset 0 1px 0 rgba(255,255,255,.4);
+  transition:transform .18s ease,box-shadow .18s ease}
+.cta:hover{transform:translateY(-2px);box-shadow:0 20px 42px -12px rgba(255,107,26,.9),inset 0 1px 0 rgba(255,255,255,.45)}
+.cta:active{transform:translateY(0)}
+.ghost{display:block;margin:14px auto 0;font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.ghost:hover{color:var(--ink)}
+
+/* ---------------- locked / rolling ---------------- */
+.status{text-align:center}
+.status .big{font-size:12px;letter-spacing:.36em;color:var(--muted)}
+.status .big b{color:var(--ink);font-weight:700}
+.bar{width:min(78vw,300px);height:2px;background:rgba(255,255,255,.1);margin:22px auto 0;
+  border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;width:35%;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  animation:slide 1.05s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(330%)}}
+
+/* foil shimmer loader (spec §20) — never a grey rectangle */
+.shimmer{width:var(--card-w);aspect-ratio:var(--card-ar);margin:0 auto 26px;border-radius:14px;
+  background:linear-gradient(110deg,#141018 30%,#2A2233 48%,#141018 66%);
+  background-size:220% 100%;animation:shim 1.5s linear infinite;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+@keyframes shim{to{background-position:-220% 0}}
+
+/* ---------------- tear ---------------- */
+#tearWrap{position:relative;width:var(--card-w);aspect-ratio:var(--card-ar);
+  touch-action:none;user-select:none;-webkit-user-select:none}
+#tearWrap .pack{margin:0;width:100%;cursor:grab;transform:none}
+#tearWrap .pack:hover{transform:none}
+#tearWrap.grabbing .pack{cursor:grabbing}
+.strip{position:absolute;left:0;right:0;top:0;height:var(--tear,26px);z-index:3;
+  background:linear-gradient(180deg,#3A1C0C,#1C0D06);
+  clip-path:polygon(0 0,100% 0,100% 62%,96% 100%,92% 58%,88% 100%,84% 58%,80% 100%,
+    76% 58%,72% 100%,68% 58%,64% 100%,60% 58%,56% 100%,52% 58%,48% 100%,44% 58%,
+    40% 100%,36% 58%,32% 100%,28% 58%,24% 100%,20% 58%,16% 100%,12% 58%,8% 100%,4% 58%,0 100%);
+  box-shadow:0 2px 10px rgba(0,0,0,.6);
+  transform-origin:left center}
+.hint{position:absolute;left:50%;top:calc(var(--tear,26px) + 14px);transform:translateX(-50%);
+  font-size:10px;letter-spacing:.24em;color:rgba(255,255,255,.72);white-space:nowrap;
+  pointer-events:none;animation:pulse 1.9s ease-in-out infinite;z-index:4;
+  text-shadow:0 2px 12px #000}
+@keyframes pulse{0%,100%{opacity:.42}50%{opacity:1}}
+
+/* ---------------- card ---------------- */
+.holder{perspective:1400px;width:var(--card-w);aspect-ratio:var(--card-ar);position:relative}
+.card{position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform 1s cubic-bezier(.2,.75,.2,1);
+  transform:rotateY(180deg) var(--tilt,)}
+.card.flipped{transform:rotateY(0deg) var(--tilt,)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:4.6% / 3.3%;
+  overflow:hidden;box-shadow:0 26px 60px -20px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.08)}
+.back{transform:rotateY(180deg);
+  background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.028) 0 8px,transparent 8px 16px),
+    radial-gradient(120% 80% at 50% 30%,#2A1330,#120A1C 60%,#0A0612);
+  display:grid;place-items:center}
+.back .sigil{width:42%;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;
+  background:radial-gradient(circle at 38% 32%,rgba(255,255,255,.12),transparent 60%);
+  box-shadow:inset 0 0 40px rgba(255,107,26,.14)}
+.back .sigil b{font:800 13px/1 ui-sans-serif,system-ui;letter-spacing:.28em;color:#D8CCE6}
+.back .edge{position:absolute;inset:5.5%;border-radius:3.4%;border:1px solid rgba(255,255,255,.09)}
+
+.front{background:#000}
+.front img{width:100%;height:100%;display:block;object-fit:contain;}
+
+/* ---- foil layers, composited over the untouched art (spec §4) ---- */
+.foil{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .8s ease}
+.card.flipped .foil{opacity:1}
+
+/* NORMAL — barely there */
+[data-foil="normal"] .f1{
+  background:linear-gradient(var(--ang,105deg),transparent 42%,rgba(255,255,255,.10) 50%,transparent 58%);
+  mix-blend-mode:soft-light}
+
+/* HOLO — directional rainbow */
+[data-foil="holo"] .f1{
+  background:linear-gradient(var(--ang,105deg),transparent 30%,
+    rgba(255,0,128,.34) 41%,rgba(255,214,0,.34) 47%,rgba(0,255,190,.34) 53%,
+    rgba(80,120,255,.34) 59%,transparent 70%);
+  mix-blend-mode:color-dodge;filter:blur(3px)}
+[data-foil="holo"] .f2{
+  background:repeating-linear-gradient(var(--ang2,15deg),rgba(255,255,255,.10) 0 2px,transparent 2px 5px);
+  mix-blend-mode:overlay;opacity:.5}
+
+/* REVERSE HOLO — foil on the border, art window left clear */
+[data-foil="reverse-holo"] .f1{
+  background:linear-gradient(var(--ang,105deg),rgba(190,255,255,.30),rgba(255,190,255,.30),rgba(255,255,190,.30));
+  mix-blend-mode:color-dodge;
+  -webkit-mask:linear-gradient(#000,#000) ,
+    radial-gradient(ellipse 40% 26% at 50% 33%,#000 60%,transparent 78%);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  mask:linear-gradient(#000,#000),radial-gradient(ellipse 40% 26% at 50% 33%,#000 60%,transparent 78%)}
+[data-foil="reverse-holo"] .f2{
+  background:repeating-linear-gradient(-22deg,rgba(255,255,255,.13) 0 1px,transparent 1px 6px);
+  mix-blend-mode:overlay}
+
+/* FULL ART — broad smooth diffraction */
+[data-foil="full-art"] .f1{
+  background:linear-gradient(var(--ang,105deg),transparent 12%,rgba(120,220,255,.30) 34%,
+    rgba(255,255,255,.42) 50%,rgba(255,150,220,.30) 66%,transparent 88%);
+  mix-blend-mode:color-dodge;filter:blur(9px)}
+[data-foil="full-art"] .f2{
+  background:radial-gradient(90% 60% at var(--px,50%) var(--py,40%),rgba(255,255,255,.24),transparent 62%);
+  mix-blend-mode:screen}
+
+/* SPECIAL ILLUSTRATION RARE — multidirectional */
+[data-foil="special-illustration"] .f1{
+  background:
+    linear-gradient(var(--ang,105deg),transparent 18%,rgba(255,90,190,.34) 38%,rgba(120,255,240,.34) 56%,transparent 78%),
+    linear-gradient(calc(var(--ang,105deg) * -1.7),transparent 24%,rgba(255,230,120,.28) 50%,transparent 76%);
+  mix-blend-mode:color-dodge;filter:blur(6px)}
+[data-foil="special-illustration"] .f2{
+  background:
+    repeating-conic-gradient(from calc(var(--ang,105deg)) at var(--px,50%) var(--py,45%),
+      rgba(255,255,255,.16) 0deg 4deg,transparent 4deg 12deg);
+  mix-blend-mode:overlay;opacity:.75}
+[data-foil="special-illustration"] .f3{
+  background:radial-gradient(circle at var(--px,50%) var(--py,40%),rgba(255,255,255,.42),transparent 34%);
+  mix-blend-mode:screen}
+
+/* GOLD — metallic specular */
+[data-foil="gold"] .f1{
+  background:linear-gradient(var(--ang,105deg),#6B4A10 8%,#F7DE8A 30%,#FFF8DC 47%,
+    #E0B646 62%,#7A5412 84%);
+  mix-blend-mode:overlay;opacity:.85}
+[data-foil="gold"] .f2{
+  background:repeating-linear-gradient(var(--ang2,12deg),rgba(255,255,255,.20) 0 1px,transparent 1px 4px);
+  mix-blend-mode:soft-light}
+
+/* surface: grain + glass coating on every card */
+.coat{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(110% 80% at var(--px,50%) var(--py,30%),rgba(255,255,255,.16),transparent 55%);
+  mix-blend-mode:screen;opacity:.55}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='.5'/></svg>")}
+
+/* ---------------- reveal meta ---------------- */
+.reveal-meta{margin-top:26px;text-align:center;opacity:0;transform:translateY(10px);
+  transition:opacity .7s ease,transform .7s ease}
+.reveal-meta.on{opacity:1;transform:none}
+.reveal-meta .nm{font-size:clamp(20px,5.4vw,28px);font-weight:800;letter-spacing:-.01em}
+.reveal-meta .st{margin-top:5px;font-size:10.5px;letter-spacing:.22em;color:var(--muted)}
+.reveal-meta .val{margin-top:14px;font-size:clamp(24px,6vw,32px);font-weight:800;color:var(--gold);
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.reveal-meta .vk{font-size:9.5px;letter-spacing:.24em;color:var(--muted);margin-top:3px}
+.chips{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.chip{font-size:9.5px;letter-spacing:.16em;padding:6px 11px;border-radius:7px;
+  border:1px solid var(--line);color:var(--muted)}
+.chip.t{color:#FFD9A8;border-color:rgba(255,180,90,.4)}
+
+/* ---------------- grail (spec §7) ---------------- */
+#grailFx{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
+  transition:opacity 1s ease;background:#000}
+#grailFx.on{opacity:1}
+.spark{position:absolute;width:2px;height:2px;border-radius:50%;background:#FFE9B0;
+  box-shadow:0 0 7px 2px rgba(255,215,120,.85);opacity:0}
+@keyframes rise{0%{opacity:0;transform:translateY(24px) scale(.4)}
+  18%{opacity:1}70%{opacity:.85}100%{opacity:0;transform:translateY(-150px) scale(1.15)}}
+.grail-tag{font-size:10.5px;letter-spacing:.44em;color:var(--gold);text-align:center;
+  margin-bottom:16px;opacity:0;transition:opacity .8s ease}
+.grail-tag.on{opacity:1}
+.card.grail .face.front{box-shadow:0 0 0 1px rgba(255,215,120,.5),
+  0 0 70px rgba(255,190,90,.42),0 30px 70px -20px #000}
+
+.rowbtns{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap;
+  opacity:0;transition:opacity .6s ease}
+.rowbtns.on{opacity:1}
+.btn2{padding:12px 22px;border-radius:10px;border:1px solid var(--line);font-size:11px;
+  letter-spacing:.18em;color:var(--ink);transition:border-color .2s,background .2s}
+.btn2:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+.btn2.pri{background:linear-gradient(180deg,#FF7E33,#E2510A);color:#180701;border-color:transparent;font-weight:700}
+
+/* odds panel */
+#odds{position:fixed;right:16px;bottom:16px;z-index:6;width:min(92vw,320px);
+  border:1px solid var(--line);border-radius:12px;background:rgba(12,12,16,.92);
+  backdrop-filter:blur(14px);padding:12px 13px;font-size:11px;
+  transform:translateY(calc(100% + 22px));transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+#odds.on{transform:none}
+#odds h4{margin:0 0 9px;font-size:9.5px;letter-spacing:.24em;color:var(--muted);font-weight:600}
+.orow{display:flex;justify-content:space-between;gap:10px;padding:4px 0;color:var(--muted)}
+.orow b{color:var(--ink);font-weight:600}
+.orow.g b{color:var(--gold)}
+#oddsToggle{position:fixed;right:16px;bottom:16px;z-index:7;font-size:9.5px;letter-spacing:.2em;
+  color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:8px 12px;
+  background:rgba(12,12,16,.9);backdrop-filter:blur(10px)}
+#oddsToggle:hover{color:var(--ink)}
+#oddsToggle.hide{opacity:0;pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.12s!important}
+}
+</style>
+</head>
+<body>
+
+<div id="chrome">
+  <div class="brand">RIP<span>DEX</span></div>
+  <div class="mono" id="balance">1,000,000 $RIP</div>
+</div>
+
+<div id="grailFx"></div>
+
+<div id="stage">
+
+  <!-- 1. SELECT -->
+  <section class="scene on" id="s-select">
+    <div>
+      <div class="kicker">FEATURED RIPDEX PACK</div>
+      <div class="pack" id="packArt">
+        <div class="pack-hero" id="packHero"></div>
+        <div class="pack-top"></div>
+        <div class="pack-label">
+          <div class="nm">CHARIZARD CHASE</div>
+          <div class="set">151 · BASE SET · SCARLET &amp; VIOLET</div>
+        </div>
+      </div>
+      <div class="meta">
+        <div><div class="k">CONTAINS</div><div class="v">1 CARD</div></div>
+        <div><div class="k">PRICE</div><div class="v">100,000</div></div>
+        <div><div class="k">TOP PULL</div><div class="v" style="color:var(--gold)">$897</div></div>
+      </div>
+      <button class="cta" id="ripBtn">RIP PACK</button>
+      <button class="ghost" id="oddsLink">VIEW FULL ODDS</button>
+    </div>
+  </section>
+
+  <!-- 2. LOCKED / ROLLING -->
+  <section class="scene" id="s-roll">
+    <div class="status">
+      <div class="shimmer"></div>
+      <div class="big" id="rollText"><b>PACK LOCKED</b></div>
+      <div class="bar"><i></i></div>
+    </div>
+  </section>
+
+  <!-- 3. TEAR -->
+  <section class="scene" id="s-tear">
+    <div>
+      <div id="tearWrap">
+        <div class="strip" id="strip"></div>
+        <div class="pack">
+          <div class="pack-hero" id="packHero2"></div>
+          <div class="pack-top"></div>
+          <div class="pack-label"><div class="nm">CHARIZARD CHASE</div></div>
+        </div>
+        <div class="hint" id="tearHint">DRAG ACROSS TO TEAR</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. REVEAL -->
+  <section class="scene" id="s-card">
+    <div>
+      <div class="grail-tag" id="grailTag">GRAIL PULL</div>
+      <div class="holder" id="holder">
+        <div class="card" id="card">
+          <div class="face back">
+            <div class="edge"></div>
+            <div class="sigil"><b>RIP</b></div>
+          </div>
+          <div class="face front">
+            <img id="cardImg" alt="">
+            <div class="foil"><div class="f1"></div><div class="f2"></div><div class="f3"></div></div>
+            <div class="coat"></div>
+            <div class="grain"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hint" id="flipHint" style="position:static;transform:none;margin-top:18px;text-align:center">TAP TO REVEAL</div>
+      <div class="reveal-meta" id="meta">
+        <div class="nm" id="mName"></div>
+        <div class="st" id="mSet"></div>
+        <div class="val" id="mVal"></div>
+        <div class="vk">REFERENCE VALUE</div>
+        <div class="chips" id="mChips"></div>
+      </div>
+      <div class="rowbtns" id="after">
+        <button class="btn2" id="shareBtn">SHARE PULL</button>
+        <button class="btn2 pri" id="againBtn">RIP ANOTHER</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<button id="oddsToggle">ODDS</button>
+<div id="odds"><h4>CHARIZARD CHASE — EXACT ODDS</h4><div id="oddsBody"></div></div>
+
+<script type="module">
+/* ------------------------------------------------------------------
+   This demo mirrors @ripdex/pokemon-core so the reveal is driven by the
+   real engine, not by a hand-picked outcome:
+     - identical variantId scheme (set|number|finish|printing)
+     - identical weighted selection over a curated pool
+     - identical HMAC-SHA256 -> 13-hex/2^52 uniform derivation
+     - prices frozen in a snapshot BEFORE randomness is generated (§17)
+   ------------------------------------------------------------------ */
+
+const IMG = id => `https://images.pokemontcg.io/${id.split('-')[0]}/${id.split('-').slice(1).join('-')}_hires.png`;
+
+/* Frozen price snapshot. Real market values, pokemontcg.io, 2026-09-08.
+   The reveal reads value from here; it never queries a price after drawing. */
+const POOL = [
+  { variantId:'sv3pt5|4|non-foil|unlimited',        cardId:'sv3pt5-4',   name:'Charmander',  set:'151', num:'4/165',    rarity:'Common',                    artist:'Tomokazu Komiya', foil:'normal',                weight:3400, value:0.24 },
+  { variantId:'sv3pt5|4|reverse-holofoil|unlimited',cardId:'sv3pt5-4',   name:'Charmander',  set:'151', num:'4/165',    rarity:'Common',                    artist:'Tomokazu Komiya', foil:'reverse-holo',          weight:2100, value:0.41 },
+  { variantId:'sv3pt5|5|non-foil|unlimited',        cardId:'sv3pt5-5',   name:'Charmeleon',  set:'151', num:'5/165',    rarity:'Uncommon',                  artist:'GIDORA',          foil:'normal',                weight:2000, value:0.23 },
+  { variantId:'sv3pt5|5|reverse-holofoil|unlimited',cardId:'sv3pt5-5',   name:'Charmeleon',  set:'151', num:'5/165',    rarity:'Uncommon',                  artist:'GIDORA',          foil:'reverse-holo',          weight:1400, value:0.39 },
+  { variantId:'sv3pt5|6|holofoil|unlimited',        cardId:'sv3pt5-6',   name:'Charizard ex',set:'151', num:'6/165',    rarity:'Double Rare',               artist:'PLANETA Mochizuki',foil:'holo',                 weight:900,  value:8.57 },
+  { variantId:'sv3pt5|183|holofoil|unlimited',      cardId:'sv3pt5-183', name:'Charizard ex',set:'151', num:'183/165',  rarity:'Ultra Rare',                artist:'PLANETA Mochizuki',foil:'full-art',             weight:170,  value:39.57 },
+  { variantId:'sv3pt5|199|holofoil|unlimited',      cardId:'sv3pt5-199', name:'Charizard ex',set:'151', num:'199/165',  rarity:'Special Illustration Rare', artist:'miki kudo',       foil:'special-illustration',  weight:26,   value:366.05 },
+  { variantId:'base1|4|holofoil|unlimited',         cardId:'base1-4',    name:'Charizard',   set:'Base Set', num:'4/102',rarity:'Rare Holo',                artist:'Mitsuhiro Arita', foil:'holo',                  weight:4,    value:897.19 },
+];
+const TOTAL = POOL.reduce((s,e)=>s+e.weight,0);
+
+const TIERS = [
+  { t:'TIER 1', max:5 }, { t:'TIER 2', max:25 }, { t:'TIER 3', max:100 },
+  { t:'TIER 4', max:500 }, { t:'GRAIL', max:Infinity },
+];
+const tierOf = v => TIERS.find(b => v < b.max).t;
+
+// Choreography per tier (mirrors tiers.ts choreographyFor)
+const CHOREO = {
+  'TIER 1':{suspense:220,flip:450,dim:false,takeover:false,metaDelay:300},
+  'TIER 2':{suspense:500,flip:600,dim:false,takeover:false,metaDelay:450},
+  'TIER 3':{suspense:900,flip:750,dim:true,takeover:false,metaDelay:600},
+  'TIER 4':{suspense:1400,flip:1000,dim:true,takeover:false,metaDelay:800},
+  'GRAIL' :{suspense:2200,flip:1400,dim:true,takeover:true,metaDelay:1100},
+};
+
+const fmt = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct = p => { const x=p*100; return x>=1?x.toFixed(2)+'%':x>=.01?x.toFixed(3)+'%':x.toFixed(4)+'%'; };
+const $ = s => document.querySelector(s);
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+
+/* --- provably-fair draw, same derivation as random.ts --- */
+async function uniform(serverSeed, clientSeed, nonce, cursor){
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(serverSeed),
+    {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key,
+    new TextEncoder().encode(`${clientSeed}:${nonce}:${cursor}`));
+  const hex = [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  return parseInt(hex.slice(0,13),16) / 2**52;
+}
+function selectByWeight(pool, u){
+  const target = u * TOTAL; let c = 0;
+  for (const e of pool){ c += e.weight; if (target < c) return e; }
+  return pool[pool.length-1];
+}
+
+/* --- pack hero art --- */
+const heroUrl = IMG('sv3pt5-199');
+$('#packHero').style.backgroundImage = `url("${heroUrl}")`;
+$('#packHero2').style.backgroundImage = `url("${heroUrl}")`;
+
+/* --- odds panel (§11) --- */
+$('#oddsBody').innerHTML = [...POOL].sort((a,b)=>b.weight-a.weight).map(e=>{
+  const g = e.value >= 500;
+  return `<div class="orow${g?' g':''}"><span>${e.name} · ${e.rarity}${
+    e.foil==='reverse-holo'?' (Rev)':''}</span><b>${pct(e.weight/TOTAL)}</b></div>`;
+}).join('');
+const toggleOdds = on => { $('#odds').classList.toggle('on',on); $('#oddsToggle').classList.toggle('hide',on); };
+$('#oddsToggle').onclick = () => toggleOdds(true);
+$('#odds').onclick = () => toggleOdds(false);
+$('#oddsLink').onclick = () => toggleOdds(true);
+
+/* --- scene control --- */
+let nonce = Number(localStorage.getItem('ripdex.nonce')||0);
+const show = id => document.querySelectorAll('.scene')
+  .forEach(s => s.classList.toggle('on', s.id === id));
+
+let current = null;
+
+async function rip(){
+  toggleOdds(false);
+  show('s-roll');
+  $('#rollText').innerHTML = '<b>PACK LOCKED</b>';
+  await wait(850);
+  $('#rollText').innerHTML = 'ROLLING CARD…';
+
+  // Result determined here, from committed inputs.
+  const serverSeed = 'demo-server-seed-not-for-production';
+  const clientSeed = localStorage.getItem('ripdex.clientSeed')
+    || (localStorage.setItem('ripdex.clientSeed', Math.random().toString(36).slice(2)),
+        localStorage.getItem('ripdex.clientSeed'));
+  nonce++; localStorage.setItem('ripdex.nonce', String(nonce));
+
+  const u = await uniform(serverSeed, clientSeed, nonce, 0);
+  // ?force=<cardId> pins the outcome for QA of a specific tier/shader. Present
+  // only in this demo harness; the production draw has no such override.
+  const forced = new URLSearchParams(location.search).get('force');
+  current = forced ? (POOL.find(e => e.cardId === forced) ?? selectByWeight(POOL, u))
+                   : selectByWeight(POOL, u);
+
+  // §21: preload the full-resolution art AFTER the result is settled but
+  // BEFORE the reveal, so the animation never stalls on a download.
+  const url = IMG(current.cardId);
+  await new Promise(res => {
+    const im = new Image();
+    im.onload = im.onerror = res;
+    im.src = url;
+  });
+  $('#cardImg').src = url;
+  $('#cardImg').alt = `${current.name} — ${current.set} ${current.num}`;
+
+  await wait(500);
+  startTear();
+}
+
+/* --- tear interaction (§6) --- */
+let tearing = false, torn = false, startX = 0;
+function startTear(){
+  torn = false;
+  $('#strip').style.transform = '';
+  $('#strip').style.opacity = '1';
+  $('#tearHint').style.display = '';
+  show('s-tear');
+}
+const wrap = $('#tearWrap');
+const onDown = e => { if(torn) return; tearing = true; wrap.classList.add('grabbing');
+  startX = (e.touches?e.touches[0]:e).clientX; };
+const onMove = e => {
+  if(!tearing||torn) return;
+  const x = (e.touches?e.touches[0]:e).clientX;
+  const dx = x - startX;
+  const w = wrap.getBoundingClientRect().width;
+  const p = Math.max(0, Math.min(1, dx / (w*0.62)));
+  $('#strip').style.transform =
+    `translate(${p*w*0.5}px,${-p*30}px) rotate(${p*13}deg)`;
+  $('#strip').style.opacity = String(1 - p*0.35);
+  $('#tearHint').style.opacity = String(Math.max(0, 1-p*2.4));
+  if (p >= 1) finishTear();
+};
+const onUp = () => { if(torn) return; tearing = false; wrap.classList.remove('grabbing');
+  $('#strip').style.transform=''; $('#strip').style.opacity='1'; $('#tearHint').style.opacity=''; };
+wrap.addEventListener('pointerdown', onDown);
+window.addEventListener('pointermove', onMove);
+window.addEventListener('pointerup', onUp);
+
+async function finishTear(){
+  torn = true; tearing = false;
+  wrap.classList.remove('grabbing');
+  $('#strip').style.transition = 'transform .55s cubic-bezier(.3,.9,.3,1),opacity .55s';
+  $('#strip').style.transform = 'translate(70%,-90px) rotate(34deg)';
+  $('#strip').style.opacity = '0';
+  $('#tearHint').style.display = 'none';
+  await wait(430);
+  presentCard();
+}
+
+/* --- reveal (§6, §7) --- */
+const card = $('#card');
+async function presentCard(){
+  const tier = tierOf(current.value);
+  const ch = CHOREO[tier];
+
+  card.classList.remove('flipped','grail');
+  card.style.transitionDuration = ch.flip + 'ms';
+  $('#meta').classList.remove('on');
+  $('#after').classList.remove('on');
+  $('#grailTag').classList.remove('on');
+  $('#flipHint').style.display='';
+  // The foil CSS is scoped to [data-foil] on the card itself.
+  card.setAttribute('data-foil', current.foil);
+
+  show('s-card');
+
+  if (ch.takeover){
+    $('#chrome').classList.add('hide');
+    $('#oddsToggle').classList.add('hide');
+    $('#grailFx').classList.add('on');
+    sparks();
+    card.classList.add('grail');
+  } else if (ch.dim){
+    $('#grailFx').style.background =
+      'radial-gradient(60% 60% at 50% 50%,rgba(0,0,0,.55),rgba(0,0,0,.86))';
+    $('#grailFx').classList.add('on');
+  }
+
+  await wait(ch.suspense);
+  $('#flipHint').style.animation='pulse 1.4s ease-in-out infinite';
+
+  const flip = async () => {
+    $('#card').removeEventListener('click', flip);
+    $('#flipHint').style.display='none';
+    if (ch.takeover) $('#grailTag').classList.add('on');
+    card.classList.add('flipped');
+    await wait(ch.flip + ch.metaDelay);
+    fillMeta(tier);
+  };
+  $('#card').addEventListener('click', flip);
+}
+
+function fillMeta(tier){
+  $('#mName').textContent = current.name;
+  $('#mSet').textContent = `${current.set.toUpperCase()} · ${current.num} · ${current.rarity.toUpperCase()}`;
+  $('#mVal').textContent = fmt(current.value);
+  const odds = pct(current.weight/TOTAL);
+  $('#mChips').innerHTML =
+    `<span class="chip t">${tier}</span>` +
+    `<span class="chip">${odds} ODDS</span>` +
+    `<span class="chip">ART · ${current.artist.toUpperCase()}</span>` +
+    `<span class="chip">RIP #${String(18490+nonce)}</span>`;
+  $('#meta').classList.add('on');
+  setTimeout(()=>$('#after').classList.add('on'), 260);
+}
+
+/* --- parallax tilt + foil response (§4) --- */
+const holder = $('#holder');
+holder.addEventListener('pointermove', e => {
+  const r = holder.getBoundingClientRect();
+  const x = (e.clientX - r.left)/r.width, y = (e.clientY - r.top)/r.height;
+  card.style.setProperty('--tilt', `rotateY(${(x-.5)*17}deg) rotateX(${(.5-y)*17}deg)`);
+  const f = card.querySelector('.foil'), c = card.querySelector('.coat');
+  [f,c].forEach(el=>{ el.style.setProperty('--px', (x*100).toFixed(1)+'%');
+                      el.style.setProperty('--py', (y*100).toFixed(1)+'%'); });
+  f.style.setProperty('--ang', (60 + x*120).toFixed(0)+'deg');
+  f.style.setProperty('--ang2', (x*60-30).toFixed(0)+'deg');
+});
+holder.addEventListener('pointerleave', ()=> card.style.setProperty('--tilt',''));
+
+/* --- grail sparks --- */
+function sparks(){
+  const fx = $('#grailFx'); fx.innerHTML='';
+  for(let i=0;i<46;i++){
+    const s=document.createElement('i'); s.className='spark';
+    s.style.left=Math.random()*100+'%'; s.style.top=(55+Math.random()*45)+'%';
+    s.style.animation=`rise ${2.4+Math.random()*2.6}s linear ${Math.random()*2.4}s infinite`;
+    fx.appendChild(s);
+  }
+}
+
+function reset(){
+  $('#chrome').classList.remove('hide');
+  $('#oddsToggle').classList.remove('hide');
+  $('#grailFx').classList.remove('on');
+  $('#grailFx').style.background='#000';
+  $('#grailFx').innerHTML='';
+  card.classList.remove('flipped','grail');
+  show('s-select');
+}
+
+$('#ripBtn').onclick = rip;
+$('#packArt').onclick = rip;
+$('#againBtn').onclick = () => { reset(); setTimeout(rip, 420); };
+$('#shareBtn').onclick = () => {
+  const t = `I pulled ${current.name} — ${fmt(current.value)} at ${pct(current.weight/TOTAL)} odds. RIPDEX.`;
+  navigator.clipboard?.writeText(t);
+  $('#shareBtn').textContent = 'COPIED';
+  setTimeout(()=>$('#shareBtn').textContent='SHARE PULL', 1500);
+};
+
+// Warm the pack hero so the select screen never pops in.
+new Image().src = heroUrl;
+</script>
+</body>
+</html>
