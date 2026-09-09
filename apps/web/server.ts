@@ -275,8 +275,20 @@ for (const pack of PACKS) {
 index = await buildCatalogIndex(store, { packVariantIds: inPacks });
 
 // Refuses to construct if any pool outcome is unpriced — a boot failure beats
-// a pack that openPack would reject mid-rip.
-const engine = RipEngine.create(index, ledger, PACKS);
+// a pack that openPack would reject mid-rip. On a fresh clone the likely cause
+// is simply that setup has not run, so say that rather than printing a stack.
+let engine: RipEngine;
+try {
+  engine = RipEngine.create(index, ledger, PACKS);
+} catch (err) {
+  console.error(`\n${err instanceof Error ? err.message : String(err)}\n`);
+  if (index.cards.length === 0) {
+    console.error('The catalog is empty. Run:  pnpm setup');
+  } else {
+    console.error('Some pack outcomes have no price. Run:  pnpm pokemon:sync:prices --set=<setId>');
+  }
+  process.exit(1);
+}
 
 const missing = [...inPacks].filter((v) => !index.byVariantId.has(v));
 if (missing.length > 0) {

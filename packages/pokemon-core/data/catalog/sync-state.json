@@ -1,0 +1,56 @@
+[
+  {
+    "key": "sets",
+    "lastRunAt": "2026-09-09T00:30:15.008Z",
+    "lastCursor": null,
+    "note": "174 sets from pokemontcg.io"
+  },
+  {
+    "key": "cards:sv3pt5",
+    "lastRunAt": "2026-09-09T00:36:36.110Z",
+    "lastCursor": null,
+    "note": "207 cards"
+  },
+  {
+    "key": "prices:sv3pt5",
+    "lastRunAt": "2026-09-09T01:21:35.230Z",
+    "lastCursor": "2026-09-09",
+    "note": "323 priced, 0 unpriced, 20 failed"
+  },
+  {
+    "key": "cards:base1",
+    "lastRunAt": "2026-09-09T00:57:28.283Z",
+    "lastCursor": null,
+    "note": "102 cards"
+  },
+  {
+    "key": "prices:base1",
+    "lastRunAt": "2026-09-09T01:06:27.254Z",
+    "lastCursor": "2026-09-09",
+    "note": "88 priced, 1 unpriced, 13 failed"
+  },
+  {
+    "key": "cards:base2",
+    "lastRunAt": "2026-09-09T00:59:47.866Z",
+    "lastCursor": null,
+    "note": "64 cards"
+  },
+  {
+    "key": "prices:base2",
+    "lastRunAt": "2026-09-09T01:11:55.250Z",
+    "lastCursor": "2026-09-09",
+    "note": "28 priced, 44 unpriced, 6 failed"
+  },
+  {
+    "key": "cards:sv3",
+    "lastRunAt": "2026-09-09T01:03:02.767Z",
+    "lastCursor": null,
+    "note": "230 cards"
+  },
+  {
+    "key": "prices:sv3",
+    "lastRunAt": "2026-09-09T01:13:52.900Z",
+    "lastCursor": "2026-09-09",
+    "note": "346 priced, 0 unpriced, 33 failed"
+  }
+]

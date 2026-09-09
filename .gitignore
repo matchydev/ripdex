@@ -5,15 +5,17 @@ dist/
 !.env.example
 *.log
 
-# Ingested catalog data — regenerate with pnpm pokemon:sync:*
-**/data/catalog/
+# The ingested catalog IS committed. It is only 1.7MB, and the public source API
+# fails on a meaningful fraction of cards every run, so regenerating it on a new
+# machine is slow and lossy. Committing it makes clone -> run work.
 **/data/assets-report.json
 
 # Local server logs
 web.out
 web.err
 
-# Seeded rip ledger — regenerate with apps/web/scripts/seed-rips.ts
+# The rip ledger is NOT committed: 5.8MB, and it regenerates deterministically
+# in seconds with `pnpm setup`.
 **/data/ledger/
 
 # Scratch files left by tooling
