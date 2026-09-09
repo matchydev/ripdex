@@ -39,20 +39,7 @@ const WALLET_CSS = `
 .live-count{font-size:12px;font-weight:510;letter-spacing:-.008em;color:var(--text-4)}
 .live-count b{color:var(--text-2);font-weight:560}
 
-/* The 30s refresh used to be an unexplained jump. Now a hairline fills toward
-   it, so the page tells you what is about to happen before it happens. */
-.refresh{display:flex;align-items:center;gap:12px;margin:0 0 20px}
-.refresh .track{position:relative;flex:1;height:1.5px;border-radius:2px;
-  background:var(--line);overflow:hidden}
-.refresh .track i{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(1);
-  background:linear-gradient(90deg,var(--accent),var(--accent-hi));
-  box-shadow:0 0 12px rgba(113,112,255,.75);
-  animation:refillBar 30s linear both}
-@keyframes refillBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.refresh .lbl{font-size:11px;font-weight:500;letter-spacing:-.004em;color:var(--text-4);
-  white-space:nowrap;font-variant-numeric:tabular-nums}
-.refresh .lbl b{color:var(--text-3);font-weight:540}
-
+.feed-refresh{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:24px}.feed-refresh p{font-size:12px;color:var(--text-3);margin:0}.feed-refresh button{white-space:nowrap}@media(max-width:500px){.feed-refresh{align-items:flex-start;flex-direction:column}}
 .feed{display:grid;gap:10px}
 .rip{position:relative;display:grid;grid-template-columns:62px 1fr auto;gap:18px;align-items:center;
   padding:13px 17px;border-radius:var(--r-md)}
@@ -370,11 +357,7 @@ export function livePage(feed: FeedResult, now: Date): string {
 <p class="lede" data-reveal>Every pack opened on RIPDEX, newest first. Values are
   <b>what the card was worth at the moment it was pulled</b>, not what it is worth today.</p>
 
-<div class="refresh" data-reveal>
-  <span class="lbl">NEXT REFRESH</span>
-  <span class="track"><i></i></span>
-  <span class="lbl"><b id="rf">30</b>s</span>
-</div>
+<div class="feed-refresh" data-reveal><p id="feed-update" role="status">Snapshot of the latest pulls. Refresh when you’re ready.</p><button type="button" class="reset" id="refresh-feed">Refresh feed ↻</button></div>
 
 ${
   feed.events.length === 0
@@ -391,21 +374,8 @@ ${
 }
 
 <script>
-// The tile carries an instant, not a rendered string, so a page left open does
-// not freeze at "3 minutes ago". Repaint the relative times in place.
-setInterval(() => location.reload(), 30000);
-// Make that reload legible rather than an unexplained jump: the hairline above
-// fills toward it in CSS, and this counts the seconds off beside it.
-(() => {
-  const el = document.getElementById('rf');
-  if (!el) return;
-  let left = 30;
-  const t = setInterval(() => {
-    left -= 1;
-    if (left <= 0) { el.textContent = '0'; clearInterval(t); return; }
-    el.textContent = String(left);
-  }, 1000);
-})();
+document.getElementById('refresh-feed').addEventListener('click', () => location.reload());
+setTimeout(() => { document.getElementById('feed-update').textContent = 'New pulls may be available. Refresh to see the latest.'; }, 30000);
 </script>`;
 
   return layout('Live Rips — RIPDEX', '/live', body, WALLET_CSS);
@@ -582,5 +552,5 @@ ${
         .join('')}</div>`
 }`;
 
-  return layout(`Binder — ${wallet} — RIPDEX`, '/live', body, WALLET_CSS);
+  return layout(`Binder — ${wallet} — RIPDEX`, '', body, WALLET_CSS);
 }

@@ -65,3 +65,19 @@ Browser checks covered set and Pokémon pack filters, price sorting, empty/reset
 The preview still uses the ignored local demo ledger. No production deployment or account/chain connection was performed. The shared branch remains `ripdex-upgrades`.
 
 Integration note: this pass was rebased cleanly onto Claude's `31020b2` (PSA grading + $RIP sell economy). The combined build passed all 189 tests and the eight-route/script checks again. Those gameplay changes remain Claude's work; this pass does not change their logic.
+
+## Third pass — $RIP launch hub and site-wide navigation
+
+The user requested $RIP on the homepage, pons/Robinhood Chain branding, a large CA control, a persistent header Buy button with clipboard copying, and a broader UX review. They explicitly confirmed that all unannounced launch details should say **Coming soon**.
+
+- `token.ts` adds the homepage launch section, CSS coin illustration, planned launch steps, tokenomics placeholders, official venue/network logos, FAQ, and shared Buy/CA interactions. A compact announcement near the top of the homepage makes the section discoverable before the pack library.
+- Buy $RIP appears on every page, including the standalone opening screen. It navigates directly to `/#rip-contract`, below the sticky header. Before deployment it copies nothing and reports Coming soon. Once the real public address is configured with `RIPDEX_TOKEN_ADDRESS`, it copies that exact address and exposes the corresponding pons token page. Malformed and zero addresses are rejected. Clipboard denial shows a manual-copy fallback; modified clicks retain native browser behavior.
+- `RIPDEX_TOKEN_ADDRESS` is deliberately unset. No token supply, allocation, tax, vesting, liquidity, launch timing, or contract was invented. Publishing an address does not automatically change the launch text to Live: update the launch status, FAQ, and confirmed tokenomics together when deployment is actually verified.
+- Official sources: [pons v2](https://docs.ponsfamily.com/v2), [Robinhood Chain](https://docs.robinhood.com/chain/), and [brand guidelines](https://docs.robinhood.com/chain/brand-guidelines/). Both network and launch venue remain described as planned. No Robinhood brokerage listing or endorsement is claimed. Current demo balances are clearly separate from onchain $RIP.
+- Original logo assets and provenance live in `public/art/brands/`. Robinhood Chain's supplied white wordmark is displayed unmodified on black; it is not part of the RIP token artwork.
+- Shared header search and binder controls use explicit SVG icons and accessible names. The binder remains accessible on mobile and from the footer. Binder pages no longer incorrectly mark Live as the active navigation item.
+- Card details now have set/catalog breadcrumbs. Grails has a correctly parameterized link to the wider catalog sorted by value. The opening screen's odds link targets its actual pack table.
+- Live Rips now refreshes on request, with an update hint after 30 seconds, rather than reloading the entire page and interrupting reading or dialogs.
+- `rip-page.ts` changes are presentation only: persistent header/Buy, a demo-balance label, pack-specific odds link, and a narrow-screen width fix. Gameplay, balances, grades, sale calculations, randomization, and ledger mutations are unchanged.
+
+Validation: 186 existing core tests and 9 web tests passed (195 total). Six new tests cover address validation, official token URL construction, no copying of placeholders, copy-before-navigation, denied clipboard access, and modified clicks. All eight page routes returned 200; inline scripts parsed; both logo assets served with correct MIME types. Browser checks covered mobile header/CA navigation from the rip screen, pack previews, binder lookup, live refresh, grail sorting, card breadcrumbs, token FAQ, and responsive layouts at 320, 390, and 1440 pixels. No production deployment or real token launch was performed.

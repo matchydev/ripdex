@@ -29,6 +29,7 @@ import type {
   PackConfig,
 } from '../../../packages/pokemon-core/src/index.ts';
 import { esc, money, layout, tile } from './render.ts';
+import { tokenSection } from './token.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
 
 const HOME_CSS = `
@@ -402,6 +403,7 @@ export function homePage(
 </aside>
 </div>
 <div class="home-inner">
+<a class="token-announcement" href="#rip-token"><span><b>$RIP</b> The next chapter is coming.</span><span>Launch plan <span aria-hidden="true">↗</span></span></a>
 <section class="set-section" aria-label="Browse Pokémon sets">
  ${index.facets.sets.map((set) => {
    const cards = index.cards.filter((c) => c.setId === set.id);
@@ -414,15 +416,16 @@ export function homePage(
   <div class="section-head" data-reveal><div><span class="section-index">THE PACK LIBRARY</span><h2 id="packs-title">Find your kind of pack.</h2></div><span class="discovery-hint">Preview contents. Compare possibilities.</span></div>
   ${packExplorer(packs, index, wrappers)}
 </section>
+${tokenSection()}
 <section class="section" aria-labelledby="grails-title">
   <div class="section-head" data-reveal>
-    <div><span class="section-index">02 / THE WISHLIST</span><h2 id="grails-title">Worth the chase.</h2><p>The cards you never stopped thinking about.</p></div>
+    <div><span class="section-index">THE WISHLIST</span><h2 id="grails-title">Worth the chase.</h2><p>The cards you never stopped thinking about.</p></div>
     <div class="rail-actions"><button type="button" data-rail-step="-1" aria-label="Previous featured cards">←</button><button type="button" data-rail-step="1" aria-label="Next featured cards">→</button><a class="text-link" href="/grails">All grails ↗</a></div>
   </div>
   ${grails.length ? `<div class="rail grail-rail" id="grail-rail" tabindex="0" aria-label="Featured cards, scroll horizontally" data-reveal-group="45">${grails.slice(0, 8).map(tile).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
 </section>
 <section class="section" aria-labelledby="how-title">
-  <div class="section-head" data-reveal><div><span class="section-index">04 / OPEN POSSIBILITIES</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>
+  <div class="section-head" data-reveal><div><span class="section-index">HOW IT WORKS</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>
   <ol class="steps" data-reveal-group="80">
     <li data-reveal><span class="ix">01</span><h3>Find your pack</h3><p>Explore the sets, possible pulls, and exact odds before you choose.</p></li>
     <li data-reveal><span class="ix">02</span><h3>Make the reveal</h3><p>Open your pack and discover the card waiting inside.</p></li>

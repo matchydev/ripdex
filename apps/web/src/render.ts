@@ -16,6 +16,7 @@ import { oddsTable, formatProbability } from '../../../packages/pokemon-core/src
 import { DESIGN_CSS, MOTION_JS } from './design.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
 import { WORKSPACE_UI, WORKSPACE_CSS } from './workspace-ui.ts';
+import { tokenHeader, tokenUI, TOKEN_CSS } from './token.ts';
 
 export function esc(value: unknown): string {
   return String(value ?? '')
@@ -211,7 +212,7 @@ export function layout(title: string, active: string, body: string, extraHead = 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>${esc(title)}</title>
-<style>${CSS + WORKSPACE_CSS}</style>${extraHead}
+<style>${CSS + WORKSPACE_CSS + TOKEN_CSS}</style>${extraHead}
 </head><body>
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -220,7 +221,7 @@ export function layout(title: string, active: string, body: string, extraHead = 
 <header class="top">
   <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
   <nav class="links" aria-label="Main navigation">${nav}</nav>
-  <div class="header-tools"><button type="button" class="header-search" id="open-search" aria-label="Search the Pokédex"><span aria-hidden="true">⌕</span><span class="search-label">Find a card</span><kbd aria-hidden="true">/</kbd></button><button type="button" class="header-binder" id="open-binder">▤ <span>Find a binder</span></button></div>
+  <div class="header-tools"><button type="button" class="header-search" id="open-search" aria-label="Search the Pokédex"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><span class="search-label">Find a card</span><kbd aria-hidden="true">/</kbd></button><button type="button" class="header-binder" id="open-binder" aria-label="Find a binder"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="3" width="15" height="18" rx="2"/><path d="M9 3v18M3 7h4M3 12h4M3 17h4M12 8h5M12 12h5"/></svg> <span>Find a binder</span></button>${tokenHeader()}</div>
 </header>
 <div class="ticker" id="ripTicker" hidden aria-label="Live rips">
   <span class="ticker-tag"><span class="pulse-dot"></span>LIVE RIPS</span>
@@ -228,10 +229,11 @@ export function layout(title: string, active: string, body: string, extraHead = 
   <button type="button" class="ticker-pause" id="ticker-pause" aria-pressed="false">Pause</button>
 </div>
 <main id="main-content" class="wrap${active === '/' ? ' home-wrap' : ''}">${body}</main>
-<footer class="site-footer"><a class="footer-wordmark" href="/">RIPDEX</a><div class="footer-links"><a href="/cards">Pokédex</a><a href="/packs#odds">Pack odds</a><a href="/live">Live pulls</a></div><span>For the love of the collection.</span></footer>
+<footer class="site-footer"><a class="footer-wordmark" href="/">RIPDEX</a><div class="footer-links"><a href="/cards">Pokédex</a><a href="/packs#odds">Pack odds</a><a href="/live">Live pulls</a><a href="/#rip-token">$RIP token</a><button type="button" data-footer-binder>Find a binder</button></div><span>For the love of the collection.</span></footer>
 ${MOTION_JS}
 ${TICKER_JS}
 ${WORKSPACE_UI}
+${tokenUI()}
 </body></html>`;
 }
 
@@ -337,6 +339,7 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
   const inferred = c.variants.filter((v) => v.confidence === 'inferred');
 
   const body = `
+<nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/cards">Pokédex</a><span aria-hidden="true">/</span><a href="/cards?setId=${encodeURIComponent(c.setId)}">${esc(c.setName)}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(c.name)} #${esc(c.number)}</span></nav>
 <div class="detail" data-reveal-group="70">
   <div class="tilt-wrap" data-reveal>
     <div class="hero-card" data-tilt="0.8">
@@ -391,6 +394,7 @@ export function grailsPage(cards: CardListing[], minValue: number): string {
 <p class="lede" data-reveal>Every card in the catalog worth ${money(
     minValue,
   )} or more, by reference value. <b class="mono" data-count="${cards.length}">0</b> of them.</p>
+<div class="catalog-shortcuts"><a href="/cards?sort=value-desc">Explore all cards by value ↗</a><a href="/packs">Find packs containing grails ↗</a></div>
 <div class="grails" data-reveal-group="45">
   ${cards
     .map(

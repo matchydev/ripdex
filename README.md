@@ -3,7 +3,7 @@
 Onchain Pokémon pack ripping.
 
 ```bash
-pnpm test                              # 189 tests (core + web)
+pnpm test                              # 195 tests (core + web)
 pnpm pokemon:sync:sets                 # import set metadata
 pnpm pokemon:sync:cards --set=sv3pt5   # import cards, derive variants
 pnpm pokemon:sync:prices --set=sv3pt5  # one price row per variant per day

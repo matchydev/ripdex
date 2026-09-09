@@ -35,6 +35,7 @@
 import type { CardListing, PackConfig } from '../../../packages/pokemon-core/src/index.ts';
 import { esc } from './render.ts';
 import { MOTION_JS } from './design.ts';
+import { tokenHeader, tokenUI, TOKEN_CSS } from './token.ts';
 
 const RIP_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap');
@@ -672,7 +673,9 @@ export function ripPage(
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>${packName} — RIPDEX</title>
-<style>${RIP_CSS}</style>
+<style>${RIP_CSS + TOKEN_CSS}
+#s-select .center{min-width:0;max-width:100%}#chrome.hide{opacity:1;pointer-events:auto}#chrome{z-index:20}.chrome-right{flex-wrap:wrap;justify-content:flex-end}.chrome-right .token-buy{min-height:34px}.bal:before{content:"DEMO";font-size:8px;color:var(--text-3);margin-right:5px}@media(max-width:480px){#chrome{inset:12px;align-items:flex-start;gap:10px}#chrome .brand{font-size:15px}.chrome-right{gap:6px;max-width:205px}.chrome-right .bal{font-size:11px}.chrome-right .odds-link{font-size:9px}.chrome-right .token-buy{font-size:10px;min-height:30px;padding:0 10px}}
+</style>
 </head><body>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <div id="grailFx"></div>
@@ -680,7 +683,7 @@ export function ripPage(
 <div id="chrome">
   <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
   <div class="chrome-right">
-    <span class="bal" id="balChip" title="Your $RIP balance"><span id="balNum">—</span><span class="u">$RIP</span></span>
+    <span class="bal" id="balChip" title="Your demo $RIP balance — not an onchain token"><span id="balNum">—</span><span class="u">$RIP</span></span>
     <button class="odds-link mute-btn" id="muteBtn" type="button" aria-label="Toggle sound">
       <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
         <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"></path>
@@ -689,7 +692,8 @@ export function ripPage(
         <line class="sl" x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></line>
       </svg>
     </button>
-    <a class="odds-link" href="/packs">ODDS →</a>
+    <a class="odds-link" href="/packs#odds-${esc(pack.id)}">ODDS →</a>
+    ${tokenHeader()}
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1250,5 +1254,6 @@ if (mb){ mb.classList.toggle('off', muted); mb.onclick = () => setMuted(!muted);
 refreshBalance();
 new Image().src = ${JSON.stringify(hero)};
 </script>
+${tokenUI()}
 </body></html>`;
 }
