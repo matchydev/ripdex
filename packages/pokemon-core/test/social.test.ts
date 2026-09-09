@@ -175,6 +175,10 @@ function textNodes(svg: string): TextNode[] {
     const size = Number(attr('font-size'));
     const weight = Number(attr('font-weight') ?? '400');
     const spacing = Number(attr('letter-spacing') ?? '0');
+    // Measure with the metric that matches the family the element actually
+    // declares — measuring a mono run with proportional widths would under-read
+    // "$12,500.00" by ~10px and quietly excuse a real overflow.
+    const mono = (attr('font-family') ?? '').includes('monospace');
     out.push({
       content,
       x: Number(attr('x')),
@@ -183,7 +187,8 @@ function textNodes(svg: string): TextNode[] {
       weight,
       spacing,
       anchor: attr('text-anchor') ?? 'start',
-      width: measureText(content, size, { bold: weight >= 600, letterSpacing: spacing }),
+      mono,
+      width: measureText(content, size, { bold: weight >= 600, mono, letterSpacing: spacing }),
     });
   }
   return out;
@@ -346,6 +351,23 @@ test('no text on any card overflows the canvas', () => {
       assert.ok(t.y > 0 && t.y < SHARE_HEIGHT, `"${t.content}" baseline at ${t.y}`);
     }
   }
+});
+
+test('a seven-figure value never runs into the odds column', () => {
+  // The money figure is the widest thing on the card and it is drawn in mono,
+  // where the comma and the period are full-width. Measured with proportional
+  // metrics this case reads ~10px narrower than it draws and slides under the
+  // odds label.
+  const svg = renderShareCard(grail({ referenceValue: 1234567.89, probability: 1.2e-8 }));
+  const nodes = textNodes(svg);
+  const oddsLabel = nodes.find((t) => t.content === 'PULL ODDS');
+  const value = nodes.find((t) => t.content.startsWith('$1,234,567'));
+  const odds = nodes.find((t) => t.content.endsWith('%'));
+  assert.ok(oddsLabel && value && odds);
+
+  assert.ok(value.mono && odds.mono, 'figures are drawn in the mono family');
+  assert.ok(bounds(value)[1] <= oddsLabel.x, `value ends at ${bounds(value)[1]}, odds start at ${oddsLabel.x}`);
+  assert.ok(bounds(odds)[1] <= SHARE_WIDTH - 64, 'odds stay inside the right margin');
 });
 
 /* ------------------------------------------------------------------ *
