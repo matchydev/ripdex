@@ -118,6 +118,23 @@ test('value sorting puts unpriced cards last in both directions', async (t) => {
   assert.equal(asc.at(-1)?.name, 'Unpriced Thing');
 });
 
+test('rarity sorting ranks an unlearned rarity as unknown, not as the rarest thing in the catalog', async (t) => {
+  const { index, cleanup } = await seed();
+  t.after(cleanup);
+
+  // New sets invent rarity strings constantly, and a card can carry none at all.
+  // Scored above the ladder rather than below it, both of these head a
+  // rarest-first browse and bury the actual chase cards.
+  const extra: typeof index.cards = [
+    { ...index.cards[0], cardId: 'x-1', name: 'Brand New Rarity', rarity: 'Ultra Turbo Rare' },
+    { ...index.cards[0], cardId: 'x-2', name: 'No Rarity', rarity: null },
+  ];
+  const widened = { ...index, cards: [...index.cards, ...extra] };
+
+  const order = queryCards(widened, { sort: 'rarity' }).cards.map((c) => c.rarity);
+  assert.deepEqual(order, ['Rare Holo', 'Rare', 'Common', 'Ultra Turbo Rare', null]);
+});
+
 test('search matches name, set and artist', async (t) => {
   const { index, cleanup } = await seed();
   t.after(cleanup);

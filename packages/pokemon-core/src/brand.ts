@@ -202,13 +202,36 @@ export function escapeHtml(value: unknown): string {
  * site-relative paths; anything else renders as unlinked text.
  * Scheme-relative `//host` is rejected because it silently inherits our scheme
  * and points off-site.
+ *
+ * The check must run on a URL-parser-normalised copy rather than the raw
+ * string, because the browser rewrites an href before it resolves it — so a
+ * naive `startsWith` guards a different URL than the one actually navigated to.
+ * Two rewrites turn an apparently site-relative path into the off-site
+ * scheme-relative form this function exists to reject:
+ *
+ *   "/\host"       for special schemes the parser folds `\` into `/`, so this
+ *                  resolves to https://host/ , not to a path on our origin.
+ *   "/<TAB>/host"  ASCII tab, CR and LF are removed from the input outright,
+ *                  so this also collapses to //host and resolves off-site.
+ *
+ * Both were verified against the WHATWG parser. We therefore normalise the way
+ * the parser does and return the normalised value, so the string we validated
+ * is the string that resolves; anything we do not recognise (leading C0 bytes,
+ * say) falls through to the allowlist and is dropped, which is the safe
+ * direction.
  */
 function safeHref(href: string | null): string | null {
   if (!href) return null;
-  const trimmed = href.trim();
-  if (trimmed.startsWith('//')) return null;
-  if (trimmed.startsWith('/')) return trimmed;
-  return /^(https?:|mailto:)/i.test(trimmed) ? trimmed : null;
+  const cleaned = href.replace(/[\t\n\r]/g, '').trim();
+  if (cleaned === '') return null;
+
+  if (cleaned.startsWith('/') || cleaned.startsWith('\\')) {
+    const folded = cleaned.replace(/\\/g, '/');
+    return folded.startsWith('//') ? null : folded;
+  }
+  // Backslashes are NOT folded here: `mailto:` is not a special scheme, so the
+  // parser leaves them alone and folding would corrupt the address.
+  return /^(https?:|mailto:)/i.test(cleaned) ? cleaned : null;
 }
 
 function paragraph(cls: string, copy: string | null | undefined): string {

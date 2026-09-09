@@ -146,6 +146,7 @@ export function layout(title: string, active: string, body: string, extraHead = 
   const nav = [
     ['/', 'HOME'],
     ['/cards', 'POKÉDEX'],
+    ['/live', 'LIVE'],
     ['/grails', 'GRAILS'],
     ['/packs', 'PACKS'],
   ]

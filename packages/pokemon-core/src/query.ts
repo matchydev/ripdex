@@ -236,8 +236,15 @@ export interface CardQueryResult {
 }
 
 /**
- * Rarity order for sorting. Unknown rarities sort last rather than throwing —
- * new sets introduce new rarity strings and a browse page must not 500 on one.
+ * Rarity ladder, least to most rare. A rarity string the ladder has not learned
+ * yet scores BELOW every known rarity rather than throwing — new sets introduce
+ * new rarity strings constantly and a browse page must not 500 on one.
+ *
+ * Below, not above. Every consumer of this ladder sorts rarest-first, so a
+ * sentinel above `Hyper Rare` would head the list with every card from a
+ * brand-new set plus every card carrying no rarity at all. Unknown is not rare,
+ * it is unknown, and ranking it as the rarest thing in the catalog is the
+ * failure this sentinel exists to avoid.
  */
 const RARITY_ORDER = [
   'Common', 'Uncommon', 'Rare', 'Rare Holo', 'Double Rare', 'Rare Holo EX',
@@ -245,13 +252,14 @@ const RARITY_ORDER = [
   'Radiant Rare', 'Amazing Rare', 'Ultra Rare', 'Rare Ultra', 'Illustration Rare',
   'Rare Rainbow', 'Special Illustration Rare', 'Rare Secret', 'Hyper Rare',
 ];
-const rarityRank = (r: string | null): number => {
-  const i = r ? RARITY_ORDER.indexOf(r) : -1;
-  return i === -1 ? RARITY_ORDER.length : i;
-};
+/**
+ * -1 for both an unrecognized rarity and a missing one. Exported so the binder's
+ * rarity sort reads this ladder instead of copying it.
+ */
+export const rarityRank = (r: string | null): number => (r ? RARITY_ORDER.indexOf(r) : -1);
 
 /** Numeric part of a collector number, for natural ordering ("10" after "9"). */
-const numericPart = (n: string): number => {
+export const numericPart = (n: string): number => {
   const m = /\d+/.exec(n);
   return m ? Number(m[0]) : Number.MAX_SAFE_INTEGER;
 };

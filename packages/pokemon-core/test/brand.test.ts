@@ -175,6 +175,54 @@ test('a javascript: href is dropped rather than linked', () => {
   assert.ok(html.includes('data-asset-key="k"'), 'the logo itself still renders');
 });
 
+/**
+ * The scheme-relative guard has to hold against the URL *parser*, not against a
+ * naive reading of the string: the browser rewrites an href before resolving
+ * it, and both rewrites below collapse an apparently site-relative path into
+ * an off-site `//host`. Asserted by resolving with the WHATWG parser rather
+ * than by matching text, so the test tracks the real behaviour.
+ */
+test('hrefs that the URL parser rewrites off-site are rejected, not just "//"', () => {
+  const SITE = 'https://ripdex.test/page';
+  const hostile = [
+    '//evil.example.com', // plain scheme-relative
+    '/\\evil.example.com', // backslash is folded to "/" for special schemes
+    '/\\\\evil.example.com',
+    '\\\\evil.example.com',
+    '/\t/evil.example.com', // tab/CR/LF are removed from the input entirely
+    '/\n/evil.example.com',
+    '/\r/evil.example.com',
+  ];
+
+  for (const href of hostile) {
+    // Precondition: the browser really would go off-site with this value.
+    assert.equal(
+      new URL(href, SITE).origin,
+      'https://evil.example.com',
+      `test case ${JSON.stringify(href)} is not actually hostile`,
+    );
+
+    const html = renderAttribution(
+      loadBrandConfig({ PARTNER_LOGO_ASSETS: JSON.stringify([{ assetKey: 'k', alt: 'A', href }]) }),
+    );
+    assert.ok(!html.includes('<a '), `${JSON.stringify(href)} must render unlinked, got: ${html}`);
+    assert.ok(html.includes('data-asset-key="k"'), 'the logo itself still renders');
+  }
+});
+
+test('every emitted relative href resolves to our own origin', () => {
+  const SITE = 'https://ripdex.test/page';
+  // Benign paths, including ones carrying characters the parser rewrites.
+  for (const href of ['/legal/attribution', '/a\\b', '\\evil.example.com', '/']) {
+    const html = renderAttribution(
+      loadBrandConfig({ PARTNER_LOGO_ASSETS: JSON.stringify([{ assetKey: 'k', alt: 'A', href }]) }),
+    );
+    const match = html.match(/href="([^"]*)"/);
+    assert.ok(match, `expected a link for ${JSON.stringify(href)}: ${html}`);
+    assert.equal(new URL(match[1], SITE).origin, 'https://ripdex.test');
+  }
+});
+
 /* ------------------------------------------------------------------ *
  * Configured copy renders
  * ------------------------------------------------------------------ */

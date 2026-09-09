@@ -21,6 +21,15 @@ import {
   findByRoute,
   oddsTable,
   validatePackConfig,
+  buildFeed,
+  buildCollection,
+  sortCollection,
+  paginateBinder,
+  setCompletion,
+  duplicateSummary,
+  buildAchievementContext,
+  evaluateAchievements,
+  type BinderSort,
   type CardQuery,
   type CardSort,
   type CatalogIndex,
@@ -32,6 +41,7 @@ import { homePage } from './src/home.ts';
 import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
 import { ripPage } from './src/rip-page.ts';
 import { RipEngine } from './src/rip-engine.ts';
+import { livePage, collectionPage } from './src/wallet-pages.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR =
@@ -44,6 +54,8 @@ const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 500);
 // floor: with a small catalog the strict threshold leaves one card, and a rail
 // of one reads as broken. /grails still applies GRAIL_MIN.
 const HOME_RAIL_MIN = Number(process.env.RIPDEX_HOME_RAIL_MIN ?? 25);
+
+const BINDER_SORTS = new Set<string>(['set', 'value', 'pull-date', 'rarity']);
 
 const SORTS = new Set<CardSort>([
   'value-desc', 'value-asc', 'newest', 'oldest', 'rarity', 'name', 'number',
@@ -149,6 +161,43 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   }
 
   if (path === '/packs') return html(res, packsPage(PACKS, index));
+
+  if (path === '/live') {
+    const openings = await ledger.recent(80);
+    return html(res, livePage(buildFeed(openings, index, PACKS, { limit: 80 }), new Date()));
+  }
+
+  const wallet = /^\/collection\/([^/]+)$/.exec(path);
+  if (wallet) {
+    const address = wallet[1];
+    // Unbounded read: a binder shows set completion and achievement progress
+    // over a wallet's whole history, both of which are wrong if computed from a
+    // page. Paging happens after aggregation, on the binder itself.
+    const openings = await ledger.listByWallet(address);
+    const stats = await ledger.walletStats(address);
+
+    const sortRaw = url.searchParams.get('sort') ?? 'set';
+    const sort = (BINDER_SORTS.has(sortRaw) ? sortRaw : 'set') as BinderSort;
+    const entries = sortCollection(buildCollection(openings, index), sort);
+    const pages = paginateBinder(entries);
+    const pageNumber = Math.min(Math.max(1, num(url.searchParams.get('page')) ?? 1), Math.max(1, pages.length));
+
+    return html(
+      res,
+      collectionPage({
+        wallet: address,
+        stats,
+        page: pages[pageNumber - 1] ?? null,
+        pageCount: Math.max(1, pages.length),
+        pageNumber,
+        sort,
+        completion: setCompletion(entries, index),
+        duplicates: duplicateSummary(entries),
+        achievements: evaluateAchievements(buildAchievementContext(openings, index)),
+        uniqueVariants: entries.length,
+      }),
+    );
+  }
 
   const ripRoute = /^\/rip\/([^/]+)$/.exec(path);
   if (ripRoute) {
