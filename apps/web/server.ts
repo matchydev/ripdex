@@ -7,6 +7,7 @@
  */
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,11 +24,14 @@ import {
   type CardQuery,
   type CardSort,
   type CatalogIndex,
+  type CardListing,
 } from '../../packages/pokemon-core/src/index.ts';
 import { loadPacks, packVariantIds, FEATURED_PACK_ID } from './packs/index.ts';
 import { cardsPage, detailPage, grailsPage, packsPage, tile, layout } from './src/render.ts';
 import { homePage } from './src/home.ts';
 import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
+import { ripPage } from './src/rip-page.ts';
+import { RipEngine } from './src/rip-engine.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR =
@@ -97,6 +101,29 @@ function notFound(res: ServerResponse, what: string): void {
   );
 }
 
+/** Read a JSON request body, capped so a request cannot exhaust memory. */
+async function readBody(req: IncomingMessage, limit = 8192): Promise<string> {
+  const chunks: Buffer[] = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > limit) throw new Error('Request body too large');
+    chunks.push(chunk as Buffer);
+  }
+  return Buffer.concat(chunks).toString('utf8');
+}
+
+/**
+ * Per-browser demo identity. Wallet auth is not wired up, so this is a stable
+ * pseudonym derived from the connection, never a claim about who the ripper is.
+ */
+function demoSeed(req: IncomingMessage): string {
+  const cookie = /ripdex_seed=([A-Za-z0-9]+)/.exec(req.headers.cookie ?? '')?.[1];
+  return cookie ?? '0xDEMOWEB' + createHash('sha1')
+    .update(String(req.headers['user-agent'] ?? '') + String(req.socket.remoteAddress ?? ''))
+    .digest('hex').slice(0, 12);
+}
+
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? '/', `http://localhost:${PORT}`);
   const path = decodeURIComponent(url.pathname);
@@ -122,6 +149,42 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   }
 
   if (path === '/packs') return html(res, packsPage(PACKS, index));
+
+  const ripRoute = /^\/rip\/([^/]+)$/.exec(path);
+  if (ripRoute) {
+    const pack = engine.getPack(ripRoute[1]);
+    if (!pack) return notFound(res, `No pack called ${ripRoute[1]}.`);
+    let best: CardListing | null = null;
+    for (const entry of pack.pool) {
+      const hit = index.byVariantId.get(entry.variantId);
+      if (hit && (hit.variant.referenceValue ?? 0) > (best?.headlineValue ?? 0)) best = hit.card;
+    }
+    const top = Math.max(
+      ...pack.pool.map((e) => index.byVariantId.get(e.variantId)?.variant.referenceValue ?? 0),
+    );
+    return html(res, ripPage(pack, best, top));
+  }
+
+  if (path === '/api/rip' && req.method === 'POST') {
+    const body = await readBody(req);
+    let packId: string;
+    try {
+      packId = String(JSON.parse(body || '{}').packId ?? '');
+    } catch {
+      return json(res, { error: 'Malformed request body.' }, 400);
+    }
+    if (!engine.getPack(packId)) return json(res, { error: `Unknown pack: ${packId}` }, 404);
+
+    // The client seed identifies the ripper. Without wallet auth wired up this
+    // is a per-browser demo identity, not a claim about who anyone is.
+    const clientSeed = demoSeed(req);
+    try {
+      return json(res, await engine.rip(packId, clientSeed));
+    } catch (err) {
+      console.error(err);
+      return json(res, { error: err instanceof Error ? err.message : 'Rip failed.' }, 500);
+    }
+  }
 
   const card = /^\/pokemon\/([^/]+)\/([^/]+)$/.exec(path);
   if (card) {
@@ -161,6 +224,10 @@ for (const pack of PACKS) {
 }
 
 index = await buildCatalogIndex(store, { packVariantIds: inPacks });
+
+// Refuses to construct if any pool outcome is unpriced — a boot failure beats
+// a pack that openPack would reject mid-rip.
+const engine = RipEngine.create(index, ledger, PACKS);
 
 const missing = [...inPacks].filter((v) => !index.byVariantId.has(v));
 if (missing.length > 0) {
