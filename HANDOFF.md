@@ -9,7 +9,7 @@ Everything a fresh session needs to keep building. Read this before touching cod
 git clone https://github.com/matchydev/ripdex.git && cd ripdex
 pnpm setup     # checks Node, reports catalog, seeds the rip ledger
 pnpm web       # http://localhost:4179
-pnpm test      # 186 tests
+pnpm test      # 197 tests (see "the test script was lying" below)
 ```
 
 The dev server is a foreground process. If a session ends, it dies with it — restart with
@@ -257,3 +257,123 @@ One line the owner has not drawn but I would: **manufactured near-misses and fak
 out.** The excitement should come from the cards being genuinely valuable and the odds being
 real — and they are; that grail is a true 1-in-3,700. Building fake tension into a product
 whose whole pitch is verifiable fairness would undercut the thing that makes it good.
+
+---
+
+## 7. Session 2 — what changed
+
+Picked up cold from this document after the first session went offline. Everything
+below is committed. Open PR: https://github.com/matchydev/ripdex/pull/1 (branch
+`og-share-route`, 3 commits, not merged).
+
+### The test script was lying
+
+`packages/pokemon-core` named three test files explicitly in its test script, so
+seven others — achievements, brand, collection, feed, openings, postgres-store,
+social — **had never run**. 127 tests, silently inert. §6 above claimed "186 tests
+passing" while `pnpm test` was actually executing 59.
+
+All seven passed once run; nothing was broken. But the suite looked like a safety
+net and was not one for 70% of the package. Both scripts are globs now, root runs
+`pnpm -r --sequential test`, and `apps/web` has its first tests. **197 passing.**
+
+If you add a package, it is picked up automatically. Do not go back to a hand-listed
+set of files.
+
+### The OG share route (closes a §6 "not built" item)
+
+`GET /og/rip/:openingId.svg` renders `social.ts`'s share card for a stored rip.
+
+- `OpeningLedger` gained `get(openingId)` — it had six reads and no way to fetch one
+  rip. Returns `null`, not a throw: the id comes off a URL, so a miss is a 404.
+- Everything on the card comes from the **frozen ledger row**, never today's catalog.
+  Same rule `achievements.ts` enforces with its `CardFacts` pick. A catalog miss
+  degrades to a card that still states the right value and odds without art.
+- That makes it immutable per `openingId`, hence `Cache-Control: immutable`, one year.
+- Hero card = highest frozen value, ties broken by **draw slot**. Ties broke on array
+  position in the first cut and a test caught it — an image cached forever cannot
+  depend on how a row was serialized.
+- SVG, not PNG: rasterizing needs a dependency. **Still needs a CDN converting in
+  front of it before links unfurl**, and there is still no per-rip permalink page
+  carrying `og:image`. The reveal links to it as SHARE CARD.
+
+### The reel and the near-miss padding
+
+The reveal was `tear -> tap -> flip`: two deliberate taps around an outcome the
+server had already settled. It is now `tear -> reel -> reveal`. A crate-opening
+spinner decelerates onto the drawn card over 5.8s and the flip auto-runs behind it.
+
+- Strip is populated from the pack's **real pool at real weights** via `pickWeighted`,
+  so commons are common on the reel. Composition is already public on `/packs`.
+- Rarity colours reuse the existing tier scale; top two tiers pulse as they pass.
+- Ticks are synthesized per tile crossing with an `OscillatorNode` — no audio files,
+  no dependency. `prefers-reduced-motion` collapses the spin to 0.45s, no ticks.
+- Reel tiles are built with `createElement` and carry **no `[data-reveal]`**, so the
+  motion-runtime scan trap in §4 does not apply to them.
+
+**`padNearMiss()` is a deliberate product decision by the owner, made explicitly and
+after the tradeoff was raised.** It seats one rare tile directly beside the winner on
+~70% of spins. Do not quietly remove it; it is what was asked for. Three limits are
+load-bearing and should survive any refactor:
+
+  1. Nothing ever *claims* a near miss — no "so close" copy, no counterfactual value.
+  2. It never adapts — not on streak, spend, or session length. A fixed rate that
+     ignores the user cannot be tuned against them.
+  3. Skipped when the pull is itself Tier 4 or Grail.
+
+The honest numbers, so whoever holds this next is not surprised by them:
+
+| Pack | True grail odds | Grail seated adjacent |
+|---|---|---|
+| `charizard-chase` | 0.0400% | ~35% of spins |
+| `base-set-rip` | 0.0269% | ~23% of spins |
+| `151-rip` | no grail in pool | 0% (rare pool is Tier 4 only) |
+
+That is roughly an 870x overrepresentation of the grail as *adjacent*. For contrast,
+the genre-standard uniform padding researched in `docs/reel-research.md` produces
+**98.5%** — so this is far milder, and the filler itself is honestly weighted. But it
+is not nothing, and the near-miss literature is specific about what adjacency does.
+The knobs are the `0.7` constant and `RARE_POOL`, both at the top of `padNearMiss`
+in `rip-page.ts`. Changing that number is a product call, not a code cleanup.
+
+### Research: `docs/reel-research.md`
+
+The four-angle workflow §6 said was "launched and stopped" was resumed and its
+**research completed** — 61 findings on reel mechanics, TCG Pocket's beat structure,
+gacha tells, and a code audit of the current reveal. Synthesis and the three critics
+died on a session limit, so **it is raw research, not a plan.**
+
+High-value items from the audit angle that are NOT yet acted on:
+
+- **`cardsPerPack` is a lie in the web layer.** The core fully supports N cards; the
+  web reveal silently drops everything after card 0.
+- Four identified dead-air beats, including a 750ms `PACK LOCKED` hold that fires
+  *before* any work is requested, and an unbounded hires-image preload under a stale
+  label.
+- 92% of pulls land in the emptiest of three visual states.
+- Five categories of real data the client already receives and throws away — the
+  whole provable-fairness payload, raw probability, pack composition and the pull's
+  rank within it, price provenance, and every connection to the ledger, collection
+  and achievements.
+
+### Next, and what is blocked on the owner
+
+1. **Pack/chest art** — animated and glowing. Requested, not started.
+2. **Live unboxing feed on the rip page.** `/live` already has every rip with
+   tier-driven prominence; it just is not surfaced where a ripper would see it.
+3. **The `$RIP` economy** — buy with `$RIP`, sell cards back, house favoured. This is
+   the only piece that is a real architectural change (wallet balances, sell pricing,
+   edge in config). **Blocked on two numbers from the owner: the house edge, and sell
+   price as a percentage of reference value.**
+
+Note a live loop where you buy with a token, receive a random outcome, and sell it
+back for the same token is a materially different regulatory object from selling
+digital packs — the cash-out is the new part, not the edge (an edge already exists
+and is disclosed on `/packs`). Flagged to the owner; it is their call and their
+lawyer's, not a reason to slow the build.
+
+### Still not built
+
+Everything in §6's "Not built" **except** the OG route, plus: no per-rip permalink
+page, no CDN rasterizing the share SVG, and the `RipEngine` in-memory nonce counter
+from §6 is still there — a restart still replays nonces.

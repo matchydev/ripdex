@@ -39,9 +39,10 @@ import { loadPacks, packVariantIds, FEATURED_PACK_ID } from './packs/index.ts';
 import { cardsPage, detailPage, grailsPage, packsPage, tile, layout } from './src/render.ts';
 import { homePage } from './src/home.ts';
 import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
-import { ripPage } from './src/rip-page.ts';
+import { ripPage, type ReelEntry } from './src/rip-page.ts';
 import { RipEngine } from './src/rip-engine.ts';
 import { livePage, collectionPage } from './src/wallet-pages.ts';
+import { ripShareCard } from './src/share.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR =
@@ -105,6 +106,24 @@ const html = (res: ServerResponse, body: string, status = 200) =>
 const json = (res: ServerResponse, value: unknown, status = 200) =>
   send(res, status, JSON.stringify(value), 'application/json; charset=utf-8');
 
+/**
+ * A share graphic is immutable: it is drawn from one ledger row whose values
+ * were frozen at rip time, and the ledger is append-only, so the bytes for a
+ * given openingId never change. Scrapers cache OG images hard and rarely
+ * revisit, which is a problem for a mutable image and exactly right for this
+ * one.
+ */
+function svg(res: ServerResponse, body: string): void {
+  res.writeHead(200, {
+    'Content-Type': 'image/svg+xml; charset=utf-8',
+    'Content-Length': Buffer.byteLength(body),
+    'Cache-Control': 'public, max-age=31536000, immutable',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+  });
+  res.end(body);
+}
+
 function notFound(res: ServerResponse, what: string): void {
   html(
     res,
@@ -167,6 +186,18 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return html(res, livePage(buildFeed(openings, index, PACKS, { limit: 80 }), new Date()));
   }
 
+  // Share graphic for one rip (spec §18). SVG rather than PNG: rasterizing
+  // needs a dependency and this repo has none, so the CDN in front of it does
+  // the conversion for the scrapers that insist on a raster.
+  const og = /^\/og\/rip\/([^/]+?)(?:\.svg)?$/.exec(path);
+  if (og) {
+    const opening = await ledger.get(og[1]);
+    if (!opening) return send(res, 404, 'No such rip.', 'text/plain; charset=utf-8');
+    const graphic = ripShareCard(opening, index, { packs: PACKS });
+    if (!graphic) return send(res, 404, 'That rip has no cards.', 'text/plain; charset=utf-8');
+    return svg(res, graphic);
+  }
+
   const wallet = /^\/collection\/([^/]+)$/.exec(path);
   if (wallet) {
     const address = wallet[1];
@@ -211,7 +242,27 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const top = Math.max(
       ...pack.pool.map((e) => index.byVariantId.get(e.variantId)?.variant.referenceValue ?? 0),
     );
-    return html(res, ripPage(pack, best, top));
+
+    // The reel scrolls the pack's REAL pool. Composition and weights are
+    // already public on /packs, so nothing is disclosed here that the odds
+    // table does not already publish — and populating from anything else would
+    // make the reel a decoration rather than a view of what can actually drop.
+    const totalWeight = pack.pool.reduce((n, e) => n + e.weight, 0) || 1;
+    const reel: ReelEntry[] = [];
+    for (const entry of pack.pool) {
+      const hit = index.byVariantId.get(entry.variantId);
+      if (!hit) continue;
+      reel.push({
+        variantId: entry.variantId,
+        name: hit.card.name,
+        art: hit.card.imageSmall,
+        tier: hit.variant.tier ?? 'TIER_1',
+        value: hit.variant.referenceValue ?? 0,
+        share: entry.weight / totalWeight,
+      });
+    }
+
+    return html(res, ripPage(pack, best, top, reel));
   }
 
   if (path === '/api/rip' && req.method === 'POST') {

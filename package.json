@@ -9,7 +9,7 @@
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
-    "test": "pnpm --filter @ripdex/pokemon-core test",
+    "test": "pnpm -r --sequential test",
     "pokemon:sync:sets": "pnpm --filter @ripdex/pokemon-core pokemon:sync:sets",
     "pokemon:sync:cards": "pnpm --filter @ripdex/pokemon-core pokemon:sync:cards",
     "pokemon:sync:prices": "pnpm --filter @ripdex/pokemon-core pokemon:sync:prices",

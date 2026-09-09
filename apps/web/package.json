@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "RIPDEX catalog surfaces: Pokedex, card detail, grails, pack odds.",
-  "scripts": { "dev": "node server.ts", "start": "node server.ts" },
-  "engines": { "node": ">=22.6" }
+  "scripts": {
+    "dev": "node server.ts",
+    "start": "node server.ts",
+    "test": "node --test test/*.test.ts"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
 }

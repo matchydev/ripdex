@@ -232,6 +232,28 @@ test('countByVariant counts copies, listByVariant counts rips', async (t) => {
   assert.equal((await led.listByVariant(PIDGEY, 1)).length, 1);
 });
 
+test('get returns one rip by id, and null for an id that is not there', async (t) => {
+  const { ledger: led } = await ledger(t);
+  await led.record(rip('rip_1', WALLET, '2026-09-01T00:00:00.000Z', [[BLASTOISE, 312.25]]));
+
+  const found = await led.get('rip_1');
+  assert.equal(found?.openingId, 'rip_1');
+  assert.equal(found?.cards[0]?.variantId, BLASTOISE, 'the whole record comes back, not a stub');
+
+  // The id arrives off a URL, so an unknown one is a 404 the caller renders.
+  assert.equal(await led.get('rip_nope'), null);
+  assert.equal(await led.get(''), null, 'an empty id is a miss, not a match on the first row');
+});
+
+test('get survives a reopen, reading rips written by a previous process', async (t) => {
+  const { ledger: led, dir } = await ledger(t);
+  await led.record(rip('rip_1', WALLET, '2026-09-01T00:00:00.000Z', [[CHARIZARD, 8400.5]]));
+  await led.close();
+
+  const reopened = new JsonOpeningLedger(dir);
+  assert.equal((await reopened.get('rip_1'))?.cards[0]?.referenceValue, 8400.5);
+});
+
 test('walletStats aggregates value, best pull and bounds', async (t) => {
   const { ledger: led } = await ledger(t);
   await led.record(
