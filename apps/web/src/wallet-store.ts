@@ -16,13 +16,41 @@ import { dirname } from 'node:path';
 
 export const STARTING_BALANCE = Number(process.env.RIPDEX_START_BALANCE ?? 1_000_000);
 
-interface Pull {
+export interface Pull {
+  openingId: string;
+  name: string;
+  setId: string;
+  number: string;
+  img: string;
+  tier: string;
+  grade: number;
+  gradeLabel: string;
+  gradedValue: number;
   sellValue: number;
   sold: boolean;
+  at: string;
 }
+/** What the rip handler records; `sold` is set to false by the store. */
+export type PullInput = Omit<Pull, 'sold'>;
+
 interface WalletState {
   balance: number;
+  spent: number;
+  earned: number;
   pulls: Record<string, Pull>;
+}
+
+export interface Profile {
+  balance: number;
+  spent: number;
+  earned: number;
+  /** earned - spent, i.e. your session P&L against the starting balance. */
+  net: number;
+  packsOpened: number;
+  grails: number;
+  owned: Pull[];
+  sold: Pull[];
+  best: Pull | null;
 }
 
 export type SellResult =
@@ -55,9 +83,12 @@ export class WalletStore {
   private ensure(wallet: string): WalletState {
     let w = this.state.get(wallet);
     if (!w) {
-      w = { balance: STARTING_BALANCE, pulls: {} };
+      w = { balance: STARTING_BALANCE, spent: 0, earned: 0, pulls: {} };
       this.state.set(wallet, w);
     }
+    // Backfill counters for wallets persisted before they existed.
+    if (typeof w.spent !== 'number') w.spent = 0;
+    if (typeof w.earned !== 'number') w.earned = 0;
     return w;
   }
 
@@ -70,6 +101,7 @@ export class WalletStore {
     const w = this.ensure(wallet);
     if (w.balance < cost) return null;
     w.balance -= cost;
+    w.spent += cost;
     this.persist();
     return w.balance;
   }
@@ -78,15 +110,17 @@ export class WalletStore {
   credit(wallet: string, amount: number): number {
     const w = this.ensure(wallet);
     w.balance += amount;
+    // A refund undoes a spend, so it should not count against lifetime spend.
+    w.spent = Math.max(0, w.spent - amount);
     this.persist();
     return w.balance;
   }
 
   /** Record an owned, sellable pull (idempotent per openingId). */
-  recordPull(wallet: string, openingId: string, sellValue: number): void {
+  recordPull(wallet: string, pull: PullInput): void {
     const w = this.ensure(wallet);
-    if (!w.pulls[openingId]) {
-      w.pulls[openingId] = { sellValue, sold: false };
+    if (!w.pulls[pull.openingId]) {
+      w.pulls[pull.openingId] = { ...pull, sold: false };
       this.persist();
     }
   }
@@ -99,8 +133,35 @@ export class WalletStore {
     if (pull.sold) return { ok: false, reason: 'already-sold' };
     pull.sold = true;
     w.balance += pull.sellValue;
+    w.earned += pull.sellValue;
     this.persist();
     return { ok: true, credited: pull.sellValue, balance: w.balance };
+  }
+
+  /** A snapshot of the wallet for the profile panel. */
+  profile(wallet: string): Profile {
+    const w = this.ensure(wallet);
+    const pulls = Object.values(w.pulls);
+    // Newest first — pulls carry an ISO `at`, and insertion order is a fallback.
+    const byRecency = (a: Pull, b: Pull): number => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0);
+    const owned = pulls.filter((p) => !p.sold).sort(byRecency);
+    const sold = pulls.filter((p) => p.sold).sort(byRecency);
+    const grails = pulls.filter((p) => p.tier === 'GRAIL').length;
+    const best = pulls.reduce<Pull | null>(
+      (top, p) => (top === null || p.gradedValue > top.gradedValue ? p : top),
+      null,
+    );
+    return {
+      balance: w.balance,
+      spent: w.spent,
+      earned: w.earned,
+      net: w.earned - w.spent,
+      packsOpened: pulls.length,
+      grails,
+      owned,
+      sold,
+      best,
+    };
   }
 
   /** Coalesced async write — the in-memory state is the source of truth. */

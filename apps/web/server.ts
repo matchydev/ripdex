@@ -406,7 +406,20 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     }
     try {
       const outcome = await engine.rip(packId, account);
-      wallets.recordPull(account, outcome.openingId, outcome.sellValue);
+      wallets.recordPull(account, {
+        openingId: outcome.openingId,
+        name: outcome.name,
+        setId: outcome.setId,
+        number: outcome.number,
+        // The ledger stores the hi-res art; the profile grid wants the thumbnail.
+        img: outcome.imageLarge.replace('_hires', ''),
+        tier: outcome.tier,
+        grade: outcome.grade,
+        gradeLabel: outcome.gradeLabel,
+        gradedValue: outcome.gradedValue,
+        sellValue: outcome.sellValue,
+        at: new Date().toISOString(),
+      });
       return json(res, { ...outcome, balance });
     } catch (err) {
       wallets.credit(account, cost); // refund — never take $RIP for a failed rip
@@ -441,6 +454,15 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
   if (path === '/api/wallet') {
     return json(res, { balance: wallets.balance(demoSeed(req)), starting: STARTING_BALANCE });
+  }
+
+  // The top-right profile panel: balance, session P&L and the owned-card grid.
+  if (path === '/api/profile') {
+    const account = demoSeed(req);
+    const p = wallets.profile(account);
+    // `account` is also the public provably-fair client seed (it appears in the
+    // live feed), so exposing it to link to the full binder reveals nothing new.
+    return json(res, { ...p, wallet: account, starting: STARTING_BALANCE });
   }
 
   const card = /^\/pokemon\/([^/]+)\/([^/]+)$/.exec(path);

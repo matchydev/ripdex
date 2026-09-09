@@ -408,6 +408,10 @@ export function homePage(
 </aside>
 </div>
 <div class="home-inner">
+<section class="section discovery-section" id="discover" aria-labelledby="packs-title">
+  <div class="section-head" data-reveal><div><span class="section-index">THE PACK LIBRARY</span><h2 id="packs-title">Find your kind of pack.</h2></div><span class="discovery-hint">Preview contents. Compare possibilities.</span></div>
+  ${packExplorer(packs, index, wrappers)}
+</section>
 <a class="token-announcement" href="#rip-token"><span>${ripMark()}<b>$RIP</b> The next chapter is coming.</span><span>Launch plan <span aria-hidden="true">↗</span></span></a>
 <section class="set-section" aria-label="Browse Pokémon sets">
  ${index.facets.sets.map((set) => {
@@ -416,10 +420,6 @@ export function homePage(
    const year = cards[0]?.year;
    return `<a class="set-door" href="/cards?setId=${encodeURIComponent(set.id)}"><div><span>${year ? year+' / ' : ''}${set.count} CARDS</span><h2>${esc(set.name)}</h2><small>Explore set ↗</small></div><div class="set-door-art" aria-hidden="true">${art.map((c) => `<img src="${esc(c.imageSmall)}" alt="" loading="lazy">`).join('')}</div></a>`;
  }).join('')}
-</section>
-<section class="section discovery-section" id="discover" aria-labelledby="packs-title">
-  <div class="section-head" data-reveal><div><span class="section-index">THE PACK LIBRARY</span><h2 id="packs-title">Find your kind of pack.</h2></div><span class="discovery-hint">Preview contents. Compare possibilities.</span></div>
-  ${packExplorer(packs, index, wrappers)}
 </section>
 ${tokenSection()}
 <section class="section" aria-labelledby="grails-title">
