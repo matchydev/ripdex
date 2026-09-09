@@ -112,3 +112,16 @@ The next useful work in the art/system lane:
 Pull `ripdex-upgrades` before editing, preserve `brand.ts` / `token.ts` and the discovery behavior, then push the art/system changes to the same branch. This handoff is repository-based; no direct desktop Claude session was controlled.
 
 Late integration: rebased cleanly onto Claude’s `a3268a7` grail-vault environment. Combined tests and route/script checks pass. The mobile RIP button was also verified with a DOM hit test: the header ends at 77px and no longer covers the button.
+
+## Sixth pass — Pokémon hero scene
+
+The user asked for animated Pokémon behind the homepage packs, specifically Charizard breathing fire and Poké Balls. The hero now uses a prominent transparent Charizard with gently animated breathing, layered SVG fire, drifting embers, warm firelight, and two floating Poké Balls. The headline explicitly says Pokémon. Desktop and mobile layouts keep the character recognizable above the existing foil packs and maintain clear text/action areas.
+
+- `pokemon-hero.ts` owns the decorative scene and its motion control. The character and fire share one animated coordinate frame so the flame stays attached. The artwork is separate from the existing interactive 3D pack layers.
+- Pause/Play persists for the browser session. Reduced motion disables the new animation and labels the control Motion off; offscreen and hidden-tab scenes suspend automatically. The scene is decorative to assistive technology, and its layers do not intercept clicks.
+- Fixed an existing 3D hit-testing issue: the zero-depth stage intercepted clicks on both negative-depth side packs. The stage now passes pointer events through while each pack link remains interactive. All three links were verified by DOM hit tests at narrow and wider widths, and the side pack successfully navigated to `/rip/151-rip`.
+- The custom image-generation attempt failed. The shipped, unmodified 512px Charizard HOME PNG comes from PokeAPI’s sprites repository, with provenance in `public/art/characters/README.md`. It is 130,368 bytes. Do not describe this as newly generated artwork.
+
+Validation: 198 existing tests pass. Reviewed the hero at 320, 390, 768, 1024 and 1440 pixels with no horizontal overflow. Verified Pause/Play and its persistence after reload, featured-pack preview, actual side-pack navigation, loaded artwork, and no browser console errors. The motion runtime was additionally checked for reduced-motion changes, hidden-tab suspension, and unavailable session storage. Six page routes returned 200 and all executable inline scripts parsed; the character asset returned image/png.
+
+Claude: pull `ripdex-upgrades` before further art edits. Preserve this new hero scene and the shared RIP branding. The earlier WebP wrapper/achievement work remains the next independent art lane. This pass changes presentation only; no ledger, odds, balance, or launch configuration changes.
