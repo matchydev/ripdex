@@ -12,6 +12,8 @@ import { fileURLToPath } from 'node:url';
 
 import {
   JsonCatalogStore,
+  JsonOpeningLedger,
+  type StoredOpening,
   buildCatalogIndex,
   queryCards,
   topGrails,
@@ -25,11 +27,14 @@ import {
 import { loadPacks, packVariantIds, FEATURED_PACK_ID } from './packs/index.ts';
 import { cardsPage, detailPage, grailsPage, packsPage, tile, layout } from './src/render.ts';
 import { homePage } from './src/home.ts';
+import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR =
   process.env.RIPDEX_DATA_DIR ?? join(HERE, '..', '..', 'packages', 'pokemon-core', 'data', 'catalog');
 const PORT = Number(process.env.PORT ?? 4179);
+const LEDGER_DIR =
+  process.env.RIPDEX_LEDGER_DIR ?? join(HERE, '..', '..', 'packages', 'pokemon-core', 'data', 'ledger');
 const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 500);
 // The homepage rail shows high-value cards rather than only cards over the grail
 // floor: with a small catalog the strict threshold leaves one card, and a rail
@@ -121,15 +126,29 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   const card = /^\/pokemon\/([^/]+)\/([^/]+)$/.exec(path);
   if (card) {
     const listing = findByRoute(index, card[1], card[2]);
-    return listing
-      ? html(res, detailPage(listing))
-      : notFound(res, `No card at ${card[1]} ${card[2]}.`);
+    if (!listing) return notFound(res, `No card at ${card[1]} ${card[2]}.`);
+
+    // Pull stats are per variant, never per card: the holo and the reverse holo
+    // of one Charmander have different odds, and a shared counter would let the
+    // common printing borrow the rare one's scarcity.
+    const counts = new Map<string, number>();
+    const openings: StoredOpening[] = [];
+    for (const v of listing.variants) {
+      counts.set(v.variantId, await ledger.countByVariant(v.variantId));
+      openings.push(...(await ledger.listByVariant(v.variantId, 12)));
+    }
+    const data = buildCardPullData(listing, PACKS, counts, openings);
+    return html(
+      res,
+      detailPage(listing, ripdexDataSection(listing, data, Date.now()), CARD_STATS_CSS),
+    );
   }
 
   notFound(res, 'That page does not exist.');
 }
 
 const store = new JsonCatalogStore(DATA_DIR);
+const ledger = new JsonOpeningLedger(LEDGER_DIR);
 const PACKS = await loadPacks();
 const inPacks = packVariantIds(PACKS);
 

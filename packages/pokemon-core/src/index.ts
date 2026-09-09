@@ -9,5 +9,6 @@ export * from './provider.ts';
 export * from './store.ts';
 export * from './ingest.ts';
 export * from './query.ts';
+export * from './openings.ts';
 export { JsonCatalogStore } from './stores/json-store.ts';
 export { PokemonTcgProvider, mapCard, mapSet, mapPrices, normalizeApiDate } from './providers/pokemontcg.ts';

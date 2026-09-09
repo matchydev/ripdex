@@ -199,7 +199,7 @@ function variantRow(v: VariantListing): string {
 </tr>`;
 }
 
-export function detailPage(c: CardListing): string {
+export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): string {
   const facts: [string, string][] = [
     ['SET', c.setName],
     ['NUMBER', c.number],
@@ -253,7 +253,7 @@ export function detailPage(c: CardListing): string {
   </div>
 </div>`;
 
-  return layout(`${c.name} — ${c.setName} ${c.number} — RIPDEX`, '/cards', body);
+  return layout(`${c.name} — ${c.setName} ${c.number} — RIPDEX`, '/cards', body + extraBlock, extraHead);
 }
 
 export function grailsPage(cards: CardListing[], minValue: number): string {

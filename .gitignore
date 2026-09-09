@@ -12,3 +12,6 @@ dist/
 # Local server logs
 web.out
 web.err
+
+# Seeded rip ledger — regenerate with apps/web/scripts/seed-rips.ts
+**/data/ledger/
