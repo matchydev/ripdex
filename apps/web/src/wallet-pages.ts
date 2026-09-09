@@ -246,18 +246,25 @@ const WALLET_CSS = `
   letter-spacing:-.006em;font-variant-numeric:tabular-nums}
 
 .achv{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:12px}
+/* Both states are deliberate. Locked recedes and unlocked feels earned, and
+   the distinction is carried by COLOUR rather than by opacity alone: the
+   reveal runtime owns opacity ([data-reveal].in forces it to 1, and reduced
+   motion forces it with !important), so a dim built only on opacity silently
+   loses that fight and every badge ends up looking unlocked. */
 .a{position:relative;border-radius:var(--r-md);padding:14px 15px;background:var(--glass);
-  box-shadow:0 0 0 1px var(--line);opacity:.6;
+  box-shadow:0 0 0 1px var(--line);
   transition:opacity .3s var(--ease),box-shadow .25s var(--ease),transform .25s var(--ease)}
-.a:hover{opacity:.82;transform:translateY(-2px)}
-.a.on{opacity:1;transform:none;
-  background:linear-gradient(150deg,rgba(245,196,81,.075),rgba(255,255,255,.02) 60%);
+.a:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--line-hi)}
+.achv .a:not(.on).in{opacity:.66}
+.achv .a:not(.on).in:hover{opacity:.88}
+.a.on{background:linear-gradient(150deg,rgba(245,196,81,.075),rgba(255,255,255,.02) 60%);
   box-shadow:0 0 0 1px rgba(245,196,81,.26),0 20px 46px -26px rgba(245,196,81,.45)}
-.a.on:hover{opacity:1;transform:translateY(-2px);
+.a.on:hover{transform:translateY(-2px);
   box-shadow:0 0 0 1px rgba(245,196,81,.42),0 26px 60px -26px rgba(245,196,81,.6)}
-.a .nm{font-size:12.5px;font-weight:580;letter-spacing:-.014em}
+.a .nm{font-size:12.5px;font-weight:580;letter-spacing:-.014em;color:var(--text-3)}
 .a.on .nm{color:var(--gold)}
-.a .ds{font-size:11.5px;font-weight:480;color:var(--text-3);margin-top:6px;line-height:1.55}
+.a .ds{font-size:11.5px;font-weight:480;color:var(--text-4);margin-top:6px;line-height:1.55}
+.a.on .ds{color:var(--text-3)}
 .a .pr{font-size:10.5px;font-weight:510;color:var(--text-4);margin-top:9px;letter-spacing:-.004em;
   font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 .a.on .pr{color:rgba(245,196,81,.72)}

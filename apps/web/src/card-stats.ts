@@ -89,9 +89,9 @@ export const CARD_STATS_CSS = `
 
 /* The slab edge. Pushed back in Z and scaled just past the face so a sliver of
    violet reads as the card's thickness at rest, and swings wide on turn. */
-.rx-under{pointer-events:none;transform:translateZ(-16px) scale(1.014);
-  background:linear-gradient(180deg,rgba(113,112,255,.26),rgba(113,112,255,.05));
-  box-shadow:0 0 0 1px rgba(113,112,255,.16);
+.rx-under{pointer-events:none;transform:translateZ(-18px) scale(1.022);
+  background:linear-gradient(180deg,rgba(113,112,255,.3),rgba(113,112,255,.06));
+  box-shadow:0 0 0 1px rgba(113,112,255,.18);
   transition:background .3s var(--ease),box-shadow .3s var(--ease)}
 .rx-b:hover .rx-under{background:linear-gradient(180deg,rgba(113,112,255,.42),rgba(113,112,255,.10));
   box-shadow:0 0 0 1px rgba(113,112,255,.3),0 0 30px rgba(113,112,255,.28)}

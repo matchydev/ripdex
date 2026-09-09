@@ -148,7 +148,11 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
   opacity:0;visibility:hidden;transform:translateY(12px);
   transition:opacity .45s var(--ease),transform .6s var(--ease),visibility .45s}
 .step.on{opacity:1;visibility:visible;transform:none}
-.step>div{position:relative;z-index:1}
+/* The content wrapper rides above the ember layer. The :not() matters: a bare
+   .step>div also matches .embers, and a *type* selector outranks its class, so
+   the ember field would be forced back to position:relative and collapse to a
+   zero-size grid item with nothing in it. */
+.step>div:not(.embers){position:relative;z-index:1}
 
 /* ============================ typography =========================== */
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:540;
@@ -242,10 +246,10 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 34px 76px -30px rgba(0,0,0,.95)}
 .pk-base{overflow:hidden;
   background:linear-gradient(158deg,#17162c 0%,#101024 38%,#0a0a12 100%)}
-.pack-hero{position:absolute;inset:0;background-size:178%;background-position:50% 24%;opacity:.66;
+.pack-hero{position:absolute;inset:0;background-size:178%;background-position:50% 24%;opacity:.58;
   filter:saturate(1.05) contrast(1.06)}
 .pack-hero::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(8,9,18,.22),rgba(7,8,14,.86) 70%,#07080e)}
+  background:linear-gradient(180deg,rgba(8,9,18,.44),rgba(7,8,14,.88) 70%,#07080e)}
 .pk-sheen{overflow:hidden;pointer-events:none;mix-blend-mode:screen}
 .pk-sheen::after{content:"";position:absolute;inset:-20%;
   background:linear-gradient(74deg,transparent 32%,rgba(113,112,255,.34) 46%,rgba(255,255,255,.62) 50%,rgba(150,140,255,.32) 55%,transparent 70%);
@@ -309,24 +313,25 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   perspective:900px;perspective-origin:50% 45%}
 .deck{position:absolute;inset:0;transform-style:preserve-3d}
 .deck i{position:absolute;inset:0;border-radius:14px;opacity:0;
-  background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(255,255,255,.015));
-  box-shadow:0 0 0 1px var(--line);
+  background:linear-gradient(165deg,rgba(255,255,255,.11),rgba(255,255,255,.03));
+  box-shadow:0 0 0 1px var(--line-hi);
   animation:deal 2.6s var(--ease) infinite;animation-delay:calc(var(--i,0) * -.371s)}
 .deck i::before{content:"";position:absolute;left:9%;right:9%;top:7.5%;height:52%;border-radius:7px;
-  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
+  background:rgba(255,255,255,.09);box-shadow:inset 0 0 0 1px var(--line-hi)}
 .deck i::after{content:"";position:absolute;left:9%;width:46%;bottom:15%;height:6.5%;border-radius:4px;
-  background:rgba(255,255,255,.07)}
+  background:rgba(255,255,255,.12)}
 @keyframes deal{
   0%{opacity:0;transform:translate3d(0,28px,-280px) rotateY(-17deg) scale(.94)}
-  20%{opacity:.55}
-  60%{opacity:.34}
+  20%{opacity:.85}
+  60%{opacity:.5}
   100%{opacity:0;transform:translate3d(0,-20px,96px) rotateY(13deg) scale(1.04)}}
 .plate{position:absolute;inset:0;border-radius:14px;overflow:hidden;
-  background:linear-gradient(180deg,rgba(13,14,20,.60),rgba(8,9,12,.84));
-  backdrop-filter:blur(3px);
-  box-shadow:0 0 0 1px var(--line),0 30px 70px -30px rgba(0,0,0,.9)}
+  background:linear-gradient(180deg,rgba(11,12,18,.40),rgba(8,9,12,.70));
+  backdrop-filter:blur(2px);
+  box-shadow:0 0 0 1px var(--line-hi),inset 0 -70px 60px -60px rgba(113,112,255,.5),
+    0 30px 70px -30px rgba(0,0,0,.9)}
 .plate::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 33%,rgba(113,112,255,.18) 46%,rgba(255,255,255,.15) 51%,transparent 67%);
+  background:linear-gradient(105deg,transparent 30%,rgba(113,112,255,.26) 45%,rgba(255,255,255,.22) 51%,rgba(113,112,255,.2) 57%,transparent 70%);
   background-size:230% 100%;animation:shim 1.6s linear infinite}
 @keyframes shim{to{background-position:-230% 0}}
 .plate .scan{position:absolute;left:0;right:0;top:0;height:2px;
@@ -334,7 +339,7 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   box-shadow:0 0 18px rgba(113,112,255,.8);animation:scan 2.2s var(--ease) infinite}
 @keyframes scan{0%{top:-2%;opacity:0}14%{opacity:1}86%{opacity:1}100%{top:100%;opacity:0}}
 .status{text-align:center}
-.status .big{font-size:12.5px;font-weight:560;letter-spacing:.05em;color:var(--text-3)}
+.status .big{font-size:12.5px;font-weight:560;letter-spacing:.05em;color:var(--text-2)}
 .status .big b{color:var(--text);font-weight:590}
 .bar{width:min(78vw,300px);height:2px;background:rgba(255,255,255,.08);margin:20px auto 0;
   border-radius:2px;overflow:hidden}
@@ -466,18 +471,24 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   transition:opacity 1s var(--ease);
   background:radial-gradient(125% 85% at 50% 42%,#13122a 0%,#0a0a14 46%,#050609 100%)}
 #grailFx.on{opacity:1}
-#grailFx::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;
+/* Deep ground. z-index:-1 keeps it above the base gradient but beneath the
+   bloom and the spark field, which are appended as real children — as an
+   ordinary ::after it would paint last and bury every spark. */
+#grailFx::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;z-index:-1;
   background:linear-gradient(180deg,transparent,rgba(4,5,9,.92))}
 #grailFx .bloom{position:absolute;left:50%;top:46%;width:min(160vw,1180px);aspect-ratio:1;
-  border-radius:50%;filter:blur(26px);
-  background:radial-gradient(circle,rgba(245,196,81,.22) 0%,rgba(113,112,255,.11) 36%,transparent 66%);
+  border-radius:50%;filter:blur(56px);
+  background:radial-gradient(circle,rgba(245,196,81,.16) 0%,rgba(150,120,255,.15) 30%,
+    rgba(113,112,255,.09) 48%,transparent 70%);
   animation:bloomPulse 6.5s var(--ease) infinite}
 @keyframes bloomPulse{
   0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.84)}
   50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+/* A soft ring rather than a box-shadow one: a 1px shadow on a 560px circle
+   draws a hard rim that reads as a drawn circle, not as light. */
 #grailFx .halo{position:absolute;left:50%;top:46%;width:min(84vw,560px);aspect-ratio:1;
-  border-radius:50%;
-  box-shadow:0 0 0 1px rgba(245,196,81,.16),inset 0 0 110px rgba(245,196,81,.12);
+  border-radius:50%;filter:blur(12px);
+  background:radial-gradient(circle,transparent 58%,rgba(245,196,81,.13) 72%,transparent 84%);
   animation:haloPulse 5.2s var(--ease) infinite}
 @keyframes haloPulse{
   0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(.92)}

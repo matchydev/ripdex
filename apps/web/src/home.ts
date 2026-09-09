@@ -80,8 +80,8 @@ const HOME_CSS = `
   transform-style:preserve-3d;cursor:pointer}
 .pack3d .plane{overflow:hidden}
 .plane-slab{transform:translateZ(-16px);background:#0a0b0c;
-  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 30px 60px -30px #000}
-.plane-art{background-size:168%;background-position:50% 20%;background-repeat:no-repeat;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 30px 60px -30px rgba(0,0,0,.9)}
+.plane-art{background-size:176%;background-position:50% 32%;background-repeat:no-repeat;
   background-color:var(--panel)}
 .plane-veil{background:
   linear-gradient(180deg,rgba(8,9,10,.06) 0%,rgba(8,9,10,.55) 58%,rgba(8,9,10,.94) 100%),
@@ -91,14 +91,14 @@ const HOME_CSS = `
 .plate{display:inline-flex;flex-direction:column;align-items:center;gap:4px;
   padding:7px 13px;border-radius:10px;
   background:rgba(10,11,12,.72);backdrop-filter:blur(10px);
-  box-shadow:0 0 0 1px var(--line-hi),0 10px 26px -14px #000}
+  box-shadow:0 0 0 1px var(--line-hi),0 10px 26px -14px rgba(0,0,0,.85)}
 .plate .nm{font-size:11.5px;font-weight:590;letter-spacing:-.012em;line-height:1;
   white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
 .plate .pr{font-size:10px;font-weight:520;letter-spacing:-.008em;color:var(--accent-hi);
   font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;line-height:1}
 .chip-feat{position:absolute;top:-11px;left:50%;transform:translateX(-50%);
   font-size:9.5px;font-weight:560;letter-spacing:.06em;padding:4px 9px;border-radius:100px;
-  color:#fff;background:var(--accent);white-space:nowrap;
+  color:var(--text);background:var(--accent);white-space:nowrap;
   box-shadow:0 0 0 1px rgba(255,255,255,.14),0 6px 20px -6px rgba(113,112,255,.9)}
 /* Flankers are dimmed on a leaf plane: a filter anywhere higher would flatten
    the whole 3D subtree. */
@@ -119,7 +119,12 @@ const HOME_CSS = `
 }
 @media(max-width:600px){
   .pack-scene{--pw:126px;--ph:176px;--spread:116px;height:296px;margin-top:20px}
-  .plate .nm{font-size:10px;max-width:96px}
+  /* The packs stand closer together here, so the plates have to shrink or the
+     centre one overlaps its neighbours' prices. */
+  .plate{padding:5px 9px;gap:3px}
+  .plate .nm{font-size:9.5px;max-width:84px}
+  .plate .pr{font-size:8.5px}
+  .chip-feat{font-size:8px;padding:3px 7px;top:-9px}
   .ghost-slot{width:80px;margin:-56px 0 0 -40px}
 }
 
@@ -189,6 +194,11 @@ section.band{padding:50px 0;box-shadow:inset 0 1px 0 var(--line)}
   font-variant-numeric:tabular-nums}
 
 /* ============================== grails ============================= */
+/* A flex item's automatic minimum size is its content's min-content width, so
+   one long set name ("Special Illustration Rare") widens that tile past its
+   flex-basis and stretches the whole row's cross size — leaving a band of dead
+   space under every other tile. min-width:0 pins them all to the basis. */
+.grail-rail .tile{min-width:0}
 .grail-rail .shot{box-shadow:0 0 0 1px rgba(245,196,81,.24),
   0 18px 44px -22px rgba(245,196,81,.30),0 2px 4px rgba(0,0,0,.4)}
 .grail-rail .tile:hover .shot{box-shadow:0 0 0 1px rgba(245,196,81,.52),
@@ -404,7 +414,7 @@ export function homePage(
     ${
       topGrail === null
         ? '<span class="n mono">—</span>'
-        : `<span class="n mono gold" data-count="${topGrail}" data-count-dp="0" data-count-prefix="$">$0</span>`
+        : `<span class="n mono gold" data-count="${topGrail}" data-count-dp="2" data-count-prefix="$">$0.00</span>`
     }
     <span class="k">TOP GRAIL VALUE</span>
   </div>
