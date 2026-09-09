@@ -1133,7 +1133,13 @@ async function present(){
 
   if (ch.fullTakeover){
     document.getElementById('chrome').classList.add('hide');
-    document.getElementById('grailFx').classList.add('on');
+    const fx = document.getElementById('grailFx');
+    // The bespoke grail vault sits behind the bloom and sparks; its centre
+    // negative space frames the real card, dimmed slightly so the card stays
+    // dominant. reset() clears fx.style.background, so nothing leaks to the next rip.
+    fx.style.background =
+      "linear-gradient(180deg,rgba(5,6,9,.34),rgba(5,6,9,.6)), #050609 url('/art/environments/grail-vault.png') center/cover no-repeat";
+    fx.classList.add('on');
     sparks();
     card.classList.add('grail');
     setTimeout(() => document.getElementById('grailTag').classList.add('on'), 480);
