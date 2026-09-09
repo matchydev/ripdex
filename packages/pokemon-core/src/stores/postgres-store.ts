@@ -270,23 +270,32 @@ FROM pokemon_card_variant
 WHERE $1::text IS NULL OR card_id = $1::text
 ORDER BY variant_id`;
 
-const PRICE_SELECT_LIST = `variant_id, to_char(observed_on, 'YYYY-MM-DD') AS observed_on,
-       ${PRICE_COLS.join(', ')}`;
+// Everything is qualified with the table alias `o`, and that is load-bearing
+// rather than cosmetic. `to_char(...) AS observed_on` introduces an OUTPUT
+// column named observed_on, and a bare name in ORDER BY / DISTINCT ON that
+// matches an output column is resolved to the OUTPUT column, never the input
+// one. Unqualified, `ORDER BY observed_on DESC` therefore sorts the to_char
+// TEXT — same row order, since ISO dates sort lexically, but an expression sort
+// that price_observation_recent_idx cannot satisfy, turning the per-request
+// lookup below into a full sort of the observation table. `o.observed_on`
+// cannot name an output column, so it binds to the DATE and the index applies.
+const PRICE_SELECT_LIST = `o.variant_id, to_char(o.observed_on, 'YYYY-MM-DD') AS observed_on,
+       ${qualify('o', PRICE_COLS).join(', ')}`;
 
 // One row per variant, chosen by DISTINCT ON — the index
 // price_observation_recent_idx (variant_id, observed_on DESC) serves this order
 // directly. A null filter means "every variant"; an empty array means none.
 const SELECT_LATEST_PRICES = `
-SELECT DISTINCT ON (variant_id) ${PRICE_SELECT_LIST}
-FROM pokemon_price_observation
-WHERE $1::text[] IS NULL OR variant_id = ANY($1::text[])
-ORDER BY variant_id, observed_on DESC`;
+SELECT DISTINCT ON (o.variant_id) ${PRICE_SELECT_LIST}
+FROM pokemon_price_observation o
+WHERE $1::text[] IS NULL OR o.variant_id = ANY($1::text[])
+ORDER BY o.variant_id, o.observed_on DESC`;
 
 const SELECT_PRICE_HISTORY = `
 SELECT ${PRICE_SELECT_LIST}
-FROM pokemon_price_observation
-WHERE variant_id = $1::text
-ORDER BY observed_on ASC`;
+FROM pokemon_price_observation o
+WHERE o.variant_id = $1::text
+ORDER BY o.observed_on ASC`;
 
 const SELECT_SYNC_STATE = `
 SELECT key, last_run_at, last_cursor, note FROM sync_state WHERE key = $1::text`;
@@ -420,14 +429,26 @@ function toUpsertResult(row: any): UpsertResult {
 }
 
 /**
- * Last write wins, matching the Map-based store. Postgres additionally requires
+ * Collapse repeated conflict keys before the batch is sent. Postgres requires
  * it: "ON CONFLICT DO UPDATE command cannot affect row a second time" aborts
  * the entire statement if one batch carries the same key twice, and a provider
  * page that repeats a card would otherwise fail the whole sync.
+ *
+ * Last write wins by default, matching the Map-based store. `merge` exists
+ * because that default is not always the same answer the store would have given
+ * had the rows arrived in separate calls — see upsertVariants.
  */
-function dedupe<T>(rows: readonly T[], keyOf: (row: T) => string): T[] {
+function dedupe<T>(
+  rows: readonly T[],
+  keyOf: (row: T) => string,
+  merge?: (prev: T, next: T) => T,
+): T[] {
   const byKey = new Map<string, T>();
-  for (const row of rows) byKey.set(keyOf(row), row);
+  for (const row of rows) {
+    const key = keyOf(row);
+    const prev = byKey.get(key);
+    byKey.set(key, prev === undefined || merge === undefined ? row : merge(prev, row));
+  }
   return [...byKey.values()];
 }
 
@@ -519,10 +540,23 @@ export class PostgresCatalogStore implements CatalogStore {
 
   async upsertVariants(rows: VariantRow[]): Promise<UpsertResult> {
     if (rows.length === 0) return emptyUpsert();
-    // The ratchet itself lives in UPSERT_VARIANTS: doing it here would need a
-    // read of the current confidence first, and two clients racing on the same
-    // variant could still write a downgrade between the read and the write.
-    const payload = dedupe(rows, (r) => r.variantId).map((r) => ({
+    // The ratchet against the STORED row lives in UPSERT_VARIANTS: doing that
+    // here would need a read of the current confidence first, and two clients
+    // racing on the same variant could still write a downgrade between the read
+    // and the write.
+    //
+    // The collapse below has to ratchet too, and SQL cannot help with it. The
+    // statement only ever sees one row per variant, so whichever row loses the
+    // dedupe is invisible to it — a batch carrying both a `reported` and an
+    // `inferred` row for one variant would send `inferred` under last-write-wins
+    // and the stored-row CASE would have nothing to protect. For a variant that
+    // does not exist yet that is unrecoverable: it inserts as `inferred`, and
+    // the pack_pool_entry trigger then refuses it. JsonCatalogStore ratchets
+    // each row against the accumulated map and so is order-independent here;
+    // this keeps the two stores answering the same question the same way.
+    const payload = dedupe(rows, (r) => r.variantId, (prev, next) =>
+      prev.confidence === 'reported' ? { ...next, confidence: 'reported' as const } : next,
+    ).map((r) => ({
       variant_id: r.variantId,
       card_id: r.cardId,
       set_id: r.setId,
@@ -536,10 +570,23 @@ export class PostgresCatalogStore implements CatalogStore {
 
   async upsertPrices(rows: PriceRow[]): Promise<UpsertResult> {
     if (rows.length === 0) return emptyUpsert();
+    // The row and its quote must name the same variant. Only the row's id is
+    // written (it is what the primary key is built from), and toPriceRow
+    // rebuilds quote.variantId from that key on the way back out — so a
+    // mismatch would not survive as a visible inconsistency, it would be
+    // laundered into a confident price filed against the wrong variant. That is
+    // precisely the cross-variant attribution the model forbids, so it is an
+    // error rather than a silent preference for one side.
+    for (const r of rows) {
+      if (r.quote.variantId !== r.variantId) {
+        throw new Error(
+          `postgres-store: price row for ${r.variantId} carries a quote for ` +
+            `${r.quote.variantId}; prices never cross variants`,
+        );
+      }
+    }
     // Keyed by (variant_id, observed_on): one observation per variant per day,
     // so re-running a sync overwrites today rather than appending a duplicate.
-    // The quote's own variantId is ignored in favour of the row's — they are
-    // the same identity, and the row is what the primary key is built from.
     // NUL joins the two halves because it is the one byte a variantId cannot
     // contain, so no pair of distinct rows can collide into one key.
     const payload = dedupe(rows, (r) => `${r.variantId}\0${r.observedOn}`).map((r) => ({

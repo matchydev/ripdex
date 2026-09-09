@@ -296,7 +296,18 @@ function fold(state: DefState, entry: AchievementEntry, ctx: AchievementContext)
   }
 
   const target = targetOf(state, bucket, ctx);
-  if (value >= target) {
+
+  // Threshold on the number that will be REPORTED, not on the raw accumulator.
+  // Frozen values are whole cents, but summing them in binary drifts: 35
+  // two-decimal pulls that add to exactly $1,000.00 land on 999.9999999999999.
+  // Comparing that raw sum while reporting `round2` of it renders "1000 / 1000"
+  // on a badge that is still locked — a full progress bar with no unlock — and
+  // then stamps `unlockedAt` on whatever later rip finally pushes it over, which
+  // is the wrong rip. Rounding both sides through the same helper makes
+  // `current >= target` and `unlocked` the same statement by construction. The
+  // accumulator itself stays unrounded so repeated rounding cannot compound.
+  const shown = round2(value);
+  if (shown >= target) {
     state.unlocked = true;
     // Chronological order makes this the FIRST rip that satisfied the
     // achievement, which is the one the user remembers earning it on.
@@ -308,8 +319,8 @@ function fold(state: DefState, entry: AchievementEntry, ctx: AchievementContext)
 
   // Closest to completion is a fraction, not a count: 5 of 6 cards is nearer
   // than 40 of 102.
-  if (state.lead === null || value / target > state.lead.value / state.lead.target) {
-    state.lead = { value, target };
+  if (state.lead === null || shown / target > state.lead.value / state.lead.target) {
+    state.lead = { value: shown, target };
   }
 }
 

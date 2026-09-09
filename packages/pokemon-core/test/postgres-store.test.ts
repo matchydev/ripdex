@@ -270,9 +270,31 @@ test('latestPrices asks for exactly one row per variant', async () => {
   await s.latestPrices(['a|1|non-foil|unlimited']);
   const sql = calls[0].text;
 
-  assert.match(sql, /SELECT DISTINCT ON \(variant_id\)/);
-  assert.match(sql, /ORDER BY variant_id, observed_on DESC/);
+  assert.match(sql, /SELECT DISTINCT ON \(o\.variant_id\)/);
+  assert.match(sql, /ORDER BY o\.variant_id, o\.observed_on DESC/);
   assert.deepEqual(calls[0].params, [['a|1|non-foil|unlimited']]);
+});
+
+test('the price ordering binds the date column, not the to_char alias', async () => {
+  const { store: s, calls } = store();
+  await s.latestPrices();
+  await s.priceHistory('a|1|non-foil|unlimited');
+
+  // `to_char(...) AS observed_on` creates an output column of that name, and a
+  // bare name in ORDER BY / DISTINCT ON resolves to the output column. Sorting
+  // the rendered text gives the same row order but is an expression sort, which
+  // price_observation_recent_idx cannot serve — so the qualification here is a
+  // performance contract, not formatting.
+  for (const call of calls) {
+    assert.ok(
+      !/ORDER BY (?!o\.)/.test(call.text),
+      `ORDER BY must name the table column:\n${call.text}`,
+    );
+    assert.ok(
+      !/DISTINCT ON \((?!o\.)/.test(call.text),
+      `DISTINCT ON must name the table column:\n${call.text}`,
+    );
+  }
 });
 
 test('latestPrices without ids asks for every variant, with an empty list asks for none', async () => {
@@ -284,7 +306,7 @@ test('latestPrices without ids asks for every variant, with an empty list asks f
   // what an empty request means.
   assert.deepEqual(calls[0].params, [null]);
   assert.deepEqual(calls[1].params, [[]]);
-  assert.match(calls[0].text, /\$1::text\[\] IS NULL OR variant_id = ANY\(\$1::text\[\]\)/);
+  assert.match(calls[0].text, /\$1::text\[\] IS NULL OR o\.variant_id = ANY\(\$1::text\[\]\)/);
 });
 
 test('list filters are bound, not appended', async () => {
@@ -307,8 +329,8 @@ test('dates are rendered as text, never handed over as timestamps', async () => 
   // A DATE returned as a JS Date is UTC midnight; printed back in a negative
   // offset it becomes the previous day.
   assert.match(calls[0].text, /to_char\(release_date, 'YYYY-MM-DD'\) AS release_date/);
-  assert.match(calls[1].text, /to_char\(observed_on, 'YYYY-MM-DD'\) AS observed_on/);
-  assert.match(calls[1].text, /ORDER BY observed_on ASC/, 'history is oldest first');
+  assert.match(calls[1].text, /to_char\(o\.observed_on, 'YYYY-MM-DD'\) AS observed_on/);
+  assert.match(calls[1].text, /ORDER BY o\.observed_on ASC/, 'history is oldest first');
 });
 
 test('rows are batched rather than sent one per round trip', async () => {
