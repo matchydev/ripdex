@@ -1,5 +1,5 @@
 /** One asset for the RIP token and the site's brand identity. */
-export const RIP_MARK_URL = '/art/brands/rip-r-v1.png';
+export const RIP_MARK_URL = '/art/brands/rip-r-v2.png';
 export function ripMark(className = ''): string {
   return `<img class="rip-mark ${className}" src="${RIP_MARK_URL}" width="40" height="40" alt="" aria-hidden="true" decoding="async">`;
 }

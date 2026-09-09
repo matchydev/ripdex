@@ -127,3 +127,11 @@ Validation: 198 existing tests pass. Reviewed the hero at 320, 390, 768, 1024 an
 Claude: pull `ripdex-upgrades` before further art edits. Preserve this new hero scene and the shared RIP branding. The earlier WebP wrapper/achievement work remains the next independent art lane. This pass changes presentation only; no ledger, odds, balance, or launch configuration changes.
 
 Late integration: rebased onto Claude’s `dbf70ab` / `c367881` sale celebration. The combined 198 tests pass and both homepage/opening scripts parse. Adjusted that new celebration for reduced motion: skip the coin burst and show the profit text without travel or scaling, instead of compressing the full animation into 0.2 seconds. The sale calculation and feedback content are unchanged.
+
+## Seventh pass — cleaner RIP token identity
+
+The user requested a stronger replacement token image and disliked the text on the coin. Generated `public/art/brands/rip-r-v2.png`: an upright, broad sculpted R with silver-lavender faces and violet edges. The original 1254px transparent PNG is preserved, and the prompt is recorded in the brands README. `brand.ts` now uses v2 for every shared mark, favicon, download and the opening screen. V1 remains only as the previous design asset.
+
+Removed both coin text overlays, the dashed inner circle and the busy purple coin face. The new presentation uses a simple graphite surface, restrained violet metal rim, slight tilt, and gentle motion with reduced-motion support. Coming soon and the launch information remain in the surrounding page content.
+
+Validation: 12 web tests pass. All eight main page routes return 200, reference v2, and contain parseable scripts. The PNG serves correctly; desktop 1440px and mobile 320px reviews show the loaded new mark and no horizontal overflow. Coin text content is empty. No launch settings or gameplay logic changed. Claude’s `b3c03c1` achievement artwork is included in this integration.
