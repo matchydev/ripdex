@@ -32,30 +32,6 @@ import { esc, money, layout, tile } from './render.ts';
 
 const HOME_CSS = `
 <style>
-/* ============================== hero =============================== */
-.hero{position:relative;padding:52px 0 8px;text-align:center}
-.hero::before{content:"";position:absolute;left:50%;top:-180px;width:min(1180px,132%);height:680px;
-  transform:translateX(-50%);pointer-events:none;z-index:-1;
-  background:radial-gradient(ellipse at 50% 42%,rgba(113,112,255,.20),transparent 62%)}
-/* flow-root, so the spans' negative top margins below cannot collapse out
-   through the heading and drag the whole lockup upward. */
-.hero h1{display:flow-root;margin:24px 0 0;font-weight:590;letter-spacing:-.045em;
-  line-height:.95;font-size:clamp(2.6rem,8.2vw,6.1rem)}
-/* background-clip:text paints inside the element box and clips to the glyphs, so
-   ink that rises above the box is simply never painted. At line-height .95 the
-   box top sits 0.83em over the baseline while the acute on the É of POKÉMON
-   reaches 0.95em — measured, 12px of the accent went unpainted. The padding
-   raises the paint area; the equal negative margin keeps the layout identical. */
-.hero h1 span{display:block;padding-top:.2em;margin-top:-.2em;
-  background:linear-gradient(176deg,var(--text) 22%,#959cab 106%);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero h1 span.em{
-  background:linear-gradient(112deg,var(--accent-hi),var(--accent) 52%,#5b58e0);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero .sub{margin:22px auto 0;max-width:50ch;color:var(--text-3);font-size:16px;font-weight:480;
-  letter-spacing:-.014em;line-height:1.55}
-.hero .cta-row{margin-top:30px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-
 /* ========================= the pack scene ========================== */
 /* One camera, three objects standing in it. Sizes are variables so the whole
    arrangement scales down on narrow screens without re-authoring the geometry. */
@@ -146,134 +122,122 @@ const HOME_CSS = `
   .ghost-slot{width:80px;margin:-56px 0 0 -40px}
 }
 
-/* ============================ stat strip =========================== */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:46px 0 4px;
-  border-radius:var(--r-lg);overflow:hidden;background:var(--line);
-  box-shadow:0 0 0 1px var(--line)}
-.stat{position:relative;padding:22px 22px 20px;background:rgba(15,16,17,.74);
-  backdrop-filter:blur(12px)}
-.stat .n{display:block;font-size:clamp(1.6rem,3.5vw,2.45rem);font-weight:590;
-  letter-spacing:-.045em;line-height:1;font-family:ui-monospace,Menlo,monospace;
-  font-variant-numeric:tabular-nums}
-.stat .n.gold{color:var(--gold)}
-.stat .k{display:block;margin-top:9px;font-size:10.5px;font-weight:540;letter-spacing:.06em;
-  color:var(--text-4)}
-@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
 
-/* ============================== bands ============================== */
-section.band{padding:50px 0;box-shadow:inset 0 1px 0 var(--line)}
-.band-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
-.band-head h2{display:flex;align-items:center;margin:0;font-size:12px;font-weight:560;
-  letter-spacing:.05em;color:var(--text-3)}
-.band-head a{font-size:12.5px;font-weight:520;letter-spacing:-.011em;color:var(--text-4);
-  display:inline-flex;align-items:center;gap:6px;
-  transition:color .2s var(--ease)}
-.band-head a:hover{color:var(--accent-hi)}
-.band-head a i{font-style:normal;transition:transform .3s var(--ease)}
-.band-head a:hover i{transform:translateX(3px)}
-
-/* ============================ live pulls =========================== */
-.pull{display:flex;align-items:center;gap:11px;padding:9px 14px 9px 9px;flex:0 0 auto;
-  border-radius:var(--r-md);background:var(--glass);box-shadow:0 0 0 1px var(--line);
-  transition:box-shadow .25s var(--ease),background .25s var(--ease)}
-.pull:hover{background:rgba(255,255,255,.055);box-shadow:0 0 0 1px var(--line-hi)}
-.pull .shot-s{width:40px;height:56px;border-radius:7px;overflow:hidden;flex:0 0 auto;
-  background:var(--panel);box-shadow:0 0 0 1px var(--line)}
-.pull .shot-s img{width:100%;height:100%;object-fit:cover;display:block}
-.pull .who{display:block;min-width:0}
-.pull .nm{display:block;font-size:13px;font-weight:540;letter-spacing:-.014em;line-height:1.25;
-  max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pull .sub{display:block;font-size:11px;font-weight:460;letter-spacing:-.008em;
-  color:var(--text-4);margin-top:3px;
-  max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pull .v{margin-left:6px;font-size:12.5px;font-weight:600;letter-spacing:-.02em;
-  font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums;color:var(--text-2)}
-.pull .v.major{color:var(--gold)}
-.pull.major{box-shadow:0 0 0 1px rgba(245,196,81,.26)}
-.pull.major:hover{box-shadow:0 0 0 1px rgba(245,196,81,.45)}
-
-/* ========================== featured packs ========================= */
-.pack-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(248px,1fr))}
-.pack-card{display:block;border-radius:var(--r-lg);overflow:hidden}
-.pack-card::before{z-index:5}
-.pack-card .pc-art{display:block;height:136px;background-size:cover;background-position:50% 22%;
-  background-color:var(--panel);
+/* One continuous stage; only the text and section interiors have gutters. */
+.home-wrap{max-width:none;padding:0 0 70px}
+.home-inner{max-width:1200px;margin:auto;padding:0 32px}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:640px;
+  background:radial-gradient(ellipse at 72% 56%,rgba(113,112,255,.17),transparent 54%)}
+.hero-inner{position:relative;max-width:1200px;margin:auto;padding:38px 32px 32px}
+.hero-top{display:flex;justify-content:space-between;gap:20px;color:var(--text-3);font-size:10px;letter-spacing:.14em}
+.hero h1{position:relative;margin:14px 0 0;font-size:clamp(90px,15.5vw,196px);font-weight:650;
+  line-height:.98;letter-spacing:-.075em;color:var(--text)}
+.hero h1 span{color:var(--accent)}
+.hero-main{display:grid;grid-template-columns: .85fr 1.15fr;align-items:center;min-height:344px}
+.hero-copy{position:relative;z-index:3;padding:25px 0 18px}
+.hero h2{font-weight:590;font-size:clamp(28px,3.1vw,42px);line-height:1.12;letter-spacing:-.045em;margin:0 0 16px}
+.hero-copy p{max-width:32ch;margin:0 0 26px;color:var(--text-3);font-size:14px;line-height:1.75}
+.hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.text-link{font-size:12px;color:var(--text-2);padding:12px 0;display:inline-flex;gap:12px;align-items:center}
+.text-link:hover{color:var(--accent-hi)}
+.hero-foot{display:flex;justify-content:space-between;gap:20px;padding-top:20px;box-shadow:0 -1px 0 var(--line);
+  font-size:10px;letter-spacing:.08em;color:var(--text-3)}
+.hero-foot b{color:var(--text-2);font-weight:550}
+.hero .pack-scene{width:100%;--pw:170px;--ph:238px;--spread:154px;height:334px;margin:-30px 0 0}
+.hero .pack-scene::after{bottom:0}
+.hero .slot-l .plane-art,.hero .slot-r .plane-art{filter:brightness(.85) saturate(.85)}
+.hero .plane-veil{background:linear-gradient(180deg,transparent 35%,rgba(8,9,10,.7))}
+.hero .ghosts{display:none}
+.hero .pack3d{border-radius:10px}
+.hero .plate{background:rgba(10,11,12,.9)}
+.hero .chip-feat{font-size:8px;letter-spacing:.1em}
+.section{padding:62px 0;box-shadow:0 -1px 0 var(--line)}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px}
+.section-index{display:block;color:var(--text-4);font-size:10px;letter-spacing:.13em;margin-bottom:12px}
+.section h2{font-size:clamp(26px,3.5vw,38px);line-height:1.1;letter-spacing:-.04em;font-weight:590;margin:0}
+.section-head p{color:var(--text-3);font-size:13px;margin:10px 0 0}
+.pack-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 24px}
+.pack-card{display:block;min-width:0}
+.pack-visual{position:relative;display:flex;align-items:center;justify-content:center;height:235px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 85%,rgba(113,112,255,.15),transparent 66%),var(--panel);border-radius:12px;
+  box-shadow:0 0 0 1px var(--line);transition:background .3s var(--ease)}
+.pack-visual::after{content:'';position:absolute;left:18%;right:18%;bottom:13px;height:20px;
+  background:rgba(0,0,0,.6);filter:blur(13px)}
+.pack-visual img{position:relative;z-index:1;width:125px;height:174px;object-fit:cover;border-radius:5px;
+  transform:rotate(-8deg);box-shadow:5px 5px 0 #202129,8px 9px 0 #0b0c10,0 15px 25px rgba(0,0,0,.4);
   transition:transform .6s var(--ease)}
-.pack-card:hover .pc-art{transform:scale(1.045)}
-.pack-card .pc-veil{position:absolute;left:0;right:0;top:0;height:150px;pointer-events:none;
-  background:linear-gradient(180deg,rgba(8,9,10,.1),rgba(8,9,10,.72) 62%,var(--bg))}
-.pack-card .pc-body{position:relative;display:block;padding:14px 16px 16px}
-.pack-card .pc-nm{display:block;font-size:14.5px;font-weight:560;letter-spacing:-.02em;line-height:1.2}
-.pack-card .pc-dt{display:block;margin-top:5px;font-size:12px;font-weight:460;
-  letter-spacing:-.008em;color:var(--text-4)}
-.pack-card .pc-pr{display:inline-block;margin-top:11px;font-size:12px;font-weight:560;
-  letter-spacing:-.014em;color:var(--accent-hi);padding:4px 9px;border-radius:7px;
-  background:var(--accent-dim);font-family:ui-monospace,Menlo,monospace;
-  font-variant-numeric:tabular-nums}
-
-/* ============================== grails ============================= */
-/* A flex item's automatic minimum size is its content's min-content width, so
-   one long set name ("Special Illustration Rare") widens that tile past its
-   flex-basis and stretches the whole row's cross size — leaving a band of dead
-   space under every other tile. min-width:0 pins them all to the basis. */
-.grail-rail .tile{min-width:0}
-.grail-rail .shot{box-shadow:0 0 0 1px rgba(245,196,81,.24),
-  0 18px 44px -22px rgba(245,196,81,.30),0 2px 4px rgba(0,0,0,.4)}
-.grail-rail .tile:hover .shot{box-shadow:0 0 0 1px rgba(245,196,81,.52),
-  0 30px 68px -22px rgba(245,196,81,.42),0 8px 16px rgba(0,0,0,.5)}
-.grail-rail .val{color:var(--gold)}
-
-/* ========================== how it works =========================== */
-/* Five nodes with a connector that draws itself between them, in sequence. The
-   draw hangs off the same --d the reveal-group stagger writes, so the wire can
-   never outrun the node it comes from. */
-.flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0;padding:0;list-style:none}
-.step{display:flex;align-items:center;gap:10px}
-.node{position:relative;display:flex;align-items:center;gap:11px;padding:13px 17px;
-  border-radius:var(--r-md);background:var(--glass);box-shadow:0 0 0 1px var(--line);
-  transition:box-shadow .25s var(--ease),background .25s var(--ease),transform .25s var(--ease)}
-.node:hover{background:rgba(255,255,255,.055);box-shadow:0 0 0 1px var(--line-hi);
-  transform:translateY(-2px)}
-.node .ix{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
-  flex:0 0 auto;border-radius:7px;font-size:10.5px;font-weight:600;letter-spacing:-.01em;
-  color:var(--accent-hi);background:var(--accent-dim);
-  box-shadow:0 0 0 1px rgba(113,112,255,.22);font-variant-numeric:tabular-nums}
-.node b{font-size:12.5px;font-weight:560;letter-spacing:.02em;color:var(--text)}
-.wire{position:relative;width:42px;height:2px;flex:0 0 auto;border-radius:2px;
-  background:var(--line);overflow:hidden}
-.wire i{position:absolute;inset:0;transform:scaleX(0);transform-origin:0 50%;
-  background:linear-gradient(90deg,var(--accent),var(--accent-hi));
-  box-shadow:0 0 10px rgba(113,112,255,.7)}
-.step.in .wire i{transform:scaleX(1);transition:transform .7s var(--ease);
-  transition-delay:calc(var(--d,0ms) + 220ms)}
-.wire::after{content:"";position:absolute;top:0;bottom:0;width:15px;opacity:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent)}
-.step.in .wire::after{animation:wirePulse 2.8s var(--ease) infinite;
-  animation-delay:calc(var(--d,0ms) + 900ms)}
-@keyframes wirePulse{
-  0%{transform:translateX(-16px);opacity:0}
-  26%{opacity:1}
-  100%{transform:translateX(48px);opacity:0}}
-@media(max-width:600px){.wire{width:26px}}
-
-/* =========================== provably fair ========================= */
-.fair{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:16px}
-.fair .f{padding:18px 18px 19px;border-radius:var(--r-lg)}
-.fair .f h4{margin:0 0 8px;font-size:11px;font-weight:560;letter-spacing:.055em;color:var(--text)}
-.fair .f p{margin:0;font-size:13px;font-weight:460;letter-spacing:-.01em;color:var(--text-3);
-  line-height:1.62}
-.fair .f p em{font-style:normal;color:var(--text-2);font-weight:540}
-/* Neutral code chip. Emerald is reserved for "a pricing provider confirmed
-   this" and gold for grail value; a hash string is neither. */
-.fair code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;letter-spacing:-.02em;
-  color:var(--text-2);word-break:break-all;padding:1px 5px;border-radius:5px;
-  background:var(--glass);box-shadow:0 0 0 1px var(--line)}
-
-/* ============================ dex outro ============================ */
-.dex-line{margin:0;font-size:clamp(1.05rem,2.3vw,1.5rem);font-weight:510;letter-spacing:-.028em;
-  line-height:1.4;color:var(--text-3);max-width:34ch}
-.dex-line b{color:var(--text);font-weight:590;
-  font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.pack-card:nth-child(even) .pack-visual img{transform:rotate(8deg)}
+.pack-card:hover .pack-visual img{transform:translateY(-9px) rotate(0deg) scale(1.04)}
+.pack-no{position:absolute;top:16px;left:16px;color:var(--text-4);font:10px ui-monospace,monospace}
+.pack-arrow{position:absolute;right:14px;top:12px;font-size:19px;color:var(--text-4);transition:color .3s,transform .3s}
+.pack-card:hover .pack-arrow{color:var(--accent-hi);transform:translate(2px,-2px)}
+.pack-info{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:18px}
+.pack-info h3{font-size:14px;font-weight:590;letter-spacing:-.02em;margin:0}
+.pack-price{font-size:12px;color:var(--text-2);white-space:nowrap}
+.pack-price small{font-size:9px;color:var(--text-4)}
+.pack-detail{font-size:11px;color:var(--text-3);margin:7px 0 0}
+.grail-rail{gap:28px;padding:8px 3px 24px}
+.grail-rail .tile{flex-basis:190px;min-width:0}
+.grail-rail .shot{box-shadow:0 14px 35px rgba(0,0,0,.45),0 0 0 1px var(--line-hi)}
+.grail-rail .tile::before{opacity:.16}
+.home-live{display:grid;grid-template-columns:240px 1fr;gap:40px;align-items:center}
+.home-live h2{font-size:28px}
+.home-live p{font-size:12px;color:var(--text-3)}
+.pull-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}
+.pull{display:flex;align-items:center;gap:12px;padding:14px 0;box-shadow:0 1px 0 var(--line);min-width:0}
+.pull img{width:34px;height:48px;object-fit:cover;border-radius:3px}
+.pull .who{min-width:0;flex:1}.pull .nm{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pull .sub{display:block;color:var(--text-4);font-size:10px;margin-top:3px}
+.pull .v{font-size:11px;color:var(--text-2);white-space:nowrap}.pull .v.major{color:var(--gold)}
+.home-live .empty-state{text-align:left;padding:24px 0;background:none;box-shadow:none}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);list-style:none;padding:0;margin:32px 0 0;gap:36px}
+.steps li{box-shadow:0 -1px 0 var(--line-hi);padding:24px 0 0}
+.steps .ix{font:11px ui-monospace,monospace;color:var(--accent-hi)}
+.steps h3{font-size:18px;letter-spacing:-.025em;font-weight:560;margin:20px 0 10px}
+.steps p{font-size:13px;color:var(--text-3);margin:0;max-width:32ch;line-height:1.7}
+.fair-details{margin-top:30px;box-shadow:0 1px 0 var(--line)}
+.fair-details summary{padding:20px 0;cursor:pointer;font-size:13px;color:var(--text-2)}
+.fair{display:grid;grid-template-columns:repeat(2,1fr);gap:24px 40px;padding:10px 0 30px}
+.fair h3{font-size:11px;font-weight:560;letter-spacing:.06em}
+.fair p{font-size:12px;color:var(--text-3);line-height:1.8}.fair code{overflow-wrap:anywhere;color:var(--text-2)}
+.dex-outro{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:22px 0}
+.dex-outro p{font-size:13px;color:var(--text-3);max-width:42ch;margin-bottom:0}
+@media(min-width:1400px){.hero h1{font-size:196px}}
+@media(max-width:900px){
+ .hero{min-height:0}.hero-inner{padding:28px 24px}.home-inner{padding:0 24px}
+ .hero .pack-scene{--pw:138px;--ph:194px;--spread:115px}
+ .hero-main{grid-template-columns:1fr 1fr}.hero-copy p{max-width:28ch}
+ .hero-actions{gap:8px}.hero-actions .btn{padding:0 18px}
+ .pack-visual{height:200px}.pack-info{display:block}.pack-price{display:block;margin-top:7px}
+ .home-live{grid-template-columns:1fr;gap:16px}
+}
+@media(max-width:600px){
+ .hero-inner{padding:22px 20px 24px}.home-inner{padding:0 20px}
+ .hero-top{font-size:8px;letter-spacing:.08em}.hero-top span:last-child{display:none}
+ .hero h1{font-size:24vw;margin:18px 0 0}.hero-main{display:flex;flex-direction:column-reverse;min-height:0}
+ .hero .pack-scene{--pw:113px;--ph:158px;--spread:99px;height:224px;margin:4px 0 0}
+ .hero .slot-c{transform:translate3d(0,-8px,80px)}
+ .hero-copy{width:100%;padding:5px 0 22px}.hero h2{font-size:30px;margin-bottom:10px}
+ .hero-copy p{max-width:40ch;font-size:13px;margin-bottom:20px}.hero-actions{gap:18px}
+ .hero-foot{font-size:8px;padding-top:16px}.hero-foot span:last-child{display:none}
+ .section{padding:38px 0}.section-head{align-items:start;gap:12px;margin-bottom:22px}
+ .section-head .text-link{white-space:nowrap;font-size:10px}.section-head p{max-width:28ch;font-size:12px}
+ .section-index{font-size:9px}.section h2{font-size:28px}
+ .pack-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 14px}
+ .pack-visual{height:170px}.pack-visual img{width:87px;height:122px}.pack-no{font-size:8px;top:12px;left:10px}
+ .pack-info h3{font-size:12px}.pack-price{font-size:11px}.pack-detail{font-size:10px}
+ .grail-rail .tile{flex-basis:155px}.grail-rail{gap:20px}
+ .pull-list,.fair{grid-template-columns:1fr}.steps{grid-template-columns:1fr;gap:22px}
+ .steps li{display:grid;grid-template-columns:30px 1fr;gap:0 12px;padding-top:20px}
+ .steps .ix{grid-row:span 2;padding-top:5px}.steps h3{margin:0 0 8px}.steps p{max-width:none}
+ .dex-outro{display:block}.dex-outro .btn{margin-top:24px}
+}
+@media(max-width:360px){
+ .hero .pack-scene{--pw:98px;--ph:137px;--spread:85px;height:185px}
+ .hero h2{font-size:26px}.hero-copy p{font-size:12px;line-height:1.6;margin-bottom:16px}
+ .hero-actions{gap:12px}.hero-actions .btn{font-size:12px;padding:0 16px;height:44px}
+ .hero-actions .text-link{font-size:10px;gap:7px}.hero-copy{padding-bottom:18px}
+}
 </style>`;
 
 export interface HomeFeedItem {
@@ -361,17 +325,6 @@ export function homePage(
   if (featured) arranged.push({ pack: featured, slot: 'c' });
   if (others[1]) arranged.push({ pack: others[1], slot: 'r' });
 
-  const topGrail = grails[0]?.headlineValue ?? null;
-  const ghostX = [-330, -118, 118, 330];
-  const ghostFloat = [
-    '--float-dur:12.5s;--float-delay:-3.2s;--float-amp:16px',
-    '--float-dur:14.8s;--float-delay:-7.6s;--float-amp:12px',
-    '--float-dur:11.4s;--float-delay:-1.1s;--float-amp:19px',
-    '--float-dur:16.2s;--float-delay:-9.4s;--float-amp:14px',
-  ];
-
-  const steps = ['BUY $RIP', 'CHOOSE PACK', 'RIP IT', 'REVEAL POKÉMON', 'BUILD COLLECTION'];
-
   const fair: [string, string][] = [
     [
       'SEED COMMITTED FIRST',
@@ -392,173 +345,71 @@ export function homePage(
   ];
 
   const body = `
-<section class="hero">
-  <div class="eyebrow" data-reveal>PROVABLY FAIR PACK RIPS</div>
-  <h1 data-reveal-group="90">
-    <span data-reveal>RIP POKÉMON.</span>
-    <span data-reveal>CHASE GRAILS.</span>
-    <span class="em" data-reveal>ONCHAIN.</span>
-  </h1>
-  <p class="sub" data-reveal>Open Pokémon card packs using $RIP. Every pull is verifiable.</p>
-  <div class="cta-row" data-reveal>
-    <a class="btn btn-primary btn-lg" href="/packs" data-magnetic="0.3">RIP A PACK</a>
-    <a class="btn btn-ghost btn-lg" href="/cards">BROWSE THE POKÉDEX</a>
-  </div>
-
-  <div class="pack-scene scene" data-reveal-3d>
-    <div class="stage-drift" data-parallax="0.055">
-      <div class="stage">
-        <div class="ghosts" aria-hidden="true">${grails
-          .slice(0, 4)
-          .map(
-            (g, i) => `<div class="ghost-slot"
-            style="transform:translate3d(${ghostX[i]}px,-24px,-380px) rotateY(${
-              ghostX[i] < 0 ? 14 : -14
-            }deg)">
-          <div class="ghost floaty" style="${ghostFloat[i]}">
-            <img src="${esc(g.imageSmall)}" alt="" loading="lazy" decoding="async">
-          </div>
-        </div>`,
-          )
-          .join('')}</div>
-        ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c', wrappers[a.pack.id])).join('')}
+<section class="hero" aria-labelledby="home-title">
+  <div class="hero-inner">
+    <div class="hero-top" data-reveal><span>THE COLLECTOR’S NEXT CHAPTER</span><span>POKÉMON / PACKS / POSSIBILITIES</span></div>
+    <h1 id="home-title" data-reveal>RIP<span>DEX</span></h1>
+    <div class="hero-main">
+      <div class="hero-copy" data-reveal-group="80">
+        <h2 data-reveal>The thrill of the pull.<br>The start of a collection.</h2>
+        <p data-reveal>From your first starter to your forever grail. Discover Pokémon packs with every outcome in view.</p>
+        <div class="hero-actions" data-reveal>
+          <a class="btn btn-primary btn-lg" href="/packs">Explore packs <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="/cards">Browse the Pokédex <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+      <div class="pack-scene scene" aria-label="Featured packs">
+        <div class="stage-drift" data-parallax="0.025"><div class="stage">
+          ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c', wrappers[a.pack.id])).join('')}
+        </div></div>
       </div>
     </div>
+    <div class="hero-foot"><span><b>${index.cards.length.toLocaleString()}</b> CARDS TO DISCOVER</span><span><b>${index.facets.sets.length}</b> ICONIC SETS</span><span>EXACT ODDS. EVERY PACK.</span></div>
   </div>
 </section>
-
-<div class="stats" data-reveal>
-  <div class="stat">
-    <span class="n mono" data-count="${index.cards.length}">0</span>
-    <span class="k">CARDS IN THE DEX</span>
+<div class="home-inner">
+<section class="section" aria-labelledby="packs-title">
+  <div class="section-head" data-reveal>
+    <div><span class="section-index">01 / FIND YOUR NEXT PULL</span><h2 id="packs-title">Pick your pack.</h2><p>Old-school favorites. New obsessions.</p></div>
+    <a class="text-link" href="/packs">All packs &amp; odds <span aria-hidden="true">↗</span></a>
   </div>
-  <div class="stat">
-    <span class="n mono" data-count="${index.facets.sets.length}">0</span>
-    <span class="k">SETS INGESTED</span>
-  </div>
-  <div class="stat">
-    <span class="n mono" data-count="${index.byVariantId.size}">0</span>
-    <span class="k">TRACKED VARIANTS</span>
-  </div>
-  <div class="stat">
-    ${
-      topGrail === null
-        ? '<span class="n mono">—</span>'
-        : `<span class="n mono gold" data-count="${topGrail}" data-count-dp="2" data-count-prefix="$">$0.00</span>`
-    }
-    <span class="k">TOP GRAIL VALUE</span>
-  </div>
-</div>
-
-<section class="band">
-  <div class="band-head" data-reveal>
-    <h2><span class="pulse-dot"></span>LIVE PULLS</h2>
-    <a href="/live">WATCH LIVE <i>→</i></a>
-  </div>
-  ${
-    feed.length === 0
-      ? '<div class="empty-state" data-reveal>No rips yet. The feed fills as packs are opened.</div>'
-      : `<div class="marquee" data-marquee data-reveal style="--dur:${Math.max(
-          30,
-          feed.length * 3.4,
-        ).toFixed(0)}s">
-        <div class="track">${feed
-          .map((e) => {
-            const major = e.prominence === 'major';
-            return `<a class="pull${major ? ' major' : ''}" href="${esc(e.href)}">
-            <span class="shot-s"><img src="${esc(e.imageSmall)}" alt="${esc(
-              e.cardName,
-            )}" loading="lazy" decoding="async"></span>
-            <span class="who">
-              <span class="nm">${esc(e.cardName)}</span>
-              <span class="sub">${esc(e.wallet)} · ${esc(e.when)}</span>
-            </span>
-            <span class="v${major ? ' major' : ''}">${money(e.value)}</span>
-          </a>`;
-          })
-          .join('')}</div>
-      </div>`
-  }
-</section>
-
-<section class="band">
-  <div class="band-head" data-reveal>
-    <h2>FEATURED PACKS</h2>
-    <a href="/packs">ALL ODDS <i>→</i></a>
-  </div>
-  <div class="pack-grid" data-reveal-group="70">
-    ${packs
-      .map(
-        (p) => `<a class="pack-card card lift" href="/packs" data-reveal data-spotlight>
-      <span class="pc-art" style="background-image:url('${esc(heroImage(p, index))}')"></span>
-      <span class="pc-veil"></span>
-      <span class="pc-body">
-        <span class="pc-nm">${esc(p.name)}</span>
-        <span class="pc-dt">${p.pool.length} outcomes · ${p.cardsPerPack} card</span>
-        <span class="pc-pr">${p.priceRip.toLocaleString()} $RIP</span>
-      </span>
-    </a>`,
-      )
-      .join('')}
+  <div class="pack-grid" data-reveal-group="65">
+    ${packs.map((p, i) => `<a class="pack-card" href="/rip/${encodeURIComponent(p.id)}" data-reveal>
+      <div class="pack-visual"><span class="pack-no">PACK / ${String(i + 1).padStart(2, '0')}</span><span class="pack-arrow" aria-hidden="true">↗</span>
+        <img src="${esc(wrappers[p.id] ?? heroImage(p, index))}" alt="${esc(p.name)} artwork" loading="lazy" decoding="async">
+      </div>
+      <div class="pack-info"><h3>${esc(p.name)}</h3><span class="pack-price mono">${p.priceRip.toLocaleString()} <small>$RIP</small></span></div>
+      <p class="pack-detail">${p.pool.length} possible outcomes · ${p.cardsPerPack} ${p.cardsPerPack === 1 ? 'card' : 'cards'} per pack</p>
+    </a>`).join('')}
   </div>
 </section>
-
-<section class="band">
-  <div class="band-head" data-reveal>
-    <h2>THE GRAILS</h2>
-    <a href="/grails">SEE ALL <i>→</i></a>
+<section class="section" aria-labelledby="grails-title">
+  <div class="section-head" data-reveal>
+    <div><span class="section-index">02 / THE WISHLIST</span><h2 id="grails-title">Worth the chase.</h2><p>The cards you never stopped thinking about.</p></div>
+    <a class="text-link" href="/grails">Explore grails <span aria-hidden="true">↗</span></a>
   </div>
-  ${
-    grails.length
-      ? `<div class="rail grail-rail" data-reveal-group="45">${grails
-          .slice(0, 20)
-          .map(tile)
-          .join('')}</div>`
-      : '<div class="empty-state" data-reveal>No cards above the grail threshold in the catalog yet.</div>'
-  }
+  ${grails.length ? `<div class="rail grail-rail" data-reveal-group="45">${grails.slice(0, 8).map(tile).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
 </section>
-
-<section class="band">
-  <div class="band-head" data-reveal><h2>HOW IT WORKS</h2></div>
-  <ol class="flow" data-reveal-group="120">
-    ${steps
-      .map(
-        (s, i) => `<li class="step" data-reveal>
-      <span class="node">
-        <span class="ix">${String(i + 1).padStart(2, '0')}</span>
-        <b>${esc(s)}</b>
-      </span>
-      ${i < steps.length - 1 ? '<span class="wire" aria-hidden="true"><i></i></span>' : ''}
-    </li>`,
-      )
-      .join('')}
+<section class="section home-live" aria-labelledby="live-title">
+  <div data-reveal><span class="section-index">03 / FROM THE COMMUNITY</span><h2 id="live-title"><span class="pulse-dot"></span>Fresh pulls.</h2><p>Every rip has a story.</p><a class="text-link" href="/live">View the live feed <span aria-hidden="true">→</span></a></div>
+  ${feed.length ? `<div class="pull-list">${feed.slice(0, 6).map((e) => `<a class="pull" href="${esc(e.href)}"><img src="${esc(e.imageSmall)}" alt="" loading="lazy"><span class="who"><span class="nm">${esc(e.cardName)}</span><span class="sub">${esc(e.wallet)} · ${esc(e.when)}</span></span><span class="v mono${e.prominence === 'major' ? ' major' : ''}">${money(e.value)}</span></a>`).join('')}</div>` : '<div class="empty-state">No packs opened yet. Recent pulls will appear here.</div>'}
+</section>
+<section class="section" aria-labelledby="how-title">
+  <div class="section-head" data-reveal><div><span class="section-index">04 / OPEN POSSIBILITIES</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>
+  <ol class="steps" data-reveal-group="80">
+    <li data-reveal><span class="ix">01</span><h3>Find your pack</h3><p>Explore the sets, possible pulls, and exact odds before you choose.</p></li>
+    <li data-reveal><span class="ix">02</span><h3>Make the reveal</h3><p>Open your pack and discover the card waiting inside.</p></li>
+    <li data-reveal><span class="ix">03</span><h3>Build your binder</h3><p>Keep track of your pulls, complete sets, and find your next favorite.</p></li>
   </ol>
+  <details class="fair-details"><summary>Behind every pull: published odds &amp; verifiable outcomes</summary>
+    <div class="fair">${fair.map(([h, p]) => `<div><h3>${esc(h)}</h3><p>${p}</p></div>`).join('')}</div>
+  </details>
 </section>
-
-<section class="band">
-  <div class="band-head" data-reveal><h2>PROVABLY FAIR</h2></div>
-  <div class="fair" data-reveal-group="60">
-    ${fair
-      .map(
-        ([h, p]) => `<div class="f card" data-reveal data-spotlight>
-      <h4>${esc(h)}</h4>
-      <p>${p}</p>
-    </div>`,
-      )
-      .join('')}
-  </div>
+<section class="section dex-outro" aria-labelledby="dex-title">
+  <div data-reveal><span class="section-index">THE COLLECTION STARTS HERE</span><h2 id="dex-title">Meet your next favorite.</h2><p>${index.cards.length.toLocaleString()} cards. ${index.byVariantId.size.toLocaleString()} variants. Every printing priced separately.</p></div>
+  <a class="btn btn-primary btn-lg" href="/cards">Explore the Pokédex <span aria-hidden="true">↗</span></a>
 </section>
+</div>`;
 
-<section class="band">
-  <div class="band-head" data-reveal>
-    <h2>POKÉDEX</h2>
-    <a href="/cards">BROWSE <i>→</i></a>
-  </div>
-  <p class="dex-line" data-reveal><b data-count="${index.cards.length}">0</b> cards across
-    <b data-count="${index.facets.sets.length}">0</b> sets,
-    <b data-count="${index.byVariantId.size}">0</b> tracked variants.
-    Every printing priced separately.</p>
-</section>`;
-
-  return layout('RIPDEX — Rip Pokémon. Chase grails. Onchain.', '/', body, HOME_CSS);
+  return layout('RIPDEX — The thrill of the pull.', '/', body, HOME_CSS);
 }

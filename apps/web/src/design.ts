@@ -42,7 +42,7 @@ export const DESIGN_CSS = `
   --text:#f7f8f8;
   --text-2:#d0d6e0;
   --text-3:#8a8f98;
-  --text-4:#62666d;
+  --text-4:#858b96;
 
   --accent:#7170ff;
   --accent-hi:#828fff;
@@ -106,7 +106,7 @@ img{max-width:100%}
 /* ========================== gradient mesh ========================== */
 /* Large, slow, heavily blurred blobs. Fixed behind everything so the page
    breathes without any element on it moving. */
-.mesh{position:fixed;inset:-30vmax;z-index:0;pointer-events:none;filter:blur(100px);opacity:.42}
+.mesh{position:fixed;inset:-30vmax;z-index:0;pointer-events:none;filter:blur(100px);opacity:.12}
 .mesh i{position:absolute;display:block;border-radius:50%;mix-blend-mode:screen}
 .mesh i:nth-child(1){width:62vmax;height:62vmax;left:-10%;top:-18%;
   background:radial-gradient(circle,rgba(113,112,255,.62),transparent 62%);
@@ -296,10 +296,10 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* =============================== motion ============================ */
 /* 3D rise. The rotateX is what separates this from a plain fade. */
-[data-reveal]{opacity:0;transform:perspective(1000px) translateY(26px) rotateX(6deg) scale(.985);
+.motion-ready [data-reveal]{opacity:0;transform:perspective(1000px) translateY(26px) rotateX(6deg) scale(.985);
   transition:opacity .8s var(--ease),transform .8s var(--ease);
   transition-delay:var(--d,0ms)}
-[data-reveal].in{opacity:1;transform:none}
+.motion-ready [data-reveal].in{opacity:1;transform:none}
 /* Fallback: if the runtime never runs, content must still be visible. */
 .no-motion [data-reveal]{opacity:1!important;transform:none!important}
 
@@ -381,12 +381,12 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
   animation-delay:var(--float-delay,0s)}
 
 /* Scroll-driven 3D entrance: rotates up onto its feet as it enters view. */
-[data-reveal-3d]{opacity:0;
+.motion-ready [data-reveal-3d]{opacity:0;
   transform:perspective(1200px) translateY(46px) rotateX(24deg) scale(.94);
   transform-origin:50% 100%;
   transition:opacity .9s var(--ease),transform .9s var(--ease);
   transition-delay:var(--d,0ms)}
-[data-reveal-3d].in{opacity:1;transform:none}
+.motion-ready [data-reveal-3d].in{opacity:1;transform:none}
 .no-motion [data-reveal-3d]{opacity:1!important;transform:none!important}
 
 /* =============================== forms ============================= */
@@ -424,6 +424,46 @@ input[type=number]{width:104px}
   header.top{padding:0 12px}
   nav.links a{padding:7px 8px;font-size:12px}
 }
+/* Shared collector workspace: legible chrome, quiet surfaces, artwork first. */
+header.top{height:68px;padding:0 max(24px,calc((100vw - 1136px)/2));gap:24px}
+.brand{font-size:23px;font-weight:650;letter-spacing:-.065em;margin-right:22px;gap:10px}
+.brand .dot{width:21px;height:24px;border-radius:2px;clip-path:polygon(20% 0,100% 0,80% 42%,100% 42%,30% 100%,43% 55%,0 55%);animation:none;box-shadow:none}
+nav.links{gap:5px;align-items:center}
+nav.links a{font-size:11px;letter-spacing:.045em;padding:12px 13px}
+nav.links a.on{background:none;color:var(--text)}
+nav.links a.on::after{bottom:-10px;box-shadow:none}
+.header-action{margin-left:auto;white-space:nowrap;font-size:11px;height:34px;padding:0 15px}
+.wrap{padding-top:50px}
+h1.page{font-size:clamp(40px,6vw,64px);padding-top:4px;letter-spacing:-.05em;color:var(--text);background:none}
+.eyebrow{background:none;box-shadow:none;padding:0;font-size:10px;letter-spacing:.13em;border-radius:0;margin-bottom:10px}
+.lede{font-size:14px;line-height:1.8}
+.grid{gap:32px 24px;grid-template-columns:repeat(auto-fill,minmax(165px,1fr))}
+.tile::before{opacity:.18}.tile:hover::before{opacity:.38}
+.meta{padding-top:13px}.meta .nm{font-size:13px}.meta .sub{font-size:11px}
+:focus-visible{outline:2px solid var(--accent-hi);outline-offset:5px}
+input:focus-visible,select:focus-visible{outline-offset:2px}
+.skip-link{position:fixed;top:10px;left:16px;z-index:100;padding:12px 20px;background:var(--panel);transform:translateY(-180%)}
+.skip-link:focus{transform:translateY(0)}
+.site-footer{position:relative;z-index:2;max-width:1200px;margin:auto;padding:30px 32px 40px;display:flex;justify-content:space-between;gap:20px;box-shadow:0 -1px 0 var(--line);font-size:11px;color:var(--text-4)}
+.footer-wordmark{font-size:18px;letter-spacing:-.05em;color:var(--text-2);font-weight:650}
+.footer-links{display:flex;gap:22px;align-items:center}.footer-links a:hover{color:var(--accent-hi)}
+.table-scroll{overflow-x:auto;width:100%;margin:20px 0;overscroll-behavior-x:contain}
+.table-scroll table{min-width:600px}
+.marquee:focus-within .track{animation-play-state:paused}
+@media(max-width:760px){
+ header.top{height:104px;display:grid;grid-template-columns:1fr auto;grid-template-rows:56px 48px;gap:0;padding:0 20px}
+ .brand{font-size:22px;margin:0}.header-action{grid-column:2;grid-row:1}
+ nav.links{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:0}
+ nav.links a{font-size:10px;padding:12px 7px;white-space:nowrap}
+ nav.links a.on::after{bottom:0;left:7px;right:7px}
+ .wrap{padding-top:30px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px}
+ .site-footer{padding:25px 20px;flex-wrap:wrap}.footer-links{gap:16px}
+ .btn,.chk,input[type=search],input[type=number],select{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ .motion-ready [data-reveal-3d]{opacity:1!important;transform:none!important}
+}
+
 `;
 
 export const MOTION_JS = `
@@ -432,6 +472,7 @@ export const MOTION_JS = `
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const noObserver = !('IntersectionObserver' in window);
   if (reduced || noObserver) document.documentElement.classList.add('no-motion');
+  else document.documentElement.classList.add('motion-ready');
 
   /* ---- 3D scroll reveal, with stagger ----
      Exposed as a rescan because the Pokedex grid inserts tiles by fetch. A
@@ -603,7 +644,12 @@ export const MOTION_JS = `
 
   /* ---- marquee: duplicate the track so the loop is seamless ---- */
   document.querySelectorAll('[data-marquee] .track').forEach((track) => {
-    track.append(...[...track.children].map((c) => c.cloneNode(true)));
+    track.append(...[...track.children].map((c) => {
+      const copy = c.cloneNode(true);
+      copy.setAttribute('aria-hidden', 'true');
+      copy.setAttribute('inert', '');
+      return copy;
+    }));
   });
 
   /* ---- parallax + scroll progress ---- */

@@ -302,6 +302,22 @@ const WALLET_CSS = `
   background-size:100% 100%;box-shadow:0 0 14px rgba(245,196,81,.4)}
 
 .dupes{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+/* Match the catalog's quieter framing while retaining the binder geometry. */
+.feed{gap:0}.rip{border-radius:0;background:none;box-shadow:0 1px 0 var(--line);padding:20px 8px}
+.rip:hover{background:var(--glass);transform:none;box-shadow:0 1px 0 var(--line-hi)}
+.rip.notable{box-shadow:0 1px 0 var(--line);background:none}
+.rip.major{border-radius:10px;margin:10px 0;background:rgba(245,196,81,.025);box-shadow:0 0 0 1px rgba(245,196,81,.2)}
+.wstats{gap:0;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line);margin:26px 0 30px}
+.wstats .b{border-radius:0;padding:24px 16px;background:none;box-shadow:none}
+.wstats .b:hover{box-shadow:none;transform:none}.wstats .k{font-size:9px}.wstats .v{margin-top:12px}
+.wallet-chip{overflow-wrap:anywhere;max-width:100%}
+@media(max-width:640px){
+ .wstats{grid-template-columns:repeat(2,minmax(0,1fr))}.wstats .b{padding:20px 10px}.wstats .v{font-size:21px}
+ .rip{padding:16px 4px}.rip .nm{font-size:14px}.rip .who{font-size:10px}.rip .val{font-size:14px}
+ .rip.major{padding:16px 10px}.tag{font-size:8px;margin-left:0;margin-top:4px}
+ .sets{grid-template-columns:1fr}.bnav a,.bnav span{min-height:44px;display:inline-flex;align-items:center}
+}
+
 </style>`;
 
 /* ------------------------------------------------------------------ *

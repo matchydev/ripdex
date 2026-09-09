@@ -70,8 +70,9 @@ button.reset:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
 .sentinel{height:1px}
 
 /* ---- card detail ---- */
+.detail>div{min-width:0}
 .detail{display:grid;grid-template-columns:minmax(280px,430px) 1fr;gap:52px;align-items:start}
-@media(max-width:860px){.detail{grid-template-columns:1fr;gap:30px}}
+@media(max-width:860px){.detail{grid-template-columns:minmax(0,1fr);gap:30px}}
 /* The hero card is a real slab: art at Z 0, gloss forward, so turning it
    parallaxes the highlight across the surface instead of sliding a gradient. */
 /* Same card-presentation rules as the grid tiles: true 63/88 ratio, cover,
@@ -134,7 +135,7 @@ table.odds td.n,table.pulls td.n{text-align:right}
    wallets are opening and what those cards are worth, and the client refetches
    it so a fresh rip joins the stream. Gold value = grail/major, emerald =
    notable — the same encoding the reveal and the catalog use. */
-.ticker{position:sticky;top:56px;z-index:39;display:flex;align-items:stretch;height:36px;
+.ticker{position:sticky;top:68px;z-index:39;display:flex;align-items:stretch;height:36px;
   background:rgba(8,9,10,.66);backdrop-filter:blur(22px) saturate(1.6);
   box-shadow:0 1px 0 var(--line);overflow:hidden}
 .ticker[hidden]{display:none}
@@ -163,18 +164,40 @@ table.odds td.n,table.pulls td.n{text-align:right}
 .tk.notable .tv{color:var(--em)}
 .tk .sep{width:3px;height:3px;border-radius:50%;background:var(--text-4);opacity:.6;flex:0 0 auto}
 @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+@media(max-width:760px){.ticker{top:104px}.ticker-tag{padding:0 10px;font-size:9px}}
+.ticker:focus-within .ticker-track{animation-play-state:paused}
+.controls{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding:20px 0 24px;background:none;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line);border-radius:0;backdrop-filter:none;margin-bottom:36px}
+.controls input:not([type=checkbox]),.controls select{min-width:0;width:100%}
+.controls #q{grid-column:span 3;height:46px;font-size:14px;background-color:var(--panel)}
+.controls #setId{grid-column:span 2;height:46px}.controls #sort{height:46px}
+.filter-more{grid-column:1/-1;grid-row:3}
+.filter-more summary{display:flex;justify-content:space-between;cursor:pointer;list-style:none;color:var(--text-3);font-size:12px;padding:14px 0;box-shadow:0 1px 0 var(--line)}
+.filter-more summary::-webkit-details-marker{display:none}.filter-more[open] summary span{transform:rotate(45deg)}
+.advanced-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:18px 0 0}
+.advanced-fields .chk{grid-column:span 2;font-size:11px}.advanced-fields input[type=checkbox]{width:auto;min-height:auto}
+.controls .count{grid-column:span 5;align-self:center;font-size:10px;letter-spacing:.07em}
+.controls .reset{justify-self:start;height:38px;font-size:11px;background:none}
+.grails{gap:32px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+@media(max-width:760px){
+ .controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .controls #q{grid-column:1/-1}.controls #setId,.controls #sort{grid-column:auto}
+ .filter-more{grid-row:4}.advanced-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .controls .count{grid-column:auto}.controls .reset{height:44px}
+ .grails{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px}
+}
+
 `;
 
 export function layout(title: string, active: string, body: string, extraHead = ''): string {
   const nav = [
     ['/', 'HOME'],
     ['/cards', 'POKÉDEX'],
-    ['/live', 'LIVE'],
-    ['/grails', 'GRAILS'],
     ['/packs', 'PACKS'],
+    ['/grails', 'GRAILS'],
+    ['/live', 'LIVE'],
   ]
     .map(([href, label]) =>
-      `<a href="${href}"${active === href ? ' class="on"' : ''}>${label}</a>`,
+      `<a href="${href}"${active === href ? ' class="on" aria-current="page"' : ''}>${label}</a>`,
     )
     .join('');
 
@@ -188,18 +211,21 @@ export function layout(title: string, active: string, body: string, extraHead = 
 <title>${esc(title)}</title>
 <style>${CSS}</style>${extraHead}
 </head><body>
+<a class="skip-link" href="#main-content">Skip to content</a>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="scrollbar-top" aria-hidden="true"></div>
 <header class="top">
   <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
-  <nav class="links">${nav}</nav>
+  <nav class="links" aria-label="Main navigation">${nav}</nav>
+  <a class="btn btn-ghost header-action" href="/packs">Explore packs ↗</a>
 </header>
 <div class="ticker" id="ripTicker" hidden aria-label="Live rips">
   <span class="ticker-tag"><span class="pulse-dot"></span>LIVE RIPS</span>
   <div class="ticker-view"><div class="ticker-track" id="ripTickerTrack"></div></div>
 </div>
-<div class="wrap">${body}</div>
+<main id="main-content" class="wrap${active === '/' ? ' home-wrap' : ''}">${body}</main>
+<footer class="site-footer"><a class="footer-wordmark" href="/">RIPDEX</a><div class="footer-links"><a href="/cards">Pokédex</a><a href="/packs#odds">Pack odds</a><a href="/live">Live pulls</a></div><span>For the love of the collection.</span></footer>
 ${MOTION_JS}
 ${TICKER_JS}
 </body></html>`;
@@ -316,10 +342,10 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
     </div>
 
     <h2 class="sec">VARIANTS &amp; REFERENCE PRICE</h2>
-    <table class="variants">
+    <div class="table-scroll" role="region" aria-label="Variants table" tabindex="0"><table class="variants">
       <thead><tr><th>VARIANT</th><th>REFERENCE</th><th>BASIS</th><th>TIER</th><th>CONFIDENCE</th><th></th><th>OBSERVED</th></tr></thead>
       <tbody>${c.variants.map(variantRow).join('')}</tbody>
-    </table>
+    </table></div>
 
     ${
       inferred.length || unpriced.length
@@ -392,24 +418,17 @@ export function cardsPage(index: CatalogIndex): string {
   const body = `
 <div class="eyebrow" data-reveal>THE CATALOG</div>
 <h1 class="page" data-reveal>Pokédex</h1>
-<p class="lede" data-reveal><b class="mono" data-count="${index.cards.length}">0</b> cards across
-  <b class="mono" data-count="${f.sets.length}">0</b> sets,
-  <b class="mono" data-count="${index.byVariantId.size}">0</b> tracked variants.
+<p class="lede" data-reveal><b class="mono" data-count="${index.cards.length}">${index.cards.length.toLocaleString()}</b> cards across
+  <b class="mono" data-count="${f.sets.length}">${f.sets.length}</b> sets,
+  <b class="mono" data-count="${index.byVariantId.size}">${index.byVariantId.size.toLocaleString()}</b> tracked variants.
   Every printing priced separately.</p>
 
-<div class="controls" data-reveal>
-  <input type="search" id="q" placeholder="Charizard, Pikachu, Mew…" autocomplete="off">
-  <select id="setId"><option value="">ALL SETS</option>${f.sets
+<div class="controls" role="search" aria-label="Filter cards" data-reveal>
+  <input type="search" aria-label="Search cards" id="q" placeholder="Charizard, Pikachu, Mew…" autocomplete="off">
+  <select id="setId" aria-label="Set"><option value="">ALL SETS</option>${f.sets
     .map((s) => `<option value="${esc(s.id)}">${esc(s.name)} (${s.count})</option>`)
     .join('')}</select>
-  <select id="type">${opts(f.types, 'ALL TYPES')}</select>
-  <select id="rarity">${opts(f.rarities, 'ALL RARITIES')}</select>
-  <select id="artist">${opts(f.artists, 'ALL ARTISTS')}</select>
-  <select id="year">${opts(f.years, 'ALL YEARS')}</select>
-  <input type="number" id="minPrice" placeholder="MIN $" min="0" step="1">
-  <input type="number" id="maxPrice" placeholder="MAX $" min="0" step="1">
-  <label class="chk"><input type="checkbox" id="inPacks"> AVAILABLE TO RIP</label>
-  <select id="sort">
+  <select id="sort" aria-label="Sort cards">
     <option value="value-desc">VALUE ↓</option>
     <option value="value-asc">VALUE ↑</option>
     <option value="newest">NEWEST</option>
@@ -418,18 +437,28 @@ export function cardsPage(index: CatalogIndex): string {
     <option value="name">NAME</option>
     <option value="number">NUMBER</option>
   </select>
+  <details class="filter-more"><summary>More filters <span aria-hidden="true">+</span></summary><div class="advanced-fields">
+  <select id="type" aria-label="Pokémon type">${opts(f.types, 'ALL TYPES')}</select>
+  <select id="rarity" aria-label="Rarity">${opts(f.rarities, 'ALL RARITIES')}</select>
+  <select id="artist" aria-label="Artist">${opts(f.artists, 'ALL ARTISTS')}</select>
+  <select id="year" aria-label="Release year">${opts(f.years, 'ALL YEARS')}</select>
+  <input type="number" aria-label="Minimum price" id="minPrice" placeholder="MIN $" min="0" step="1">
+  <input type="number" aria-label="Maximum price" id="maxPrice" placeholder="MAX $" min="0" step="1">
+  <label class="chk"><input type="checkbox" id="inPacks"> AVAILABLE TO RIP</label>
+  </div></details>
   <button class="reset" id="reset">RESET</button>
-  <span class="count" id="count"></span>
+  <span class="count" id="count" role="status" aria-live="polite">Loading cards…</span>
 </div>
 
-<div class="grid" id="grid" data-reveal-group="35"></div>
+<div class="grid" id="grid" aria-label="Card results" aria-busy="true" data-reveal-group="35"></div>
 <div class="sentinel" id="sentinel"></div>
-<div class="empty" id="empty" hidden>Nothing matches those filters.</div>
+<div class="empty-state" id="empty" hidden>Nothing matches those filters.</div>
 
 <script>
 const $ = (id) => document.getElementById(id);
 const FIELDS = ['q','setId','type','rarity','artist','year','minPrice','maxPrice','sort'];
-let page = 1, loading = false, done = false;
+let page = 1, loading = false, done = false, requestId = 0;
+let controller;
 
 function params(p) {
   const u = new URLSearchParams();
@@ -442,25 +471,40 @@ function params(p) {
 }
 
 async function load(reset) {
-  if (loading || (done && !reset)) return;
+  if (!reset && (loading || done)) return;
+  if (reset) {
+    controller?.abort();
+    page = 1; done = false;
+    $('grid').innerHTML = '';
+    $('empty').hidden = true;
+  }
+  controller = new AbortController();
+  const current = ++requestId;
   loading = true;
-  if (reset) { page = 1; done = false; $('grid').innerHTML = ''; }
-
-  const res = await fetch('/api/cards?' + params(page));
-  const data = await res.json();
-
-  $('grid').insertAdjacentHTML('beforeend', data.html);
-  // Newly inserted tiles start at opacity 0; hand them to the motion runtime.
-  window.RIPDEX_MOTION?.scan($('grid'));
-  $('count').textContent = data.totalCount.toLocaleString() + ' CARDS';
-  $('empty').hidden = data.totalCount !== 0;
-  done = !data.hasMore;
-  page++;
-  loading = false;
-
-  // Keep filling while the sentinel is still on screen, otherwise a short first
-  // page on a tall monitor would never trigger the observer again.
-  if (!done && $('sentinel').getBoundingClientRect().top < innerHeight) load(false);
+  $('grid').setAttribute('aria-busy', 'true');
+  $('count').textContent = 'Loading cards…';
+  try {
+    const res = await fetch('/api/cards?' + params(page), { signal: controller.signal });
+    if (!res.ok) throw new Error('Unable to load cards');
+    const data = await res.json();
+    if (current !== requestId) return;
+    $('grid').insertAdjacentHTML('beforeend', data.html);
+    window.RIPDEX_MOTION?.scan($('grid'));
+    $('count').textContent = data.totalCount.toLocaleString() + (data.totalCount === 1 ? ' CARD' : ' CARDS');
+    $('empty').hidden = data.totalCount !== 0;
+    done = !data.hasMore;
+    page++;
+  } catch (error) {
+    if (current !== requestId || error.name === 'AbortError') return;
+    $('count').textContent = 'Could not load cards. Change a filter or reset to retry.';
+    done = true;
+  } finally {
+    if (current === requestId) {
+      loading = false;
+      $('grid').setAttribute('aria-busy', 'false');
+    }
+  }
+  if (current === requestId && !done && $('sentinel').getBoundingClientRect().top < innerHeight) load(false);
 }
 
 let t;
@@ -478,8 +522,14 @@ $('reset').addEventListener('click', () => {
   load(true);
 });
 
-new IntersectionObserver((es) => { if (es[0].isIntersecting) load(false); },
-  { rootMargin: '600px' }).observe($('sentinel'));
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver((es) => { if (es[0].isIntersecting) load(false); },
+    { rootMargin: '600px' }).observe($('sentinel'));
+} else {
+  addEventListener('scroll', () => {
+    if ($('sentinel').getBoundingClientRect().top < innerHeight + 600) load(false);
+  }, { passive: true });
+}
 
 load(true);
 </script>`;
@@ -525,7 +575,7 @@ table.odds td.n{font-family:ui-monospace,Menlo,monospace;text-align:right}
 .ev b{color:var(--text-2);font-weight:560}
 
 /* ============================= case gallery =========================
-   Each pack presented as a gambling case: its own theme colour (--ca, the
+   Each pack presented as a collectible case: its own theme colour (--ca, the
    pack's artwork accent), the hero prize behind glass, the best cards peeking
    out, and one action — OPEN CASE. The numbers still live below, anchored, for
    anyone who wants the exact odds before they spend. */
@@ -577,6 +627,21 @@ table.odds td.n{font-family:ui-monospace,Menlo,monospace;text-align:right}
 .case-odds{align-self:flex-start;font-size:11px;font-weight:500;color:var(--text-4);
   transition:color .2s var(--ease)}
 .case-odds:hover{color:color-mix(in srgb,var(--ca) 55%,var(--text))}
+.cases{gap:28px 24px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.case{background:var(--panel);box-shadow:0 0 0 1px var(--line)}
+.case:hover{box-shadow:0 0 0 1px var(--line-max),0 20px 40px -25px rgba(113,112,255,.28)}
+.case-art{height:240px;background-image:radial-gradient(ellipse at 50% 80%,rgba(113,112,255,.16),transparent 65%)}
+.case-art::before{inset:26px 0 20px;background-size:contain;background-repeat:no-repeat;background-position:center;transform:rotate(-6deg)}
+.case:hover .case-art::before{transform:rotate(0deg) translateY(-5px)}
+.case-art::after{background:linear-gradient(0deg,var(--panel),transparent 35%)}
+.case-thumbs{bottom:14px}.case-thumbs img{width:25px;height:35px}
+.case-body{padding:18px 20px 20px;gap:14px}.case-nm{font-size:15px}.case-top{font-size:8px}
+.case-open{background:var(--accent);color:var(--text);box-shadow:none;font-size:10px}
+.case-odds:hover{color:var(--accent-hi)}
+.pack-head h1.page{font-size:30px}.pack-head{padding-top:22px}
+@media(max-width:1000px){.cases{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.cases{grid-template-columns:1fr}.case-art{height:230px}.case-art::before{inset:22px 0}.case-open{min-height:44px}.bar-wrap{flex-wrap:wrap}.bar{min-width:70px}.odds-row>div{min-width:0}.val-right{min-width:60px}.pack-head h1.page{font-size:28px}}
+
 </style>`;
 
 /** The hero prize art for a pack: its configured wrapper hero, else its top card. */
@@ -598,7 +663,7 @@ function packTopValue(pack: PackConfig, index: CatalogIndex): number {
   );
 }
 
-/** One pack rendered as a gambling case for the gallery. */
+/** One pack rendered as a collectible case for the gallery. */
 function caseCard(pack: PackConfig, index: CatalogIndex): string {
   const resolved = oddsTable(pack.pool).map((r) => {
     const hit = index.byVariantId.get(r.variantId);
@@ -694,7 +759,7 @@ ${band(nonGrail.length <= 12 ? 'ALL OUTCOMES' : 'MOST COMMON', common, false)}
 ${grails.length ? band('GRAILS', grails, true) : ''}
 
 <h2 class="sec">FULL ODDS TABLE</h2>
-<table class="odds">
+<div class="table-scroll" role="region" aria-label="Odds table" tabindex="0"><table class="odds">
   <thead><tr><th>CARD</th><th>VARIANT</th><th class="n">WEIGHT</th><th class="n">ODDS</th><th class="n">1 IN</th><th class="n">REFERENCE</th></tr></thead>
   <tbody>
     ${resolved
@@ -710,7 +775,7 @@ ${grails.length ? band('GRAILS', grails, true) : ''}
       )
       .join('')}
   </tbody>
-</table>
+</table></div>
 
 <div class="ev">
   Expected reference value of one rip: <b>${money(ev)}</b>, against a pack price of
@@ -727,7 +792,7 @@ ${grails.length ? band('GRAILS', grails, true) : ''}
 <div class="eyebrow" data-reveal>THE CASES</div>
 <h1 class="page" data-reveal>Choose your case</h1>
 <p class="lede" data-reveal>Every case is a curated pool with published, exact odds. Pick one, tear it open,
-  keep what you pull. <b class="mono" data-count="${packs.length}">0</b> cases live — the numbers for each are below.</p>
+  keep what you pull. <b class="mono" data-count="${packs.length}">${packs.length}</b> cases live — the numbers for each are below.</p>
 <div class="cases" data-reveal-group="55">
   ${galleryPacks.map((p) => caseCard(p, index)).join('')}
 </div>
