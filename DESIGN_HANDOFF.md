@@ -81,3 +81,11 @@ The user requested $RIP on the homepage, pons/Robinhood Chain branding, a large 
 - `rip-page.ts` changes are presentation only: persistent header/Buy, a demo-balance label, pack-specific odds link, and a narrow-screen width fix. Gameplay, balances, grades, sale calculations, randomization, and ledger mutations are unchanged.
 
 Validation: 186 existing core tests and 9 web tests passed (195 total). Six new tests cover address validation, official token URL construction, no copying of placeholders, copy-before-navigation, denied clipboard access, and modified clicks. All eight page routes returned 200; inline scripts parsed; both logo assets served with correct MIME types. Browser checks covered mobile header/CA navigation from the rip screen, pack previews, binder lookup, live refresh, grail sorting, card breadcrumbs, token FAQ, and responsive layouts at 320, 390, and 1440 pixels. No production deployment or real token launch was performed.
+
+## Fourth pass — RIP token identity
+
+Created a custom beveled violet R with a diagonal pack-tear notch using the built-in image generator. The original transparent PNG is committed at `public/art/brands/rip-r-v1.png`; prompt and provenance are in the adjacent README. `brand.ts` centralizes markup, favicon links, and responsive brand styling.
+
+Replaced the old lightning/dot mark in both header implementations. Applied the new R to the footer, homepage announcement and desktop kicker, token coin, desktop Buy button, demo balance, and rip card back. A download link in the token section serves the original artwork. All catalog, packs, grails, live, binder, detail, home and rip routes share the identity. Small mobile controls retain enough space by hiding only the decorative Buy-button icon. Also constrained the rip screen's select grid/specs to the available width.
+
+Validation: all nine existing web tests pass; eight routes return 200, include the brand/favicon, and have parseable scripts. The PNG returns 200 with image/png. Browser review confirms image loading, readable headers and token artwork at desktop and narrow mobile widths. No token or gameplay logic changed.

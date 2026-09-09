@@ -1,3 +1,4 @@
+import { ripMark, RIP_MARK_URL } from './brand.ts';
 /** Public launch information only. Never connects a wallet or submits a trade. */
 export function tokenConfig(env: Record<string, string | undefined> = process.env) {
   const candidate = (env.RIPDEX_TOKEN_ADDRESS ?? '').trim();
@@ -8,7 +9,7 @@ export function tokenConfig(env: Record<string, string | undefined> = process.en
 }
 
 export function tokenHeader() {
-  return '<a class="token-buy" href="/#rip-contract" data-token-buy>Buy $RIP <span aria-hidden="true">↗</span></a>';
+  return `<a class="token-buy" href="/#rip-contract" data-token-buy>${ripMark()}Buy $RIP <span aria-hidden="true">↗</span></a>`;
 }
 
 export function tokenSection() {
@@ -21,7 +22,7 @@ export function tokenSection() {
       <p class="token-description">Planned to launch through pons on Robinhood Chain. Launch details, tokenomics, and the official contract will live right here.</p>
       <a class="token-detail-link" href="#tokenomics">Explore the launch plan <span aria-hidden="true">↓</span></a>
     </div>
-    <div class="rip-coin-scene" aria-hidden="true"><div class="rip-coin"><span class="coin-rim">RIPDEX · THE COLLECTOR’S TOKEN</span><strong>$RIP</strong><span class="coin-bottom">COMING SOON</span></div><div class="coin-shadow"></div></div>
+    <div class="rip-coin-scene" aria-hidden="true"><div class="rip-coin"><span class="coin-rim">RIPDEX · THE COLLECTOR’S TOKEN</span>${ripMark()}<span class="coin-bottom">COMING SOON</span></div><div class="coin-shadow"></div></div>
   </div>
   <div class="token-contract" id="rip-contract" tabindex="-1">
     <button type="button" class="contract-button" data-copy-ca ${address ? '' : 'aria-disabled="true"'} aria-describedby="contract-help"><span class="ca-label">CA:</span><span class="ca-address">${address || 'Coming soon'}</span><span class="ca-icon" aria-hidden="true">${address ? '⧉' : '↗'}</span></button>
@@ -34,6 +35,7 @@ export function tokenSection() {
     <div><span class="section-index">02 / TOKENOMICS</span><h3>The numbers come next.</h3><dl class="tokenomics-list">${['Total supply','Launch allocation','Team & vesting','Liquidity','Trading fees','Launch date'].map(label => `<div><dt>${label}</dt><dd>Coming soon</dd></div>`).join('')}</dl><p class="token-small">Final figures will be published once the launch configuration is confirmed.</p></div>
   </div>
   <div class="token-faq"><details><summary>Is $RIP live yet?<span aria-hidden="true">+</span></summary><p>The $RIP launch is coming soon. This page will publish the confirmed launch date, contract address, and tokenomics.</p></details><details><summary>Will $RIP be listed in the Robinhood app?<span aria-hidden="true">+</span></summary><p>The plan is a token launch on Robinhood Chain through pons. This does not announce a listing in the Robinhood brokerage app or an endorsement by Robinhood or pons.</p></details><details><summary>Is my demo $RIP balance an onchain token?<span aria-hidden="true">+</span></summary><p>No. The current demo balance is used to try pack openings and the collection experience. It is not an onchain balance, and no conversion or redemption has been announced.</p></details></div>
+  <a class="token-brand-download" href="${RIP_MARK_URL}" download="rip-token-r.png">Download the RIP token image <span aria-hidden="true">↗</span></a>
   <p class="token-source">Launch platform: <a href="https://docs.ponsfamily.com/v2" target="_blank" rel="noopener noreferrer">pons documentation ↗</a><span>Network: <a href="https://docs.robinhood.com/chain/" target="_blank" rel="noopener noreferrer">Robinhood Chain ↗</a></span></p>
 </section>`;
 }

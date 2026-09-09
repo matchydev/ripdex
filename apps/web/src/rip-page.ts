@@ -36,6 +36,7 @@ import type { CardListing, PackConfig } from '../../../packages/pokemon-core/src
 import { esc } from './render.ts';
 import { MOTION_JS } from './design.ts';
 import { tokenHeader, tokenUI, TOKEN_CSS } from './token.ts';
+import { ripMark, BRAND_HEAD, BRAND_CSS } from './brand.ts';
 
 const RIP_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap');
@@ -670,20 +671,21 @@ export function ripPage(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
+${BRAND_HEAD}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>${packName} — RIPDEX</title>
-<style>${RIP_CSS + TOKEN_CSS}
-#s-select .center{min-width:0;max-width:100%}#chrome.hide{opacity:1;pointer-events:auto}#chrome{z-index:20}.chrome-right{flex-wrap:wrap;justify-content:flex-end}.chrome-right .token-buy{min-height:34px}.bal:before{content:"DEMO";font-size:8px;color:var(--text-3);margin-right:5px}@media(max-width:480px){#chrome{inset:12px;align-items:flex-start;gap:10px}#chrome .brand{font-size:15px}.chrome-right{gap:6px;max-width:205px}.chrome-right .bal{font-size:11px}.chrome-right .odds-link{font-size:9px}.chrome-right .token-buy{font-size:10px;min-height:30px;padding:0 10px}}
+<style>${RIP_CSS + TOKEN_CSS + BRAND_CSS}
+#s-select{grid-template-columns:minmax(0,1fr)}#s-select .center{min-width:0;max-width:100%}#s-select .specs{max-width:100%}#chrome.hide{opacity:1;pointer-events:auto}#chrome{z-index:20}.chrome-right{flex-wrap:wrap;justify-content:flex-end}.chrome-right .token-buy{min-height:34px}.bal:before{content:"DEMO";font-size:8px;color:var(--text-3);margin-right:5px}@media(max-width:480px){#chrome{inset:12px;align-items:flex-start;gap:10px}#chrome .brand{font-size:15px}.chrome-right{gap:6px;max-width:205px}.chrome-right .bal{font-size:11px}.chrome-right .odds-link{font-size:9px}.chrome-right .token-buy{font-size:10px;min-height:30px;padding:0 10px}}
 </style>
 </head><body>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <div id="grailFx"></div>
 <div class="filmgrain" aria-hidden="true"></div>
 <div id="chrome">
-  <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
+  <a class="brand" href="/">${ripMark()}RIPDEX</a>
   <div class="chrome-right">
-    <span class="bal" id="balChip" title="Your demo $RIP balance — not an onchain token"><span id="balNum">—</span><span class="u">$RIP</span></span>
+    <span class="bal" id="balChip" title="Your demo $RIP balance — not an onchain token">${ripMark()}<span id="balNum">—</span><span class="u">$RIP</span></span>
     <button class="odds-link mute-btn" id="muteBtn" type="button" aria-label="Toggle sound">
       <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
         <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"></path>
@@ -749,7 +751,7 @@ export function ripPage(
         <span class="slab-label" id="slabLabel"></span>
       </div>
       <div class="holder" id="holder"><div class="card" id="card">
-        <div class="face back"><div class="edge"></div><div class="sigil"><b>RIP</b></div></div>
+        <div class="face back"><div class="edge"></div><div class="sigil">${ripMark()}</div></div>
         <div class="thick a" aria-hidden="true"></div>
         <div class="thick b" aria-hidden="true"></div>
         <div class="face front">

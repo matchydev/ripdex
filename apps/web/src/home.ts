@@ -30,6 +30,7 @@ import type {
 } from '../../../packages/pokemon-core/src/index.ts';
 import { esc, money, layout, tile } from './render.ts';
 import { tokenSection } from './token.ts';
+import { ripMark } from './brand.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
 
 const HOME_CSS = `
@@ -377,7 +378,7 @@ export function homePage(
 <div class="lobby-stage">
 <section class="hero" aria-labelledby="home-title">
   <div class="hero-inner">
-    <div class="hero-top" data-reveal><span>THE POKÉMON COLLECTOR’S CLUB</span></div>
+    <div class="hero-top" data-reveal>${ripMark()}<span>THE POKÉMON COLLECTOR’S CLUB</span></div>
     <h1 id="home-title" data-reveal>RIP<span>DEX</span></h1>
     <div class="hero-main">
       <div class="hero-copy" data-reveal-group="70">
@@ -403,7 +404,7 @@ export function homePage(
 </aside>
 </div>
 <div class="home-inner">
-<a class="token-announcement" href="#rip-token"><span><b>$RIP</b> The next chapter is coming.</span><span>Launch plan <span aria-hidden="true">↗</span></span></a>
+<a class="token-announcement" href="#rip-token"><span>${ripMark()}<b>$RIP</b> The next chapter is coming.</span><span>Launch plan <span aria-hidden="true">↗</span></span></a>
 <section class="set-section" aria-label="Browse Pokémon sets">
  ${index.facets.sets.map((set) => {
    const cards = index.cards.filter((c) => c.setId === set.id);
