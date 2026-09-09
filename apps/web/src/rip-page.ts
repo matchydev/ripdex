@@ -264,6 +264,9 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   filter:saturate(1.05) contrast(1.06)}
 .pack-hero::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(8,9,18,.44),rgba(7,8,14,.88) 70%,#07080e)}
+/* A generated foil wrapper is the pack face: fill it, drop the card-crop veil. */
+.pack-hero.wrapped{background-size:cover;background-position:50% 42%;opacity:1;filter:none}
+.pack-hero.wrapped::after{display:none}
 .pk-sheen{overflow:hidden;pointer-events:none;mix-blend-mode:screen}
 .pk-sheen::after{content:"";position:absolute;inset:-20%;
   background:linear-gradient(74deg,transparent 32%,rgba(113,112,255,.34) 46%,rgba(255,255,255,.62) 50%,rgba(150,140,255,.32) 55%,transparent 70%);
@@ -624,11 +627,11 @@ function heroFor(pack: PackConfig, best: CardListing | null): string {
 }
 
 /** The pack, as a stack of planes rather than a picture of a pack. */
-function packObject(hero: string, packName: string, depth: boolean): string {
+function packObject(hero: string, packName: string, depth: boolean, wrapped: boolean): string {
   return `<div class="pack${depth ? ' depth' : ''}"${depth ? ' id="packArt" data-depth="1"' : ''}>
       <div class="plane pk-slab"${depth ? ' data-layer="-18"' : ''}></div>
       <div class="plane pk-base"${depth ? ' data-layer="0"' : ''}>
-        <div class="pack-hero" style="background-image:url(${esc(hero)})"></div>
+        <div class="pack-hero${wrapped ? ' wrapped' : ''}" style="background-image:url(${esc(hero)})"></div>
       </div>
       <div class="plane pk-sheen"${depth ? ' data-layer="14"' : ''}></div>
       <div class="plane pk-rim"${depth ? ' data-layer="16"' : ''}></div>
@@ -659,8 +662,13 @@ export function ripPage(
   best: CardListing | null,
   topValue: number,
   reel: ReelCard[],
+  wrapper?: string,
 ): string {
   const hero = heroFor(pack, best);
+  // The sealed pack you tear is the generated foil wrapper when one exists,
+  // else the pack's hero card cropped into the pack silhouette.
+  const packArt = wrapper || hero;
+  const wrapped = Boolean(wrapper);
   const packName = esc(pack.name);
   const embers = '<i></i>'.repeat(14);
 
@@ -701,7 +709,7 @@ export function ripPage(
       <h1 class="ttl" data-reveal>${packName}</h1>
       <div class="scene" data-reveal-3d>
         <div class="pack-hold floaty grounded" style="--float-dur:8.4s;--float-amp:13px">
-          ${packObject(hero, packName, true)}
+          ${packObject(packArt, packName, true, wrapped)}
         </div>
       </div>
       <div class="specs" data-reveal>
@@ -731,7 +739,7 @@ export function ripPage(
   <section class="step" id="s-tear"><div>
     <div id="tearWrap">
       <div class="strip" id="strip"></div>
-      ${packObject(hero, packName, false)}
+      ${packObject(packArt, packName, false, wrapped)}
       <div class="hint" id="tearHint">DRAG ACROSS TO TEAR</div>
     </div>
   </div></section>

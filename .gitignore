@@ -26,3 +26,6 @@ __adv.tmp*
 
 # Ad-hoc visual test pages
 _scratch-*.html
+
+# OpenAI art drafts (not implemented)
+public/art/generated/

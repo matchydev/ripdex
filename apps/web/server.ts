@@ -366,7 +366,8 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
         weight: entry.weight,
       });
     }
-    return html(res, ripPage(pack, best, top, reel));
+    const wrappers = await packWrappers();
+    return html(res, ripPage(pack, best, top, reel, wrappers[pack.id]));
   }
 
   if (path === '/api/rip' && req.method === 'POST') {
