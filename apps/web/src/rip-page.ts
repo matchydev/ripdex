@@ -551,6 +551,32 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .4s var(--spring)}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
+/* Big-win celebration — a coin burst + a floating profit number when a pull
+   sells for more than the pack cost. Gold, not violet: this is money. */
+.sell-btn.win{background:linear-gradient(180deg,#ffe08a,var(--gold));color:#3a2600;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.42),0 12px 34px -10px rgba(245,196,81,.9)}
+.sell-btn .prof{font-size:10px;font-weight:800;letter-spacing:-.01em;opacity:.9}
+.coins{position:fixed;inset:0;z-index:9;pointer-events:none;overflow:hidden}
+.coin{position:absolute;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  font:800 11px/1 'Inter',ui-sans-serif;color:#7a5200;
+  background:radial-gradient(circle at 35% 30%,#ffe9a8,#f5c451 46%,#a9760c 92%);
+  box-shadow:0 0 0 1px rgba(120,80,0,.5),0 2px 7px rgba(0,0,0,.55);will-change:transform,opacity}
+@keyframes coinFly{
+  0%{opacity:0;transform:translate(0,0) scale(.4) rotate(0)}
+  12%{opacity:1}
+  100%{opacity:0;transform:translate(var(--cx),var(--cy)) scale(1) rotate(var(--cr))}}
+.profit-pop{position:fixed;left:50%;top:42%;z-index:10;transform:translate(-50%,0);pointer-events:none;
+  font:800 clamp(30px,7.5vw,58px)/1 ui-monospace,Menlo,monospace;letter-spacing:-.03em;color:var(--gold);
+  text-shadow:0 0 44px rgba(245,196,81,.6),0 2px 10px rgba(0,0,0,.6);opacity:0}
+.profit-pop.on{animation:profitPop 1.7s var(--ease) forwards}
+@keyframes profitPop{
+  0%{opacity:0;transform:translate(-50%,26px) scale(.7)}
+  16%{opacity:1;transform:translate(-50%,-8px) scale(1.09)}
+  28%{transform:translate(-50%,0) scale(1)}
+  76%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-46px) scale(1)}}
+@media(prefers-reduced-motion:reduce){.coin,.profit-pop.on{animation-duration:.2s!important}}
+
 /* ========================== grail takeover =========================
    Deeper ground, a slow radial bloom behind the card, and a denser spark
    field. All of it lives inside #grailFx, which the reveal code empties on
@@ -851,6 +877,36 @@ function sLand(tier){
   }
 }
 const sStamp = () => blip(220, 0.09, 'square', 0.1, -80); // the PSA grade stamping on
+function sCoins(){ // a jingle of coins + a chord, for a profitable sell
+  if (muted) return;
+  for (let i = 0; i < 7; i++) setTimeout(() => blip(880 + i * 70 + Math.random() * 90, 0.05, 'square', 0.045, 0), i * 42);
+  setTimeout(() => { blip(784, 0.4, 'triangle', 0.06, 0); blip(1175, 0.5, 'triangle', 0.045, 0); }, 120);
+}
+
+// A burst of gold coins fountaining up from the sell area, and a big floating
+// profit number. Fires only when a pull sells for MORE than the pack cost.
+function coinBurst(count){
+  let c = document.getElementById('coins');
+  if (!c){ c = document.createElement('div'); c.className = 'coins'; c.id = 'coins'; document.body.appendChild(c); }
+  c.innerHTML = '';
+  for (let i = 0; i < count; i++){
+    const coin = document.createElement('div'); coin.className = 'coin'; coin.textContent = '$';
+    coin.style.left = (46 + Math.random() * 8) + '%';
+    coin.style.top = (66 + Math.random() * 10) + '%';
+    coin.style.setProperty('--cx', ((Math.random() * 2 - 1) * (140 + Math.random() * 260)).toFixed(0) + 'px');
+    coin.style.setProperty('--cy', (-(120 + Math.random() * 300)).toFixed(0) + 'px');
+    coin.style.setProperty('--cr', (Math.random() * 900 - 450).toFixed(0) + 'deg');
+    coin.style.animation = 'coinFly ' + (1.1 + Math.random() * 0.8) + 's cubic-bezier(.2,.7,.3,1) forwards';
+    coin.style.animationDelay = (Math.random() * 0.16) + 's';
+    c.appendChild(coin);
+  }
+  setTimeout(() => { if (c) c.innerHTML = ''; }, 2400);
+}
+function profitPop(text){
+  let p = document.getElementById('profitPop');
+  if (!p){ p = document.createElement('div'); p.className = 'profit-pop'; p.id = 'profitPop'; document.body.appendChild(p); }
+  p.textContent = text; p.classList.remove('on'); void p.offsetWidth; p.classList.add('on');
+}
 function setMuted(m){
   muted = m;
   try { localStorage.setItem('ripdex_muted', m ? '1' : '0'); } catch (e) {}
@@ -1174,8 +1230,13 @@ function fill(){
     '<span class="chip">' + result.oddsLabel + ' ODDS</span>' +
     '<span class="chip">' + result.variantLabel.toUpperCase() + '</span>';
   const sb = document.getElementById('sellBtn');
-  sb.classList.remove('sold'); sb.disabled = false;
-  sb.innerHTML = 'SELL · <span class="mono">' + rip$(result.sellValue) + '</span> <span class="ru">$RIP</span>';
+  sb.classList.remove('sold', 'win'); sb.disabled = false;
+  // A pull that sells for more than the pack cost is a winner — flag the profit
+  // on the button and light it gold; the burst comes on the actual sell.
+  const profit = result.sellValue - PACK_PRICE;
+  sb.innerHTML = 'SELL · <span class="mono">' + rip$(result.sellValue) + '</span> <span class="ru">$RIP</span>' +
+    (profit > 0 ? ' <span class="prof">▲ +' + rip$(profit) + '</span>' : '');
+  if (profit > 0) sb.classList.add('win');
   document.getElementById('cardLink').href = result.href;
   document.getElementById('meta').classList.add('on');
   setTimeout(() => document.getElementById('after').classList.add('on'), 260);
@@ -1223,6 +1284,8 @@ function reset(){
   document.getElementById('reelEyebrow').textContent = 'SETTLING';
   document.getElementById('slabHead').classList.remove('on');
   document.getElementById('toast').classList.remove('on');
+  const co = document.getElementById('coins'); if (co) co.innerHTML = '';
+  const pp = document.getElementById('profitPop'); if (pp) pp.classList.remove('on');
   show('s-select');
 }
 
@@ -1255,9 +1318,14 @@ sellBtn.onclick = async () => {
     const d = await r.json();
     if (r.ok){
       setBalance(d.balance, 'up');
-      sellBtn.classList.add('sold');
+      sellBtn.classList.remove('win'); sellBtn.classList.add('sold');
       sellBtn.innerHTML = 'SOLD · +<span class="mono">' + rip$(d.credited) + '</span> <span class="ru">$RIP</span>';
-      if (!muted) blip(680, 0.14, 'triangle', 0.08, 240);
+      const profit = d.credited - PACK_PRICE;
+      if (profit > 0){
+        coinBurst(Math.min(64, 16 + Math.round(profit / Math.max(1, PACK_PRICE)) * 5));
+        profitPop('+' + rip$(profit) + ' $RIP');
+        sCoins();
+      } else if (!muted){ blip(680, 0.14, 'triangle', 0.08, 240); }
     } else {
       if (typeof d.balance === 'number') setBalance(d.balance);
       toast(d.error || 'Sell failed'); sellBtn.disabled = false;
