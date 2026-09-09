@@ -39,60 +39,78 @@ export const money = (n: number | null, currency = 'USD'): string =>
  * primitives and the tile treatment all live in design.ts; only what is
  * genuinely specific to these pages belongs here.
  */
+/**
+ * Page-level styles built on the design system. Tokens, surfaces, motion
+ * primitives and the tile treatment live in design.ts; only what is genuinely
+ * specific to these pages belongs here.
+ */
 export const CSS = DESIGN_CSS + `
 
 /* ---- controls (Pokedex) ---- */
 .controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:26px;
-  padding:14px;border:1px solid var(--line);border-radius:var(--r-md);
-  background:var(--glass);backdrop-filter:blur(14px)}
-.count{font-size:11.5px;color:var(--muted);letter-spacing:.12em;margin-left:auto;
+  padding:14px;border-radius:var(--r-md);background:var(--glass);
+  box-shadow:0 0 0 1px var(--line);backdrop-filter:blur(14px)}
+.count{font-size:12px;font-weight:510;color:var(--text-3);margin-left:auto;
   font-variant-numeric:tabular-nums}
-button.reset{border:1px solid var(--line);color:var(--muted);border-radius:var(--r-sm);
-  padding:10px 14px;font-size:12px;transition:color .25s,border-color .25s}
-button.reset:hover{color:var(--ink);border-color:var(--line-2)}
+button.reset{color:var(--text-3);border-radius:var(--r-sm);height:38px;padding:0 14px;
+  font-size:13px;font-weight:510;box-shadow:0 0 0 1px var(--line);background:var(--glass);
+  transition:color .2s var(--ease),box-shadow .2s var(--ease)}
+button.reset:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
 .sentinel{height:1px}
 
 /* ---- card detail ---- */
 .detail{display:grid;grid-template-columns:minmax(280px,430px) 1fr;gap:52px;align-items:start}
 @media(max-width:860px){.detail{grid-template-columns:1fr;gap:30px}}
+/* The hero card is a real slab: art at Z 0, gloss forward, so turning it
+   parallaxes the highlight across the surface instead of sliding a gradient. */
 .hero-card{position:relative;border-radius:var(--r-md);overflow:hidden;
-  box-shadow:var(--shadow-lg);transition:transform .45s var(--ease)}
+  box-shadow:var(--sh-3);transform-style:preserve-3d}
 .hero-card img{width:100%;display:block}
 .hero-card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
-  background:radial-gradient(58% 42% at var(--mx,50%) var(--my,40%),rgba(255,255,255,.30),transparent 66%);
-  mix-blend-mode:overlay;transition:opacity .35s}
+  background:radial-gradient(58% 42% at var(--mx,50%) var(--my,40%),rgba(255,255,255,.26),transparent 66%);
+  mix-blend-mode:overlay;transition:opacity .35s var(--ease)}
 .hero-card:hover::after{opacity:1}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:2px;
-  margin:24px 0 8px;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;
-  background:var(--line)}
-.fact{padding:13px 15px;background:var(--bg-2)}
-.fact .k{font-size:9.5px;letter-spacing:.2em;color:var(--faint)}
-.fact .v{margin-top:5px;font-size:14px;font-weight:650}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;
+  margin:24px 0 8px;border-radius:var(--r-md);overflow:hidden;
+  background:var(--line);box-shadow:0 0 0 1px var(--line)}
+.fact{padding:14px 15px;background:var(--panel);transition:background .25s var(--ease)}
+.fact:hover{background:var(--elevated)}
+.fact .k{font-size:10px;font-weight:560;letter-spacing:.055em;color:var(--text-4)}
+.fact .v{margin-top:6px;font-size:14px;font-weight:560;letter-spacing:-.014em}
+
 table.variants,table.odds,table.pulls{width:100%;border-collapse:collapse;font-size:13px}
-table.variants th,table.odds th,table.pulls th{text-align:left;font-size:9.5px;
-  letter-spacing:.16em;color:var(--faint);font-weight:600;padding:0 12px 10px 0}
-table.variants td,table.odds td,table.pulls td{padding:12px 12px 12px 0;
-  border-top:1px solid var(--line)}
-table.variants tbody tr,table.pulls tbody tr{transition:background .25s}
-table.variants tbody tr:hover,table.pulls tbody tr:hover{background:var(--surface)}
-table.variants td.num,table.odds td.n,table.pulls td.n{font-family:ui-monospace,Menlo,monospace;
-  font-weight:650;font-variant-numeric:tabular-nums}
+table.variants th,table.odds th,table.pulls th{text-align:left;font-size:10px;font-weight:560;
+  letter-spacing:.055em;color:var(--text-4);padding:0 12px 11px 0;white-space:nowrap}
+table.variants td,table.odds td,table.pulls td{padding:12px 12px 12px 0;color:var(--text-2);
+  box-shadow:inset 0 1px 0 var(--line)}
+table.variants tbody tr,table.pulls tbody tr,table.odds tbody tr{transition:background .22s var(--ease)}
+table.variants tbody tr:hover,table.pulls tbody tr:hover,table.odds tbody tr:hover{
+  background:rgba(255,255,255,.035)}
+table.variants td.num,table.odds td.n,table.pulls td.n{
+  font-family:ui-monospace,Menlo,monospace;font-weight:560;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;color:var(--text)}
 table.odds td.n,table.pulls td.n{text-align:right}
-.pill{display:inline-block;font-size:9px;letter-spacing:.12em;padding:4px 8px;border-radius:6px;
-  border:1px solid var(--line);color:var(--muted)}
-.pill.rep{color:var(--em);border-color:rgba(0,229,160,.34);background:rgba(0,229,160,.06)}
-.pill.inf{color:#D8A44E;border-color:rgba(216,164,78,.34);background:rgba(216,164,78,.06)}
-.note{font-size:12.5px;color:var(--muted);line-height:1.68;max-width:64ch}
-.src{font-size:11.5px;color:var(--faint);margin-top:10px}
-.src a{color:var(--muted);text-decoration:underline}
+.pill{display:inline-block;font-size:10px;font-weight:540;letter-spacing:.03em;
+  padding:4px 8px;border-radius:6px;color:var(--text-3);box-shadow:0 0 0 1px var(--line)}
+.pill.rep{color:var(--em);box-shadow:0 0 0 1px rgba(74,222,155,.3);background:rgba(74,222,155,.07)}
+.pill.inf{color:var(--warn);box-shadow:0 0 0 1px rgba(216,164,78,.3);background:rgba(216,164,78,.07)}
+.note{font-size:13px;color:var(--text-3);line-height:1.68;max-width:64ch}
+.note b{color:var(--text-2);font-weight:560}
+.src{font-size:12px;color:var(--text-4);margin-top:12px}
+.src a{color:var(--text-3);text-decoration:underline;text-underline-offset:2px}
+.src a:hover{color:var(--accent-hi)}
 
 /* ---- grails ---- */
 .grails{display:grid;gap:24px;grid-template-columns:repeat(auto-fill,minmax(216px,1fr))}
-.gcard .shot{box-shadow:0 0 0 1px rgba(255,209,102,.30),0 18px 46px -18px rgba(255,209,102,.28),var(--shadow)}
-.gcard:hover .shot{box-shadow:0 0 0 1px rgba(255,209,102,.55),0 26px 66px -20px rgba(255,209,102,.45),var(--shadow-lg)}
-.gcard .rank{position:absolute;bottom:8px;left:8px;z-index:2;font-size:9px;letter-spacing:.14em;
-  background:rgba(0,0,0,.78);backdrop-filter:blur(6px);color:var(--gold);padding:5px 9px;
-  border-radius:6px;border:1px solid rgba(255,209,102,.32);font-weight:800}
+/* Gold rims the grail tiles. It is the only place gold appears on a surface
+   rather than on a number, and it earns it: these are the chase cards. */
+.gcard .shot{box-shadow:0 0 0 1px rgba(245,196,81,.28),
+  0 18px 46px -18px rgba(245,196,81,.22),var(--sh-1)}
+.gcard:hover .shot{box-shadow:0 0 0 1px rgba(245,196,81,.5),
+  0 28px 68px -20px rgba(245,196,81,.4),var(--sh-3)}
+.gcard .rank{position:absolute;bottom:8px;left:8px;z-index:2;font-size:10px;font-weight:600;
+  letter-spacing:.03em;background:rgba(8,9,10,.8);backdrop-filter:blur(8px);color:var(--gold);
+  padding:4px 9px;border-radius:6px;box-shadow:0 0 0 1px rgba(245,196,81,.3)}
 `;
 
 export function layout(title: string, active: string, body: string, extraHead = ''): string {
@@ -372,27 +390,33 @@ const ODDS_CSS = `
 .pack-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
 .pack-head .price{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-weight:700}
 .odds-band{margin:26px 0 8px}
-.odds-band h3{font-size:10.5px;letter-spacing:.24em;color:var(--muted);margin:0 0 12px;font-weight:600}
+.odds-band h3{font-size:10px;letter-spacing:.055em;color:var(--text-4);margin:0 0 14px;font-weight:560}
 .odds-row{display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;
   padding:9px 0;border-top:1px solid var(--line)}
 .odds-row img{width:56px;border-radius:5px;display:block;background:#0D0B12}
 .odds-row .who{font-size:13px;font-weight:600}
-.odds-row .where{font-size:10.5px;color:var(--faint);margin-top:2px}
+.odds-row .where{font-size:11.5px;color:var(--text-4);margin-top:3px;letter-spacing:-.008em}
 .bar-wrap{display:flex;align-items:center;gap:12px;margin-top:6px}
 .bar{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden}
-.bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#FF7E33,#E2510A)}
-.bar.g i{background:linear-gradient(90deg,#F2C14E,#B8860B)}
+/* Odds bars animate their width in on reveal rather than appearing filled, so
+   the comparison between outcomes reads as it draws. */
+.bar i{display:block;height:100%;width:0;border-radius:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-hi));
+  transition:width 1.1s var(--ease);transition-delay:var(--d,0ms)}
+[data-reveal].in .bar i,.no-motion .bar i{width:var(--w,0%)}
+.bar.g i{background:linear-gradient(90deg,var(--gold),#c9962f)}
 .pctv{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;min-width:74px;text-align:right}
 .pctv.g{color:var(--gold)}
-.val-right{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);min-width:78px;text-align:right}
+.val-right{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--text-3);
+  min-width:78px;text-align:right;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 table.odds{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
-table.odds th{text-align:left;font-size:9.5px;letter-spacing:.16em;color:var(--faint);
+table.odds th{text-align:left;font-size:10px;letter-spacing:.055em;color:var(--text-4);
   font-weight:600;padding:0 12px 9px 0}
 table.odds td{padding:9px 12px 9px 0;border-top:1px solid var(--line)}
 table.odds td.n{font-family:ui-monospace,Menlo,monospace;text-align:right}
 .ev{margin-top:22px;padding:14px 16px;border:1px solid var(--line);border-radius:11px;
-  background:var(--surface);font-size:12.5px;color:var(--muted);line-height:1.65;max-width:74ch}
-.ev b{color:var(--ink)}
+  background:var(--glass);font-size:13px;color:var(--text-3);line-height:1.68;max-width:74ch}
+.ev b{color:var(--text-2);font-weight:560}
 </style>`;
 
 export function packsPage(packs: PackConfig[], index: CatalogIndex): string {
@@ -426,7 +450,7 @@ export function packsPage(packs: PackConfig[], index: CatalogIndex): string {
     .map((r) => {
       const c = r.card;
       const href = c ? `/pokemon/${encodeURIComponent(c.setId)}/${encodeURIComponent(c.number)}` : '#';
-      return `<div class="odds-row">
+      return `<div class="odds-row" data-reveal>
       ${c ? `<a href="${href}"><img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy"></a>` : '<div></div>'}
       <div>
         <div class="who">${c ? esc(c.name) : esc(r.variantId)}${
@@ -434,7 +458,7 @@ export function packsPage(packs: PackConfig[], index: CatalogIndex): string {
         }</div>
         <div class="where">${c ? `${esc(c.setName)} · ${esc(c.number)} · ${esc(c.rarity ?? '')}` : 'not in catalog'}</div>
         <div class="bar-wrap">
-          <div class="bar${gold ? ' g' : ''}"><i style="width:${Math.max(0.6, (r.probability / top) * 100).toFixed(2)}%"></i></div>
+          <div class="bar${gold ? ' g' : ''}"><i style="--w:${Math.max(0.6, (r.probability / top) * 100).toFixed(2)}%"></i></div>
           <span class="pctv${gold ? ' g' : ''}">${esc(r.probabilityLabel)}</span>
           <span class="val-right">${money(r.value)}</span>
         </div>
