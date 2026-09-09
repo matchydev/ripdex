@@ -20,3 +20,6 @@ web.err
 
 # Scratch files left by tooling
 __adv.tmp*
+
+# Ad-hoc visual test pages
+_scratch-*.html

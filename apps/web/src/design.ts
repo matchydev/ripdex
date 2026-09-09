@@ -220,7 +220,28 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* =============================== tiles ============================= */
 .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(176px,1fr))}
-.tile{position:relative;display:block}
+.tile{position:relative;display:block;isolation:isolate}
+
+/* Ambient glow derived from the card's OWN artwork.
+   A blurred, scaled, saturated copy of the same image sits behind the card, so
+   the light spilling onto the page is that card's colour — a Charizard pools
+   orange, a Blastoise pools blue. Apple Music and Spotify light album art this
+   way for the same reason.
+   This is what actually reconciles bright warm scans with a dark violet page:
+   instead of every card fighting one accent, each brings its own bridge colour,
+   and the ground reads as lit rather than as a backdrop the card was dropped
+   onto. The tile sets --art; the URL is escaped at render time.
+   Kept cheap: the blur is on a static layer that composites once, is inset well
+   inside the tile so its bounds stay small, and does not animate — only its
+   opacity does. */
+.tile::before{content:"";position:absolute;z-index:-1;
+  left:4%;right:4%;top:8%;bottom:-2%;
+  background-image:var(--art);background-size:cover;background-position:50% 42%;
+  filter:blur(22px) saturate(1.7);opacity:.38;transform:translateZ(0);
+  transition:opacity .4s var(--ease),filter .4s var(--ease)}
+.tile:hover::before{opacity:.72;filter:blur(26px) saturate(1.95)}
+/* No artwork bound (a tile rendered without --art) must not paint a grey slab. */
+.tile:not([style*="--art"])::before{display:none}
 /* Card presentation.
    Measured off cardboard.markets, which presents the same source scans far more
    cleanly than we were. Four things matter, and we had all four wrong:

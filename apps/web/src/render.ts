@@ -24,6 +24,22 @@ export function esc(value: unknown): string {
     .replace(/'/g, '&#39;');
 }
 
+/**
+ * A URL safe to interpolate into a CSS `url()` inside a style attribute.
+ *
+ * Two escapes are needed and neither is optional. esc() alone is not enough:
+ * it leaves parentheses and backslashes untouched, so a URL containing `)`
+ * would close the url() early and let whatever follows be parsed as CSS.
+ * Everything outside a conservative allow-list is dropped rather than encoded,
+ * because a card image URL has no legitimate reason to contain anything else,
+ * and failing closed is the right default for a value that becomes code.
+ */
+export function cssUrl(raw: string | null | undefined): string {
+  if (!raw) return '';
+  if (!/^https?:\/\/[A-Za-z0-9\-._~:/?#\[\]@!$&'*+,;=%]+$/.test(raw)) return '';
+  return esc(raw.replace(/["'()\\]/g, ''));
+}
+
 export const money = (n: number | null, currency = 'USD'): string =>
   n === null
     ? '—'
@@ -34,11 +50,6 @@ export const money = (n: number | null, currency = 'USD'): string =>
         maximumFractionDigits: 2,
       }).format(n);
 
-/**
- * Page-level styles that build on the design system. Tokens, surfaces, motion
- * primitives and the tile treatment all live in design.ts; only what is
- * genuinely specific to these pages belongs here.
- */
 /**
  * Page-level styles built on the design system. Tokens, surfaces, motion
  * primitives and the tile treatment live in design.ts; only what is genuinely
@@ -163,7 +174,10 @@ ${MOTION_JS}
 export function tile(c: CardListing): string {
   const href = `/pokemon/${encodeURIComponent(c.setId)}/${encodeURIComponent(c.number)}`;
   const tierClass = c.headlineValue === null ? 'none' : `t-${c.headlineTier}`;
-  return `<a class="tile" href="${href}" data-reveal data-tilt="0.7">
+  const art = cssUrl(c.imageSmall);
+  return `<a class="tile" href="${href}" data-reveal data-tilt="0.7"${
+    art ? ` style="--art:url(${art})"` : ''
+  }>
   <div class="shot">
     <img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy" decoding="async">
     ${c.availableInPacks ? '<span class="rip-badge">AVAILABLE TO RIP</span>' : ''}
@@ -262,7 +276,9 @@ export function grailsPage(cards: CardListing[], minValue: number): string {
     .map(
       (c, i) => `<a class="tile gcard halo" href="/pokemon/${encodeURIComponent(
         c.setId,
-      )}/${encodeURIComponent(c.number)}" data-reveal data-tilt="0.8">
+      )}/${encodeURIComponent(c.number)}" data-reveal data-tilt="0.8"${
+        cssUrl(c.imageSmall) ? ` style="--art:url(${cssUrl(c.imageSmall)})"` : ''
+      }>
     <div class="shot">
       <img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy" decoding="async">
       ${c.availableInPacks ? '<span class="rip-badge">AVAILABLE TO RIP</span>' : ''}
