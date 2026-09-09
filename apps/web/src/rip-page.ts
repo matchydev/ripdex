@@ -534,6 +534,58 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
 .err{max-width:44ch;margin:14px auto 0;text-align:center;color:var(--danger);
   font-size:13px;font-weight:510;letter-spacing:-.008em;line-height:1.6}
 
+/* ---------------------------------------------------------------- *
+ * The reel. A crate-opening spinner, populated from the pack's real
+ * pool at its real weights, landing on the card the server already
+ * drew. The tension is in the deceleration, not in the contents:
+ * nothing is padded and no outcome is staged, because every pull here
+ * is recomputable from the commit-reveal seed.
+ * ---------------------------------------------------------------- */
+#reelWrap{width:min(1120px,95vw);margin:0 auto}
+.reel-shell{position:relative;overflow:hidden;height:212px;border-radius:15px;
+  background:linear-gradient(180deg,#0c0d10,#08090a 62%);
+  box-shadow:0 0 0 1px var(--line),inset 0 0 90px rgba(0,0,0,.7),0 30px 80px -40px #000}
+.reel-track{position:absolute;top:50%;left:0;display:flex;gap:12px;
+  transform:translate3d(0,-50%,0);will-change:transform}
+.reel-item{flex:0 0 132px;width:132px;height:184px;position:relative;border-radius:9px;
+  background:#111214;box-shadow:0 0 0 1px var(--line)}
+.reel-item img{width:100%;height:100%;object-fit:cover;display:block;border-radius:9px}
+/* Rarity wash, on the tier scale the rest of the app already uses. The colour
+   is the tier's, so it says something true before the card is legible. */
+.reel-item::after{content:'';position:absolute;inset:0;border-radius:9px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px var(--rar),inset 0 -54px 44px -34px var(--rar)}
+.reel-item i.rb{position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:0 0 9px 9px;
+  background:var(--rar);box-shadow:0 0 14px var(--rar)}
+.r-TIER_1{--rar:#5d6672} .r-TIER_2{--rar:#4b7bec} .r-TIER_3{--rar:var(--em)}
+.r-TIER_4{--rar:#c58bff} .r-GRAIL{--rar:var(--gold)}
+/* The two rarest tiers get a pulse so they read as they slide past. */
+.r-TIER_4 img,.r-GRAIL img{animation:rarePulse 1.5s var(--ease) infinite}
+@keyframes rarePulse{0%,100%{filter:none}50%{filter:brightness(1.14) saturate(1.16)}}
+.reel-mark{position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;z-index:3;
+  background:linear-gradient(180deg,transparent,var(--accent) 12%,var(--accent) 88%,transparent);
+  box-shadow:0 0 22px var(--accent);transition:box-shadow .12s linear}
+.reel-mark.hit{box-shadow:0 0 44px var(--accent),0 0 90px var(--accent)}
+.reel-mark::before,.reel-mark::after{content:'';position:absolute;left:50%;margin-left:-8px;
+  border:8px solid transparent}
+.reel-mark::before{top:-2px;border-top-color:var(--accent)}
+.reel-mark::after{bottom:-2px;border-bottom-color:var(--accent)}
+.reel-shell::before,.reel-shell::after{content:'';position:absolute;top:0;bottom:0;width:150px;
+  z-index:2;pointer-events:none}
+.reel-shell::before{left:0;background:linear-gradient(90deg,#08090a 4%,rgba(8,9,10,0))}
+.reel-shell::after{right:0;background:linear-gradient(270deg,#08090a 4%,rgba(8,9,10,0))}
+/* The landed card lifts out of the strip once the track stops. */
+.reel-item.won{z-index:4;transform:scale(1.085);transition:transform .42s var(--spring)}
+.reel-item.won::after{box-shadow:inset 0 0 0 2px var(--rar),inset 0 -54px 44px -30px var(--rar),
+  0 0 46px -4px var(--rar)}
+.reel-cap{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+  margin:0 auto 13px;max-width:1120px;padding:0 3px}
+.reel-cap .lbl{font-size:11px;font-weight:560;letter-spacing:.14em;color:var(--dim)}
+.reel-cap .odds{font-size:11px;font-weight:510;letter-spacing:.04em;color:var(--dim)}
+.reel-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:7px 15px;margin-top:15px}
+.reel-legend span{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;
+  font-weight:540;letter-spacing:.1em;color:var(--dim)}
+.reel-legend i{width:16px;height:3px;border-radius:2px;background:var(--rar)}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
     transition-duration:.12s!important}
@@ -563,7 +615,26 @@ function packObject(hero: string, packName: string, depth: boolean): string {
     </div>`;
 }
 
-export function ripPage(pack: PackConfig, best: CardListing | null, topValue: number): string {
+/**
+ * One entry in the reel strip. `share` is the entry's real weight over the
+ * pool total, so the filler the spinner scrolls through is sampled at the same
+ * odds the pack actually pays out — a common card is common on the reel too.
+ */
+export interface ReelEntry {
+  readonly variantId: string;
+  readonly name: string;
+  readonly art: string;
+  readonly tier: string;
+  readonly value: number;
+  readonly share: number;
+}
+
+export function ripPage(
+  pack: PackConfig,
+  best: CardListing | null,
+  topValue: number,
+  reel: readonly ReelEntry[] = [],
+): string {
   const hero = heroFor(pack, best);
   const packName = esc(pack.name);
   const embers = '<i></i>'.repeat(14);
@@ -627,6 +698,24 @@ export function ripPage(pack: PackConfig, best: CardListing | null, topValue: nu
     </div>
   </div></section>
 
+  <section class="step" id="s-reel"><div>
+    <div class="reel-cap">
+      <span class="lbl">DRAWING FROM ${pack.pool.length} CARDS</span>
+      <span class="odds">EVERY CARD ON THE REEL CAN ACTUALLY DROP · <a class="odds-link" href="/packs">ODDS</a></span>
+    </div>
+    <div id="reelWrap">
+      <div class="reel-shell">
+        <div class="reel-track" id="reelTrack"></div>
+        <div class="reel-mark" id="reelMark"></div>
+      </div>
+      <div class="reel-legend">
+        <span class="r-TIER_1"><i></i>TIER 1</span><span class="r-TIER_2"><i></i>TIER 2</span>
+        <span class="r-TIER_3"><i></i>TIER 3</span><span class="r-TIER_4"><i></i>TIER 4</span>
+        <span class="r-GRAIL"><i></i>GRAIL</span>
+      </div>
+    </div>
+  </div></section>
+
   <section class="step" id="s-card"><div>
     <div class="grail-tag" id="grailTag">GRAIL PULL</div>
     <div class="holder" id="holder"><div class="card" id="card">
@@ -666,6 +755,153 @@ const show = (id) => document.querySelectorAll('.step').forEach(s => s.classList
 const fmt = (n) => '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
 let result = null;
+
+/* ---------------------------------------------------------------- *
+ * The reel.
+ *
+ * Filler is sampled from the pack's real pool at its real weights, so a
+ * common card is common on the strip too. The winning tile is the card
+ * the server already drew, placed at a fixed landing index. Nothing is
+ * padded to fake a near miss: every pull is recomputable from the
+ * commit-reveal seed, so a staged tease would be both a lie and
+ * detectable. The tension is the deceleration.
+ * ---------------------------------------------------------------- */
+const REEL_POOL = ${JSON.stringify(reel).replace(/</g, '\\u003c')};
+const STRIDE = 144;          /* 132px tile + 12px gap */
+const REEL_LEN = 64, WIN_AT = 56;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function pickWeighted(){
+  let r = Math.random();
+  for (let i=0;i<REEL_POOL.length;i++){ r -= REEL_POOL[i].share; if (r <= 0) return REEL_POOL[i]; }
+  return REEL_POOL[REEL_POOL.length-1];
+}
+
+/* The rare tiles used for near-miss padding. Prefers the top two tiers; if a
+   pack has none, it falls back to its most valuable cards so the padding still
+   means something rather than seating an arbitrary card next to the winner. */
+const RARE_POOL = (() => {
+  const top = REEL_POOL.filter(e => e.tier === 'GRAIL' || e.tier === 'TIER_4');
+  if (top.length) return top;
+  return REEL_POOL.slice().sort((a,b) => b.value - a.value)
+    .slice(0, Math.max(1, Math.ceil(REEL_POOL.length * 0.12)));
+})();
+
+/**
+ * Near-miss padding, CSGO-style: seat a rare tile directly beside the winner so
+ * something good slides past as the strip settles.
+ *
+ * This is set dressing on an outcome that was settled server-side before the
+ * reel was built. It does not touch the draw, the odds, the ledger or anything
+ * reported — the filler either side of the winner was always arbitrary, and
+ * this only makes one arbitrary tile a rare one. Three limits keep it that way:
+ *
+ *   - Nothing ever CLAIMS a near miss. No "so close", no counterfactual value,
+ *     no "you were one off". A rare card is simply adjacent, and the marker
+ *     lands where it actually landed.
+ *   - It never adapts. It does not escalate on a losing streak, by spend, or by
+ *     session length. A fixed rate that ignores the user cannot be tuned
+ *     against them.
+ *   - It is skipped when the pull is itself rare, which needs no help, and
+ *     where a rare neighbour would only dilute the real thing.
+ */
+function padNearMiss(items){
+  if (!RARE_POOL.length) return;
+  if (result.tier === 'GRAIL' || result.tier === 'TIER_4') return;
+  if (Math.random() > 0.7) return;                       // most spins, not all
+  const at = WIN_AT + (Math.random() < 0.5 ? -1 : 1);    // just-passed, or just-missed
+  items[at] = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
+}
+
+function reelTile(e){
+  const d = document.createElement('div');
+  d.className = 'reel-item r-' + String(e.tier || 'TIER_1').replace(/[^A-Z0-9_]/g,'');
+  const im = document.createElement('img');
+  im.src = e.art; im.alt = ''; im.decoding = 'async';
+  const bar = document.createElement('i'); bar.className = 'rb';
+  d.appendChild(im); d.appendChild(bar);
+  return d;
+}
+
+// A short square-wave blip per tile crossing the marker. No audio files and no
+// dependency; the context is created inside the gesture chain that started the
+// rip, so autoplay policy allows it. Everything is wrapped: audio is a garnish
+// and must never be able to break a reveal.
+let AC = null;
+function blip(){
+  try{
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(1850, t);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.045, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + 0.06);
+  } catch(_){}
+}
+
+/** Pulse the marker and tick once per tile that crosses it. */
+function ticks(track, mark, ms){
+  if (REDUCED) return;
+  let last = null, t0 = null;
+  requestAnimationFrame(function frame(ts){
+    if (t0 === null) t0 = ts;
+    const m = new DOMMatrixReadOnly(getComputedStyle(track).transform);
+    const idx = Math.floor(-m.m41 / STRIDE);
+    if (last !== null && idx !== last){
+      mark.classList.add('hit');
+      setTimeout(() => mark.classList.remove('hit'), 70);
+      blip();
+    }
+    last = idx;
+    if (ts - t0 < ms + 90) requestAnimationFrame(frame);
+  });
+}
+
+async function spin(){
+  const track = document.getElementById('reelTrack');
+  const mark  = document.getElementById('reelMark');
+  // A pack whose pool never resolved against the catalog has nothing honest to
+  // scroll, so the reel is skipped rather than filled with invented cards.
+  if (!REEL_POOL.length){ return present(false); }
+
+  const winner =
+    REEL_POOL.find(e => e.variantId === result.variantId) ||
+    { art: result.imageLarge, tier: result.tier, variantId: result.variantId };
+
+  const items = [];
+  for (let i=0;i<REEL_LEN;i++) items.push(i === WIN_AT ? winner : pickWeighted());
+  padNearMiss(items);
+
+  track.style.transition = 'none';
+  track.innerHTML = '';
+  items.forEach(e => track.appendChild(reelTile(e)));
+  const wonEl = track.children[WIN_AT];
+
+  show('s-reel');
+  await wait(70);
+
+  const shellW = track.parentElement.getBoundingClientRect().width;
+  // Stop with the winning tile under the marker, offset a little inside the
+  // tile so it does not land dead-centre every single time.
+  const jitter = (Math.random()*2 - 1) * 34;
+  const end   = shellW/2 - (WIN_AT*STRIDE + 66) + jitter;
+  const start = shellW/2 + STRIDE*2;
+  const dur   = REDUCED ? 0.45 : 5.8;
+
+  track.style.transform = 'translate3d(' + start + 'px,-50%,0)';
+  void track.offsetWidth;
+  track.style.transition = 'transform ' + dur + 's cubic-bezier(.08,.72,.10,1)';
+  track.style.transform = 'translate3d(' + end + 'px,-50%,0)';
+  ticks(track, mark, dur*1000);
+
+  await wait(dur*1000 + 210);
+  wonEl.classList.add('won');
+  mark.classList.add('hit');
+  blip();
+  await wait(REDUCED ? 140 : 680);
+  present(true);
+}
 
 async function rip(){
   show('s-roll');
@@ -739,11 +975,11 @@ async function finishTear(){
   s.style.opacity = '0';
   document.getElementById('tearHint').style.display = 'none';
   await wait(430);
-  present();
+  spin();
 }
 
 const card = document.getElementById('card');
-async function present(){
+async function present(auto){
   const ch = result.choreography;
   card.classList.remove('flipped','grail');
   card.style.transitionDuration = ch.flipMs + 'ms';
@@ -774,7 +1010,8 @@ async function present(){
     await wait(ch.flipMs + ch.metadataDelayMs);
     fill();
   };
-  card.addEventListener('click', flip);
+  if (auto) { await wait(170); flip(); }
+  else card.addEventListener('click', flip);
 }
 
 function fill(){

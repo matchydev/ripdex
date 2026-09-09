@@ -39,7 +39,7 @@ import { loadPacks, packVariantIds, FEATURED_PACK_ID } from './packs/index.ts';
 import { cardsPage, detailPage, grailsPage, packsPage, tile, layout } from './src/render.ts';
 import { homePage } from './src/home.ts';
 import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
-import { ripPage } from './src/rip-page.ts';
+import { ripPage, type ReelEntry } from './src/rip-page.ts';
 import { RipEngine } from './src/rip-engine.ts';
 import { livePage, collectionPage } from './src/wallet-pages.ts';
 import { ripShareCard } from './src/share.ts';
@@ -242,7 +242,27 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const top = Math.max(
       ...pack.pool.map((e) => index.byVariantId.get(e.variantId)?.variant.referenceValue ?? 0),
     );
-    return html(res, ripPage(pack, best, top));
+
+    // The reel scrolls the pack's REAL pool. Composition and weights are
+    // already public on /packs, so nothing is disclosed here that the odds
+    // table does not already publish — and populating from anything else would
+    // make the reel a decoration rather than a view of what can actually drop.
+    const totalWeight = pack.pool.reduce((n, e) => n + e.weight, 0) || 1;
+    const reel: ReelEntry[] = [];
+    for (const entry of pack.pool) {
+      const hit = index.byVariantId.get(entry.variantId);
+      if (!hit) continue;
+      reel.push({
+        variantId: entry.variantId,
+        name: hit.card.name,
+        art: hit.card.imageSmall,
+        tier: hit.variant.tier ?? 'TIER_1',
+        value: hit.variant.referenceValue ?? 0,
+        share: entry.weight / totalWeight,
+      });
+    }
+
+    return html(res, ripPage(pack, best, top, reel));
   }
 
   if (path === '/api/rip' && req.method === 'POST') {
