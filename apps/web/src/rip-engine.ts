@@ -25,6 +25,7 @@ import {
   formatProbability,
   variantLabel,
   parseVariantId,
+  floatAt,
   type CatalogIndex,
   type OpeningLedger,
   type PackConfig,
@@ -32,6 +33,11 @@ import {
   type PriceQuote,
   type PriceSnapshot,
 } from '../../../packages/pokemon-core/src/index.ts';
+import { gradePull, gradeColor, AVG_MULTIPLIER, GRADE_CURSOR, GRADE_TABLE_VERSION } from './grades.ts';
+
+/** Fraction of a pull's frozen sell value the house returns on a sell (§ user:
+ *  "use 85% of value"). The 15% spread is the house edge across every pack. */
+const SELL_FRACTION = 0.85;
 
 export interface RipOutcome {
   openingId: string;
@@ -49,6 +55,18 @@ export interface RipOutcome {
   tier: string;
   referenceValue: number;
   currency: string;
+  /** PSA grade drawn from the same committed seed (provably fair). */
+  grade: number;
+  gradeLabel: string;
+  gradeMultiplier: number;
+  gradeProbability: number;
+  /** referenceValue * gradeMultiplier, frozen with the pull. */
+  gradedValue: number;
+  gradeColor: string;
+  /** What this pull sells back for in $RIP, frozen at rip time. */
+  sellValue: number;
+  /** The pack's price in $RIP. */
+  packPriceRip: number;
   probability: number;
   oddsLabel: string;
   href: string;
@@ -59,6 +77,8 @@ export interface RipOutcome {
     nonce: number;
     priceSnapshotId: string;
     packConfigSnapshotId: string;
+    gradeCursor: number;
+    gradeTableVersion: string;
   };
 }
 
@@ -68,6 +88,8 @@ export class RipEngine {
   private readonly packs: Map<string, PackConfig>;
   private readonly locked: Map<string, PackConfigSnapshot>;
   private readonly odds: Map<string, Map<string, { probability: number; label: string }>>;
+  /** Base expected reference value per pack, for the self-balancing sell price. */
+  private readonly packEv: Map<string, number>;
   private readonly snapshot: PriceSnapshot;
   private readonly serverSeed: string;
   readonly serverSeedHash: string;
@@ -97,6 +119,18 @@ export class RipEngine {
           ]),
         ),
       ]),
+    );
+    // Base expected value per pack: sum(probability * referenceValue). The sell
+    // price divides by this (times the average grade multiplier), so every pack
+    // returns 85% of its price in expectation regardless of pool or price.
+    this.packEv = new Map(
+      packs.map((p) => {
+        const ev = oddsTable(p.pool).reduce(
+          (s, r) => s + r.probability * (index.byVariantId.get(r.variantId)?.variant.referenceValue ?? 0),
+          0,
+        );
+        return [p.id, ev];
+      }),
     );
   }
 
@@ -180,6 +214,26 @@ export class RipEngine {
     const oddsRow = this.odds.get(packId)?.get(pulled.variantId);
     const parsed = parseVariantId(pulled.variantId);
 
+    // The PSA grade is drawn from the SAME committed seed as the card, at a
+    // cursor far above the pack's draw cursors — provably fair and recomputable.
+    const graded = gradePull(
+      floatAt(
+        { serverSeed: this.serverSeed, clientSeed, nonce: result.verification.nonce },
+        GRADE_CURSOR,
+      ),
+      pulled.quote.referenceValue,
+    );
+
+    // Self-balancing sell price in $RIP: 85% of the pack price scaled by how this
+    // graded pull compares to the pack's expected graded value. E[sellValue] =
+    // 0.85 * packPrice, so the house edge is a uniform 15% on every pack.
+    const ev = this.packEv.get(packId) ?? 0;
+    const packPriceRip = Number(this.packs.get(packId)?.priceRip ?? 0n);
+    const sellValue =
+      ev > 0
+        ? Math.max(1, Math.round((SELL_FRACTION * packPriceRip * graded.gradedValue) / (ev * AVG_MULTIPLIER)))
+        : 0;
+
     return {
       openingId: result.openingId,
       variantId: pulled.variantId,
@@ -196,6 +250,14 @@ export class RipEngine {
       tier: pulled.tier,
       referenceValue: pulled.quote.referenceValue,
       currency: pulled.quote.currency,
+      grade: graded.grade,
+      gradeLabel: graded.gradeLabel,
+      gradeMultiplier: graded.multiplier,
+      gradeProbability: graded.probability,
+      gradedValue: graded.gradedValue,
+      gradeColor: gradeColor(graded.grade),
+      sellValue,
+      packPriceRip,
       probability: pulled.probability,
       oddsLabel: oddsRow?.label ?? formatProbability(pulled.probability),
       href: `/pokemon/${encodeURIComponent(hit.card.setId)}/${encodeURIComponent(hit.card.number)}`,
@@ -206,6 +268,8 @@ export class RipEngine {
         nonce: result.verification.nonce,
         priceSnapshotId: result.verification.priceSnapshotId,
         packConfigSnapshotId: result.verification.packConfigSnapshotId,
+        gradeCursor: GRADE_CURSOR,
+        gradeTableVersion: GRADE_TABLE_VERSION,
       },
     };
   }

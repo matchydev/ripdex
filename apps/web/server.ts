@@ -44,6 +44,7 @@ import { homePage } from './src/home.ts';
 import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
 import { ripPage, type ReelCard } from './src/rip-page.ts';
 import { RipEngine } from './src/rip-engine.ts';
+import { WalletStore, STARTING_BALANCE } from './src/wallet-store.ts';
 import { livePage, collectionPage } from './src/wallet-pages.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -52,6 +53,9 @@ const DATA_DIR =
 const PORT = Number(process.env.PORT ?? 4179);
 const LEDGER_DIR =
   process.env.RIPDEX_LEDGER_DIR ?? join(HERE, '..', '..', 'packages', 'pokemon-core', 'data', 'ledger');
+// The $RIP balance + portfolio store (economy layer, not the provably-fair ledger).
+const WALLET_PATH =
+  process.env.RIPDEX_WALLET_PATH ?? join(HERE, '..', '..', 'packages', 'pokemon-core', 'data', 'wallets.json');
 const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 500);
 // The homepage rail shows high-value cards rather than only cards over the grail
 // floor: with a small catalog the strict threshold leaves one card, and a rail
@@ -373,17 +377,59 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     } catch {
       return json(res, { error: 'Malformed request body.' }, 400);
     }
-    if (!engine.getPack(packId)) return json(res, { error: `Unknown pack: ${packId}` }, 404);
+    const pack = engine.getPack(packId);
+    if (!pack) return json(res, { error: `Unknown pack: ${packId}` }, 404);
 
-    // The client seed identifies the ripper. Without wallet auth wired up this
-    // is a per-browser demo identity, not a claim about who anyone is.
-    const clientSeed = demoSeed(req);
+    // The per-browser demo identity is BOTH the provably-fair client seed and the
+    // $RIP wallet key. Deduct the price synchronously BEFORE the async rip so two
+    // concurrent rips on one wallet can never overspend the balance.
+    const account = demoSeed(req);
+    const cost = Number(pack.priceRip);
+    const balance = wallets.spend(account, cost);
+    if (balance === null) {
+      return json(
+        res,
+        { error: 'Not enough $RIP to open this pack.', code: 'insufficient', balance: wallets.balance(account), price: cost },
+        402,
+      );
+    }
     try {
-      return json(res, await engine.rip(packId, clientSeed));
+      const outcome = await engine.rip(packId, account);
+      wallets.recordPull(account, outcome.openingId, outcome.sellValue);
+      return json(res, { ...outcome, balance });
     } catch (err) {
+      wallets.credit(account, cost); // refund — never take $RIP for a failed rip
       console.error(err);
       return json(res, { error: err instanceof Error ? err.message : 'Rip failed.' }, 500);
     }
+  }
+
+  if (path === '/api/sell' && req.method === 'POST') {
+    const body = await readBody(req);
+    let openingId: string;
+    try {
+      openingId = String(JSON.parse(body || '{}').openingId ?? '');
+    } catch {
+      return json(res, { error: 'Malformed request body.' }, 400);
+    }
+    const account = demoSeed(req);
+    const result = wallets.sell(account, openingId);
+    if (!result.ok) {
+      return json(
+        res,
+        {
+          error: result.reason === 'already-sold' ? 'Already sold.' : 'You do not own that pull.',
+          code: result.reason,
+          balance: wallets.balance(account),
+        },
+        409,
+      );
+    }
+    return json(res, { ok: true, credited: result.credited, balance: result.balance });
+  }
+
+  if (path === '/api/wallet') {
+    return json(res, { balance: wallets.balance(demoSeed(req)), starting: STARTING_BALANCE });
   }
 
   const card = /^\/pokemon\/([^/]+)\/([^/]+)$/.exec(path);
@@ -412,6 +458,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 
 const store = new JsonCatalogStore(DATA_DIR);
 const ledger = new JsonOpeningLedger(LEDGER_DIR);
+const wallets = await WalletStore.open(WALLET_PATH);
 const PACKS = await loadPacks();
 const inPacks = packVariantIds(PACKS);
 

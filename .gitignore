@@ -18,6 +18,9 @@ web.err
 # in seconds with `pnpm setup`.
 **/data/ledger/
 
+# The $RIP balance store is per-machine runtime state, not committed.
+**/data/wallets.json
+
 # Scratch files left by tooling
 __adv.tmp*
 

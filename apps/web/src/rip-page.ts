@@ -499,6 +499,53 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
 .chip.t{color:var(--accent-hi);background:var(--accent-dim);
   box-shadow:0 0 0 1px rgba(113,112,255,.24)}
 
+/* ===================== psa slab + $RIP economy =====================
+   The pull is graded (PSA 6–10, drawn from the same seed) and can be sold back
+   for $RIP. --gc is the grade colour (gold for a 10). */
+.bal{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:100px;
+  font-size:11.5px;font-weight:590;color:var(--text-2);background:var(--glass);
+  box-shadow:0 0 0 1px var(--line);font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+  transition:color .3s var(--ease),box-shadow .3s var(--ease),transform .18s var(--spring)}
+.bal .u{color:var(--text-4);font-size:9px;font-weight:520;letter-spacing:.02em}
+.bal.up{color:var(--em);box-shadow:0 0 0 1px rgba(74,222,155,.5);transform:scale(1.06)}
+.bal.down{color:var(--danger);box-shadow:0 0 0 1px rgba(255,143,143,.45)}
+
+.slab{position:relative;--gc:var(--text-2);display:flex;flex-direction:column;align-items:center}
+.slab-head{display:inline-flex;align-items:center;gap:9px;margin:0 auto 14px;padding:7px 13px;
+  border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.015));
+  box-shadow:0 0 0 1px var(--line-hi),inset 0 1px 0 rgba(255,255,255,.14);
+  opacity:0;transform:translateY(-8px) scale(.94);transform-origin:50% 0;
+  transition:opacity .5s var(--ease),transform .55s var(--spring)}
+.slab-head.on{opacity:1;transform:none}
+.slab-brand{font-weight:800;font-size:12px;letter-spacing:.09em;color:var(--text);
+  padding-right:11px;box-shadow:1px 0 0 var(--line-hi)}
+.slab-grade{font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:18px;letter-spacing:-.02em;
+  color:var(--gc);line-height:1}
+.slab-label{font-size:10px;font-weight:640;letter-spacing:.06em;color:var(--gc)}
+
+.reveal-meta .val.g10{color:var(--gold);text-shadow:0 0 30px rgba(245,196,81,.4)}
+.reveal-meta .val.g9{color:var(--accent-hi)}
+.reveal-meta .basev{margin-top:6px;font-size:11px;font-weight:520;letter-spacing:.01em;color:var(--text-4)}
+
+.sell-btn{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 20px;border-radius:9px;
+  font-size:12.5px;font-weight:600;letter-spacing:-.006em;color:#04130c;
+  background:linear-gradient(180deg,#79f2be,var(--em));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.32),0 10px 28px -12px rgba(74,222,155,.85);
+  transition:filter .2s var(--ease),transform .18s var(--spring),background .3s var(--ease),color .3s var(--ease)}
+.sell-btn:hover{filter:brightness(1.07)}
+.sell-btn:active{transform:scale(.975)}
+.sell-btn .ru{font-size:10px;font-weight:600;opacity:.72}
+.sell-btn.sold{background:var(--glass);color:var(--em);box-shadow:0 0 0 1px rgba(74,222,155,.45);
+  cursor:default;filter:none}
+
+/* Insufficient-funds toast on the select screen. */
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:8;
+  padding:11px 18px;border-radius:100px;font-size:12.5px;font-weight:560;color:var(--danger);
+  background:rgba(15,16,17,.86);backdrop-filter:blur(14px);
+  box-shadow:0 0 0 1px rgba(255,143,143,.34),0 18px 40px -18px rgba(0,0,0,.8);
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .4s var(--spring)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
 /* ========================== grail takeover =========================
    Deeper ground, a slow radial bloom behind the card, and a denser spark
    field. All of it lives inside #grailFx, which the reveal code empties on
@@ -633,6 +680,7 @@ export function ripPage(
 <div id="chrome">
   <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
   <div class="chrome-right">
+    <span class="bal" id="balChip" title="Your $RIP balance"><span id="balNum">—</span><span class="u">$RIP</span></span>
     <button class="odds-link mute-btn" id="muteBtn" type="button" aria-label="Toggle sound">
       <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
         <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"></path>
@@ -644,6 +692,7 @@ export function ripPage(
     <a class="odds-link" href="/packs">ODDS →</a>
   </div>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div id="stage">
   <section class="step on" id="s-select">
     <div class="embers" aria-hidden="true">${embers}</div>
@@ -689,22 +738,31 @@ export function ripPage(
 
   <section class="step" id="s-card"><div>
     <div class="grail-tag" id="grailTag">GRAIL PULL</div>
-    <div class="holder" id="holder"><div class="card" id="card">
-      <div class="face back"><div class="edge"></div><div class="sigil"><b>RIP</b></div></div>
-      <div class="thick a" aria-hidden="true"></div>
-      <div class="thick b" aria-hidden="true"></div>
-      <div class="face front">
-        <img id="cardImg" alt="">
-        <div class="foil"><div class="f1"></div><div class="f2"></div><div class="f3"></div></div>
-        <div class="coat"></div><div class="grain"></div>
+    <div class="slab" id="slab">
+      <div class="slab-head" id="slabHead">
+        <span class="slab-brand">PSA</span>
+        <span class="slab-grade" id="slabGrade">—</span>
+        <span class="slab-label" id="slabLabel"></span>
       </div>
-    </div><div class="pedestal" aria-hidden="true"></div></div>
+      <div class="holder" id="holder"><div class="card" id="card">
+        <div class="face back"><div class="edge"></div><div class="sigil"><b>RIP</b></div></div>
+        <div class="thick a" aria-hidden="true"></div>
+        <div class="thick b" aria-hidden="true"></div>
+        <div class="face front">
+          <img id="cardImg" alt="">
+          <div class="foil"><div class="f1"></div><div class="f2"></div><div class="f3"></div></div>
+          <div class="coat"></div><div class="grain"></div>
+        </div>
+      </div><div class="pedestal" aria-hidden="true"></div></div>
+    </div>
     <div class="reveal-meta" id="meta">
       <div class="nm" id="mName"></div><div class="st" id="mSet"></div>
-      <div class="val" id="mVal"></div><div class="vk">REFERENCE VALUE</div>
+      <div class="val" id="mVal"></div><div class="vk" id="mVk">GRADED VALUE</div>
+      <div class="basev" id="mBase"></div>
       <div class="chips" id="mChips"></div>
     </div>
     <div class="rowbtns" id="after">
+      <button class="sell-btn" id="sellBtn">SELL · <span class="mono" id="sellNum"></span> <span class="ru">$RIP</span></button>
       <a class="btn2" id="cardLink" href="#">VIEW CARD</a>
       <button class="btn2 pri" id="againBtn">RIP ANOTHER</button>
     </div>
@@ -719,6 +777,7 @@ export function ripPage(
 ${MOTION_JS}
 <script type="module">
 const PACK_ID = ${JSON.stringify(pack.id)};
+const PACK_PRICE = ${Number(pack.priceRip)};
 // The pool, weighted exactly as it drops. Filler for the reel only — the pull
 // itself is settled server-side by /api/rip and merely PLACED on the strip.
 const REEL = ${JSON.stringify(reel)};
@@ -777,6 +836,7 @@ function sLand(tier){
     notes.forEach((f, i) => setTimeout(() => blip(f, 0.55, 'triangle', 0.06, 0), 130 + i * 95));
   }
 }
+const sStamp = () => blip(220, 0.09, 'square', 0.1, -80); // the PSA grade stamping on
 function setMuted(m){
   muted = m;
   try { localStorage.setItem('ripdex_muted', m ? '1' : '0'); } catch (e) {}
@@ -815,6 +875,27 @@ function reelSound(track, view, dur){
   reelRaf = requestAnimationFrame(frame);
 }
 
+// ---- $RIP balance ----
+let clientBalance = null;
+const rip$ = (n) => Number(n).toLocaleString('en-US');
+function setBalance(n, dir){
+  clientBalance = n;
+  const el = document.getElementById('balNum'); if (el) el.textContent = rip$(n);
+  const chip = document.getElementById('balChip');
+  if (chip && dir){ chip.classList.remove('up','down'); void chip.offsetWidth; chip.classList.add(dir);
+    setTimeout(() => chip.classList.remove(dir), 900); }
+}
+async function refreshBalance(){
+  try { const r = await fetch('/api/wallet'); const d = await r.json();
+        if (typeof d.balance === 'number') setBalance(d.balance); } catch (e) {}
+}
+let toastT = 0;
+function toast(msg){
+  const t = document.getElementById('toast'); if (!t) return;
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600);
+}
+
 let result = null;
 let ripPromise = null;
 const reelTimers = [];
@@ -824,6 +905,13 @@ const reelTimers = [];
 // on the network with the user watching.
 function startRip(){
   ensureAudio(); // the click is the gesture that unlocks Web Audio
+  // Gate on the known balance before committing to the tear, so you never tear
+  // a pack you can't afford. The server re-checks and refunds if anything slips.
+  if (clientBalance !== null && clientBalance < PACK_PRICE){
+    toast('Not enough $RIP — this pack costs ' + rip$(PACK_PRICE) + ' $RIP');
+    setBalance(clientBalance, 'down');
+    return;
+  }
   result = null;
   document.getElementById('reelWrap').classList.remove('settle');
   ripPromise = fetch('/api/rip', {
@@ -831,7 +919,11 @@ function startRip(){
     body: JSON.stringify({ packId: PACK_ID })
   }).then(async res => {
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+    if (!res.ok){
+      const e = new Error(data.error || ('HTTP ' + res.status));
+      e.code = data.code; e.status = res.status; e.balance = data.balance;
+      throw e;
+    }
     return data;
   });
   ripPromise.catch(() => {}); // afterTear surfaces the failure; don't warn twice
@@ -885,11 +977,18 @@ async function afterTear(){
   try {
     data = await ripPromise;
   } catch (err) {
+    if (err && (err.code === 'insufficient' || err.status === 402)){
+      if (typeof err.balance === 'number') setBalance(err.balance, 'down');
+      toast(String((err && err.message) || 'Not enough $RIP'));
+      reset(); // back to the pack — nothing was charged
+      return;
+    }
     document.getElementById('errText').textContent = String((err && err.message) || err);
     show('s-err');
     return;
   }
   result = data;
+  if (typeof result.balance === 'number') setBalance(result.balance, 'down');
   const img = document.getElementById('cardImg');
   img.src = result.imageLarge;
   img.alt = result.name + ' — ' + result.setName + ' ' + result.number;
@@ -1005,7 +1104,18 @@ async function present(){
   document.getElementById('meta').classList.remove('on');
   document.getElementById('after').classList.remove('on');
   document.getElementById('grailTag').classList.remove('on');
+  // The PSA slab: set the grade colour now, stamp the grade in after the card
+  // settles (the seed decided this grade too — see grades.ts).
+  const slab = document.getElementById('slab');
+  slab.style.setProperty('--gc', result.gradeColor);
+  document.getElementById('slabGrade').textContent = String(result.grade);
+  document.getElementById('slabLabel').textContent = result.gradeLabel;
+  document.getElementById('slabHead').classList.remove('on');
   show('s-card');
+  reelTimers.push(setTimeout(() => {
+    document.getElementById('slabHead').classList.add('on');
+    if (!muted && !reduceMotion) sStamp();
+  }, ch.fullTakeover ? 900 : 420));
 
   if (ch.fullTakeover){
     document.getElementById('chrome').classList.add('hide');
@@ -1030,17 +1140,22 @@ function fill(){
   document.getElementById('mSet').textContent =
     (result.setName + ' · ' + result.number + ' · ' + (result.rarity || '')).toUpperCase();
   const val = document.getElementById('mVal');
-  // Value is colour-coded by tier the same way the catalog codes it: gold is
-  // reserved for a grail, never spent on an ordinary pull.
-  val.className = 'val t-' + String(result.tier || '').replace(/[^A-Za-z0-9_]/g,'');
-  val.textContent = fmt(result.referenceValue);
+  // The graded value leads: gold for a PSA 10, accent for a 9, else the tier
+  // colour the catalog uses. The base price sits under it.
+  const gcls = result.grade >= 10 ? 'g10' : result.grade >= 9 ? 'g9' : 't-' + tierClass(result.tier);
+  val.className = 'val ' + gcls;
+  val.textContent = fmt(result.gradedValue);
+  document.getElementById('mBase').textContent =
+    'PSA ' + result.grade + ' ' + result.gradeLabel + ' · base ' + fmt(result.referenceValue) +
+    ' · ×' + result.gradeMultiplier;
   document.getElementById('mChips').innerHTML =
     '<span class="chip t">' + result.tier.replace('_',' ') + '</span>' +
+    '<span class="chip" style="color:' + result.gradeColor + '">PSA ' + result.grade + '</span>' +
     '<span class="chip">' + result.oddsLabel + ' ODDS</span>' +
-    '<span class="chip">' + result.variantLabel.toUpperCase() + '</span>' +
-    // openingId already carries a "rip_" prefix, so prepending "RIP " again
-    // renders "RIP RIP_55DAC0".
-    '<span class="chip">RIP ' + result.openingId.replace(/^rip_/,'').slice(0,10).toUpperCase() + '</span>';
+    '<span class="chip">' + result.variantLabel.toUpperCase() + '</span>';
+  const sb = document.getElementById('sellBtn');
+  sb.classList.remove('sold'); sb.disabled = false;
+  sb.innerHTML = 'SELL · <span class="mono">' + rip$(result.sellValue) + '</span> <span class="ru">$RIP</span>';
   document.getElementById('cardLink').href = result.href;
   document.getElementById('meta').classList.add('on');
   setTimeout(() => document.getElementById('after').classList.add('on'), 260);
@@ -1086,6 +1201,8 @@ function reset(){
   rw.classList.remove('settle'); rw.style.setProperty('--tier-glow','var(--accent-hi)');
   document.getElementById('reelTrack').innerHTML = '';
   document.getElementById('reelEyebrow').textContent = 'SETTLING';
+  document.getElementById('slabHead').classList.remove('on');
+  document.getElementById('toast').classList.remove('on');
   show('s-select');
 }
 
@@ -1104,9 +1221,33 @@ addEventListener('keydown', (e) => {
 });
 document.getElementById('retryBtn').onclick = () => { reset(); setTimeout(startRip, 300); };
 document.getElementById('againBtn').onclick = () => { reset(); setTimeout(startRip, 420); };
+// Sell the pull back for its frozen $RIP value (85% of graded value; the server
+// is authoritative and refuses a second sale).
+const sellBtn = document.getElementById('sellBtn');
+sellBtn.onclick = async () => {
+  if (!result || sellBtn.disabled || sellBtn.classList.contains('sold')) return;
+  sellBtn.disabled = true;
+  try {
+    const r = await fetch('/api/sell', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ openingId: result.openingId })
+    });
+    const d = await r.json();
+    if (r.ok){
+      setBalance(d.balance, 'up');
+      sellBtn.classList.add('sold');
+      sellBtn.innerHTML = 'SOLD · +<span class="mono">' + rip$(d.credited) + '</span> <span class="ru">$RIP</span>';
+      if (!muted) blip(680, 0.14, 'triangle', 0.08, 240);
+    } else {
+      if (typeof d.balance === 'number') setBalance(d.balance);
+      toast(d.error || 'Sell failed'); sellBtn.disabled = false;
+    }
+  } catch (e){ toast('Sell failed'); sellBtn.disabled = false; }
+};
 // Sound toggle — reflects the persisted mute state and flips it on click.
 const mb = document.getElementById('muteBtn');
 if (mb){ mb.classList.toggle('off', muted); mb.onclick = () => setMuted(!muted); }
+refreshBalance();
 new Image().src = ${JSON.stringify(hero)};
 </script>
 </body></html>`;
