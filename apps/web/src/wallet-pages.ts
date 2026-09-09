@@ -249,44 +249,49 @@ const WALLET_CSS = `
 .setrow .pc{font-size:11px;font-weight:510;color:var(--text-4);margin-top:7px;
   letter-spacing:-.006em;font-variant-numeric:tabular-nums}
 
-.achv{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:12px}
-/* Both states are deliberate. Locked recedes and unlocked feels earned, and
-   the distinction is carried by COLOUR rather than by opacity alone: the
-   reveal runtime owns opacity ([data-reveal].in forces it to 1, and reduced
-   motion forces it with !important), so a dim built only on opacity silently
-   loses that fight and every badge ends up looking unlocked. */
-.a{position:relative;border-radius:var(--r-md);padding:14px 15px;background:var(--glass);
-  box-shadow:0 0 0 1px var(--line);
-  transition:opacity .3s var(--ease),box-shadow .25s var(--ease),transform .25s var(--ease)}
-.a:hover{transform:translateY(-2px);box-shadow:0 0 0 1px var(--line-hi)}
-/* .66 over --text-4 landed the locked description and progress line at a 2.1:1
-   contrast ratio — dimmer than the .6 they had before the restyle, and past the
-   point where a locked achievement still tells you what it wants. A locked card
-   has to stay readable to be worth chasing, so the dim stops where the text is
-   still legible and the gold carries the rest of the distinction. */
-.achv .a:not(.on).in{opacity:.74}
-.achv .a:not(.on).in:hover{opacity:.92}
-.a.on{background:linear-gradient(150deg,rgba(245,196,81,.075),rgba(255,255,255,.02) 60%);
-  box-shadow:0 0 0 1px rgba(245,196,81,.26),0 20px 46px -26px rgba(245,196,81,.45)}
-.a.on:hover{transform:translateY(-2px);
-  box-shadow:0 0 0 1px rgba(245,196,81,.42),0 26px 60px -26px rgba(245,196,81,.6)}
-.a .nm{font-size:12.5px;font-weight:580;letter-spacing:-.014em;color:var(--text-3)}
-.a.on .nm{color:var(--gold)}
-.a .ds{font-size:11.5px;font-weight:480;color:var(--text-3);margin-top:6px;line-height:1.55}
-.a.on .ds{color:var(--text-2)}
-.a .pr{font-size:10.5px;font-weight:510;color:var(--text-3);margin-top:9px;letter-spacing:-.004em;
-  font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
-.a.on .pr{color:rgba(245,196,81,.72)}
-.abar{height:4px;border-radius:2px;background:rgba(255,255,255,.06);margin-top:10px;
-  overflow:hidden}
+.achv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+.achv .a{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;align-items:center;
+  padding:22px 0;border-bottom:1px solid var(--line)}
+.a .medal{width:76px;height:84px;object-fit:contain;display:block;filter:grayscale(1) brightness(.62);
+  transition:transform .3s var(--ease),filter .3s var(--ease);border-radius:50%}
+.a.on .medal{filter:none}.a:hover .medal{transform:translateY(-3px)}
+.a .nm{font-size:14px;font-weight:590;letter-spacing:-.018em;color:var(--text);margin:0}
+.a .ds{font-size:12px;color:var(--text-3);margin:5px 0 0;line-height:1.55}
+.a .achievement-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.03em;
+  color:var(--text-3);margin-bottom:7px}
+.a.on .achievement-status{color:var(--accent-hi)}
+.a.grail.on .achievement-status{color:var(--gold)}
+.a .pr{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--text-3);
+  margin-top:8px;font-variant-numeric:tabular-nums}
+.abar{height:4px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:10px;overflow:hidden}
 .abar i{display:block;height:100%;width:var(--pct,0%);border-radius:2px;transform-origin:0 50%;
-  background:linear-gradient(90deg,var(--accent),var(--accent-hi));background-size:220% 100%}
-.a.in .abar i{animation:barGrow 1.05s var(--ease) both}
-/* A locked badge's bar keeps moving — it is the thing still in progress. */
-.a:not(.on).in .abar i{animation:barGrow 1.05s var(--ease) both,barFlow 2.6s linear .9s infinite}
-@keyframes barFlow{from{background-position:0 0}to{background-position:-220% 0}}
-.a.on .abar i{background:linear-gradient(90deg,rgba(245,196,81,.72),var(--gold));
-  background-size:100% 100%;box-shadow:0 0 14px rgba(245,196,81,.4)}
+  background:var(--accent)}
+.a.in .abar i{animation:barGrow .7s var(--ease) both}
+.a.grail.on .abar i{background:var(--gold)}
+.collection-nav{display:flex;gap:26px;border-bottom:1px solid var(--line);margin:0 0 28px;
+  overflow-x:auto;scrollbar-width:thin}
+.collection-nav a{display:flex;align-items:center;gap:8px;min-height:48px;font-size:12px;white-space:nowrap;
+  color:var(--text-3);border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.collection-nav a:hover,.collection-nav a:focus-visible{color:var(--text);border-bottom-color:var(--accent)}
+.collection-nav small{font-size:10px;font-variant-numeric:tabular-nums;color:var(--text-4)}
+.collection-section{scroll-margin-top:156px}
+.collection-heading{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin:44px 0 20px}
+.collection-heading .sec{margin:0}.collection-heading p{font-size:12px;color:var(--text-3);margin:0;text-align:right}
+.collection-empty{padding:24px 0 30px;max-width:520px}
+.collection-empty h3{font-size:21px;letter-spacing:-.025em;margin:0 0 9px}
+.collection-empty p{font-size:13px;color:var(--text-3);line-height:1.7;margin:0 0 16px}
+.collection-empty a,.setrow .pc a{color:var(--accent-hi);font-weight:550}
+.collection-empty a{display:inline-flex;align-items:center;min-height:44px}
+.setrow .pc{display:flex;justify-content:space-between;gap:12px}
+.bnav button{font:inherit;font-size:12px;padding:8px 14px;border-radius:var(--r-sm);border:0;
+  color:var(--text-4);background:var(--glass);box-shadow:0 0 0 1px var(--line);min-height:44px}
+.bnav button:disabled{cursor:default;opacity:.5}.bnav a{min-height:44px;display:inline-flex;align-items:center}
+.binder-caption{text-align:center;color:var(--text-3);font-size:12px;margin:18px 0 0}
+.wallet-chip{margin-bottom:18px}.collection-nav{margin-bottom:16px}
+.collection-nav+.wstats{margin:16px 0 22px}.collection-nav+.wstats .b{padding-top:18px;padding-bottom:18px}
+.collection-nav+.wstats .v{margin-top:9px}
+@media(max-width:680px){.achv{grid-template-columns:1fr}.collection-nav{gap:22px}.collection-heading{align-items:flex-start;flex-direction:column;gap:7px}.collection-heading p{text-align:left}}
+@media(prefers-reduced-motion:reduce){.a .medal,.collection-nav a{transition:none}.a:hover .medal{transform:none}.a.in .abar i{animation:none}}
 
 .dupes{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
 /* Match the catalog's quieter framing while retaining the binder geometry. */
@@ -397,7 +402,7 @@ setTimeout(() => { document.getElementById('feed-update').textContent = 'New pul
  * `index` comes from `Array.prototype.map`, and only staggers the entrance.
  */
 function slot(entry: CollectionEntry | null, index: number): string {
-  if (!entry) return `<div class="slot empty" style="--i:${index}"></div>`;
+  if (!entry) return `<div class="slot empty" style="--i:${index}" aria-hidden="true"></div>`;
   const href = `/pokemon/${encodeURIComponent(entry.card.setId)}/${encodeURIComponent(
     entry.card.number,
   )}`;
@@ -434,23 +439,64 @@ export interface CollectionPageInput {
   uniqueVariants: number;
 }
 
+/** Keep unknown targets indeterminate; zero is never a completed collection. */
+function progressDisplay(current: number, target: number) {
+  const known = Number.isFinite(target) && target > 0;
+  const value = Number.isFinite(current) ? Math.max(0, current) : 0;
+  const bounded = known ? Math.min(target, value) : 0;
+  return {
+    percent: known ? (Math.floor(Math.min(100, (bounded / target) * 100) * 10) / 10).toFixed(1) : '0.0',
+    attributes: known
+      ? `aria-valuemin="0" aria-valuemax="${target}" aria-valuenow="${bounded}"`
+      : 'aria-valuetext="Progress unavailable"',
+    label: known ? `${bounded.toLocaleString()} / ${target.toLocaleString()}` : 'Progress unavailable',
+  };
+}
+
+function achievementRow(a: AchievementStatus): string {
+  // GRAIL_HUNTER is the only shipped definition that requires PullTier.Grail.
+  // Names and other rarity/value achievements do not establish a Grail pull.
+  const grail = a.def.id === 'GRAIL_HUNTER';
+  const progress = progressDisplay(a.progress.current, a.progress.target);
+  return `<div class="a${a.unlocked ? ' on' : ''}${grail ? ' grail' : ''}" data-achievement="${esc(a.def.id)}" data-reveal style="--pct:${progress.percent}%">
+    <img class="medal" src="/art/achievements/${grail ? 'grail-puller' : 'medal-base'}.png" alt="" width="76" height="84" loading="lazy" decoding="async">
+    <div>
+      <div class="achievement-status"><span aria-hidden="true">${a.unlocked ? '✓' : '○'}</span> ${a.unlocked ? 'Unlocked' : 'Locked'}</div>
+      <h3 class="nm">${esc(a.def.name)}</h3>
+      <p class="ds">${esc(a.def.description)}</p>
+      <div class="abar" role="progressbar" aria-label="${esc(a.def.name)} progress" ${progress.attributes}><i></i></div>
+      <div class="pr">${progress.label}</div>
+    </div>
+  </div>`;
+}
+
 export function collectionPage(input: CollectionPageInput): string {
   const {
     wallet, stats, page, pageCount, pageNumber, sort, completion, duplicates, achievements,
   } = input;
 
-  const q = (n: number) => `/collection/${encodeURIComponent(wallet)}?page=${n}&sort=${encodeURIComponent(sort)}`;
+  const q = (n: number) => `/collection/${encodeURIComponent(wallet)}?page=${n}&sort=${encodeURIComponent(sort)}#binder`;
   const sortLink = (s: string, label: string) =>
-    `<a href="/collection/${encodeURIComponent(wallet)}?sort=${s}"${
-      sort === s ? ' class="cur"' : ''
+    `<a href="/collection/${encodeURIComponent(wallet)}?sort=${s}#binder"${
+      sort === s ? ' class="cur" aria-current="true"' : ''
     }>${label}</a>`;
 
   const unlocked = achievements.filter((a) => a.unlocked).length;
+  const empty = !page || input.uniqueVariants === 0;
+  const binderPages = Number.isFinite(pageCount) ? Math.max(1, Math.floor(pageCount)) : 1;
+  const currentPage = Number.isFinite(pageNumber) ? Math.min(binderPages, Math.max(1, Math.floor(pageNumber))) : 1;
 
   const body = `
 <div class="eyebrow" data-reveal>THE BINDER</div>
 <h1 class="page" data-reveal>Binder</h1>
 <div class="wallet-chip" data-reveal>WALLET <span class="mono">${esc(wallet)}</span></div>
+
+<nav class="collection-nav" aria-label="Collection sections">
+  <a href="#binder">Binder <small>${input.uniqueVariants.toLocaleString()}</small></a>
+  <a href="#set-completion">Set completion <small>${completion.length}</small></a>
+  <a href="#achievements">Achievements <small>${unlocked} / ${achievements.length}</small></a>
+  <a href="#duplicates">Duplicates <small>${duplicates.totalDuplicates.toLocaleString()}</small></a>
+</nav>
 
 <div class="wstats" data-reveal-group="60">
   <div class="b" data-reveal><div class="k">RIPS</div>
@@ -470,9 +516,11 @@ export function collectionPage(input: CollectionPageInput): string {
     }</span></div></div>
 </div>
 
-<div class="bnav sorts" data-reveal>
+<section id="binder" class="collection-section" aria-label="Binder pages">
+${empty ? `<div class="collection-empty" data-reveal><h3>Your binder is ready.</h3><p>Cards collected by this wallet will appear here, with each finish and printing in its own sleeve. Explore the Pokédex to see the available cards.</p><a href="/cards">Explore the Pokédex <span aria-hidden="true">&nbsp;↗</span></a></div>` : ''}
+<nav class="bnav sorts" aria-label="Sort binder" data-reveal>
   ${sortLink('set', 'BY SET')}${sortLink('value', 'BY VALUE')}${sortLink('pull-date', 'BY PULL DATE')}${sortLink('rarity', 'BY RARITY')}
-</div>
+</nav>
 
 ${
   page
@@ -486,53 +534,47 @@ ${
     </div>
   </div>
 </div>
-<div class="bnav pager">
-  <a class="${pageNumber <= 1 ? 'off' : ''}" href="${q(pageNumber - 1)}">← TURN BACK</a>
-  <span class="cur">PAGE ${pageNumber} OF ${pageCount}</span>
-  <a class="${pageNumber >= pageCount ? 'off' : ''}" href="${q(pageNumber + 1)}">TURN PAGE →</a>
-</div>`
-    : '<div class="empty-state">This wallet has not ripped anything yet.</div>'
+<p class="binder-caption">${page.filled} of ${page.slots.length} sleeves filled on this page</p>
+<nav class="bnav pager" aria-label="Binder pagination">
+  ${currentPage <= 1 ? '<button type="button" disabled aria-label="Previous binder page">← TURN BACK</button>' : `<a href="${q(currentPage - 1)}" rel="prev" aria-label="Previous binder page">← TURN BACK</a>`}
+  <span class="cur" aria-current="page">PAGE ${currentPage} OF ${binderPages}</span>
+  ${currentPage >= binderPages ? '<button type="button" disabled aria-label="Next binder page">TURN PAGE →</button>' : `<a href="${q(currentPage + 1)}" rel="next" aria-label="Next binder page">TURN PAGE →</a>`}
+</nav>`
+    : ''
 }
+</section>
 
-<h2 class="sec" style="margin-top:52px">SET COMPLETION</h2>
+<section id="set-completion" class="collection-section" aria-labelledby="set-completion-title">
+<div class="collection-heading"><h2 class="sec" id="set-completion-title">SET COMPLETION</h2><p>Distinct cards owned, across every finish and printing.</p></div>
 ${
   completion.length
     ? `<div class="sets" data-reveal-group="50">${completion
-        .map(
-          (c) => `<div class="setrow" data-reveal style="--pct:${c.percent.toFixed(1)}%">
+        .map((c) => {
+          const progress = progressDisplay(c.collected, c.total);
+          return `<div class="setrow" data-reveal style="--pct:${progress.percent}%">
     <div class="top"><span class="nm">${esc(c.setName)}</span>
-      <span class="ct">${c.collected} / ${c.total}</span></div>
-    <div class="setbar"><i></i></div>
-    <div class="pc">${c.percent.toFixed(1)}%</div>
-  </div>`,
-        )
+      <span class="ct">${progress.label}</span></div>
+    <div class="setbar" role="progressbar" aria-label="${esc(c.setName)} collection progress" ${progress.attributes}><i></i></div>
+    <div class="pc"><span>${c.total > 0 ? `${progress.percent}% complete` : 'No catalog target'}</span><a href="/cards?setId=${encodeURIComponent(c.setId)}">View set ↗</a></div>
+  </div>`;
+        })
         .join('')}</div>`
-    : '<div class="empty-state">Nothing collected yet.</div>'
+    : '<p class="lede">Set progress appears here when this wallet has collected cards.</p>'
 }
+</section>
 
-<h2 class="sec" style="margin-top:44px">ACHIEVEMENTS</h2>
+<section id="achievements" class="collection-section" aria-labelledby="achievements-title">
+<div class="collection-heading"><h2 class="sec" id="achievements-title">ACHIEVEMENTS</h2><p>${unlocked} of ${achievements.length} unlocked</p></div>
 <div class="achv" data-reveal-group="45">
-  ${achievements
-    .map(
-      (a) => `<div class="a ${a.unlocked ? 'on' : ''}" data-reveal style="--pct:${Math.min(
-        100,
-        (a.progress.current / a.progress.target) * 100,
-      ).toFixed(1)}%">
-    <div class="nm">${esc(a.def.name)}</div>
-    <div class="ds">${esc(a.def.description)}</div>
-    <div class="abar"><i></i></div>
-    <div class="pr">${a.progress.current} / ${a.progress.target}${
-      a.unlocked && a.unlockedAt ? ' · UNLOCKED' : ''
-    }</div>
-  </div>`,
-    )
-    .join('')}
+  ${achievements.length ? achievements.map(achievementRow).join('') : '<p class="lede">No achievements are available yet.</p>'}
 </div>
+</section>
 
-<h2 class="sec" style="margin-top:44px">DUPLICATES</h2>
+<section id="duplicates" class="collection-section" aria-labelledby="duplicates-title">
+<div class="collection-heading"><h2 class="sec" id="duplicates-title">DUPLICATES</h2><p>Extra copies of the same finish and printing.</p></div>
 ${
   duplicates.entries.length === 0
-    ? '<div class="empty-state">No duplicates yet.</div>'
+    ? '<p class="lede">No extra copies in this wallet. Different finishes and printings remain separate binder entries.</p>'
     : `<p class="lede" data-reveal>${duplicates.totalDuplicates} spare
        ${duplicates.totalDuplicates === 1 ? 'copy' : 'copies'}, worth
        <b>${money(duplicates.totalValue)}</b> combined at the values they were pulled at.</p>
@@ -550,7 +592,8 @@ ${
   </a>`,
         )
         .join('')}</div>`
-}`;
+}
+</section>`;
 
   return layout(`Binder — ${wallet} — RIPDEX`, '', body, WALLET_CSS);
 }
