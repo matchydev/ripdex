@@ -25,6 +25,10 @@ export const CHARIZARD_CHASE: PackConfig = {
     backgroundColor: '#0B0608',
     foilTone: 'crimson',
     texture: 'gloss',
+    // Its own hero: falling back to the pool's top card would render the same
+    // Base Set Charizard wrapper as BASE SET RIP, and two identical packs
+    // sitting side by side on the homepage read as a bug.
+    heroImageUrl: 'https://images.pokemontcg.io/sv3pt5/199_hires.png',
   },
   pool: [
     { variantId: 'sv3pt5|4|non-foil|unlimited', weight: 3400 },

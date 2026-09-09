@@ -22,14 +22,19 @@ import {
   type CardSort,
   type CatalogIndex,
 } from '../../packages/pokemon-core/src/index.ts';
-import { PACKS, packVariantIds } from './packs/charizard-chase.ts';
+import { loadPacks, packVariantIds, FEATURED_PACK_ID } from './packs/index.ts';
 import { cardsPage, detailPage, grailsPage, packsPage, tile, layout } from './src/render.ts';
+import { homePage } from './src/home.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR =
   process.env.RIPDEX_DATA_DIR ?? join(HERE, '..', '..', 'packages', 'pokemon-core', 'data', 'catalog');
 const PORT = Number(process.env.PORT ?? 4179);
 const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 500);
+// The homepage rail shows high-value cards rather than only cards over the grail
+// floor: with a small catalog the strict threshold leaves one card, and a rail
+// of one reads as broken. /grails still applies GRAIL_MIN.
+const HOME_RAIL_MIN = Number(process.env.RIPDEX_HOME_RAIL_MIN ?? 25);
 
 const SORTS = new Set<CardSort>([
   'value-desc', 'value-asc', 'newest', 'oldest', 'rarity', 'name', 'number',
@@ -92,8 +97,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   const path = decodeURIComponent(url.pathname);
 
   if (path === '/') {
-    res.writeHead(302, { Location: '/cards' });
-    return res.end();
+    return html(res, homePage(index, PACKS, topGrails(index, 20, HOME_RAIL_MIN), FEATURED_PACK_ID, []));
   }
 
   if (path === '/cards') return html(res, cardsPage(index));
@@ -126,7 +130,8 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 }
 
 const store = new JsonCatalogStore(DATA_DIR);
-const inPacks = packVariantIds();
+const PACKS = await loadPacks();
+const inPacks = packVariantIds(PACKS);
 
 // Fail at boot, not mid-request: a pool referencing a variant that is not in
 // the catalog means the pack cannot be opened, and that should be loud.

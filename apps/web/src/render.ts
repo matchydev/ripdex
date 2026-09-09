@@ -144,6 +144,7 @@ table.variants td.num{font-family:ui-monospace,Menlo,monospace;font-weight:600}
 
 export function layout(title: string, active: string, body: string, extraHead = ''): string {
   const nav = [
+    ['/', 'HOME'],
     ['/cards', 'POKÉDEX'],
     ['/grails', 'GRAILS'],
     ['/packs', 'PACKS'],

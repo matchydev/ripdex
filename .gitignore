@@ -8,3 +8,7 @@ dist/
 # Ingested catalog data — regenerate with pnpm pokemon:sync:*
 **/data/catalog/
 **/data/assets-report.json
+
+# Local server logs
+web.out
+web.err

@@ -39,6 +39,11 @@ export interface PackArtwork {
   backgroundColor: string;
   foilTone: 'warm' | 'cool' | 'gold' | 'electric' | 'crimson' | 'mono';
   texture: 'clean' | 'distressed' | 'aged' | 'gloss';
+  /**
+   * Resolved hero artwork URL. Generated packs pin one; hand-authored packs may
+   * omit it and let the renderer fall back to the pack's most valuable outcome.
+   */
+  heroImageUrl?: string | null;
 }
 
 export interface PackConfig {
