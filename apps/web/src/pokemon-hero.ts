@@ -31,6 +31,10 @@ export const POKEMON_HERO_TOGGLE = `<button class="hero-motion-toggle" type="but
 export const POKEMON_HERO_CSS = `<style>
 .hero .hero-inner{min-height:470px;padding-top:32px}
 .hero h1{position:relative;z-index:1;font-size:clamp(84px,8vw,112px);margin-top:24px}
+.hero-contract{position:relative;z-index:2;width:46%;max-width:460px;margin-top:16px;scroll-margin-top:130px}
+.hero-contract:focus{outline:none}.hero-ca-button{display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:11px 14px;border:1px solid #766dfc66;border-radius:8px;background:#1d1b30ed;color:#c9c3ff;text-align:left;cursor:pointer}
+.hero-ca-button:hover{background:#28233f;border-color:#aaa1ff}.hero-ca-button:focus-visible{outline:2px solid #b9b1ff;outline-offset:3px}.hero-ca-label{font:650 12px ui-monospace,monospace;color:#f1edff}.hero-ca-address{min-width:0;overflow-wrap:anywhere;font:500 12px/1.5 ui-monospace,monospace}.hero-ca-button svg{margin-left:auto;flex-shrink:0;opacity:.75}
+.hero-contract-help{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .hero .hero-copy{position:relative;z-index:1;padding-top:30px;width:49%}
 .hero .hero-copy p{max-width:38ch}
 .hero .hero-copy h2{font-size:29px}
@@ -68,12 +72,13 @@ export const POKEMON_HERO_CSS = `<style>
 @media(max-width:1150px){.hero .hero-inner{min-height:440px}.hero .hero-copy{width:51%}.hero .hero-copy p br{display:none}.hero .pack-scene{--pw:105px;--ph:148px;--spread:84px;top:209px}.hero-charizard-flight{width:58%;right:-4%;top:-8px}.hero-pokeball-one{top:35%;width:37px;height:37px}.hero .hero-actions{flex-wrap:wrap;gap:0 12px}}
 @media(max-width:850px){.hero-charizard-flight{width:56%;right:-1%;top:-22px}.hero .pack-scene{--pw:120px;--ph:168px;--spread:101px;top:190px}.hero-embers i:nth-child(n+5){display:none}}
 @media(max-width:600px){
+ .hero-contract{width:100%;margin-top:12px;scroll-margin-top:154px}.hero-ca-button{min-height:42px;padding:9px 12px}.hero-ca-address{font-size:11px}
  .hero .hero-inner{padding:18px 20px 20px;min-height:0}.hero h1{font-size:23.5vw;margin-top:18px;line-height:.95}.hero .hero-top{display:none}.hero .hero-main{min-height:0}.hero .hero-copy{width:100%;padding:12px 0 22px}.hero .hero-copy h2{font-size:27px}.hero .hero-copy p{max-width:38ch;font-size:12px}.hero .hero-actions{gap:12px}.hero .hero-inspect{font-size:10px}
  .hero .pack-scene{position:relative;top:auto;right:auto;width:100%;height:252px;margin-top:0;--pw:91px;--ph:128px;--spread:89px}.hero .pack-scene .stage-drift{top:103px}.hero .hero-foot{font-size:7px}
- .hero-charizard-flight{width:330px;top:65px;right:calc(50% - 183px)}.pokemon-atmosphere:after{background:linear-gradient(0deg,#10111a 0%,#10111a 32%,#10111a00 49%)}
- .hero-pokeball-one{right:7%;top:26%;width:34px;height:34px}.hero-pokeball-two{right:82%;bottom:auto;top:43%;width:29px;height:29px}.hero-motion-toggle{font-size:10px;padding:6px 8px;top:12px;right:16px}.hero-firelight{top:10%;height:65%;width:100%}
+ .hero-charizard-flight{width:330px;top:119px;right:calc(50% - 183px)}.pokemon-atmosphere:after{background:linear-gradient(0deg,#10111a 0%,#10111a 32%,#10111a00 49%)}
+ .hero-pokeball-one{right:7%;top:33%;width:34px;height:34px}.hero-pokeball-two{right:82%;bottom:auto;top:43%;width:29px;height:29px}.hero-motion-toggle{font-size:10px;padding:6px 8px;top:12px;right:16px}.hero-firelight{top:10%;height:65%;width:100%}
 }
-@media(max-width:360px){.hero h1{margin-top:22px}.hero .hero-inner{padding-left:16px;padding-right:16px}.hero .pack-scene{height:216px;--pw:80px;--ph:112px;--spread:73px}.hero .pack-scene .stage-drift{top:95px}.hero-charizard-flight{width:290px;top:53px;right:calc(50% - 162px)}.hero .hero-copy h2{font-size:25px}.hero .hero-copy p{font-size:11px}.hero .hero-actions{gap:8px}.hero .hero-actions .btn{font-size:11px}.hero .hero-inspect{font-size:9px}.hero-pokeball-one{top:24%}.hero-pokeball-two{top:40%;right:84%}}
+@media(max-width:360px){.hero h1{margin-top:22px}.hero .hero-inner{padding-left:16px;padding-right:16px}.hero .pack-scene{height:216px;--pw:80px;--ph:112px;--spread:73px}.hero .pack-scene .stage-drift{top:95px}.hero-charizard-flight{width:290px;top:107px;right:calc(50% - 162px)}.hero .hero-copy h2{font-size:25px}.hero .hero-copy p{font-size:11px}.hero .hero-actions{gap:8px}.hero .hero-actions .btn{font-size:11px}.hero .hero-inspect{font-size:9px}.hero-pokeball-two{top:40%;right:84%}}
 @media(prefers-reduced-motion:reduce){.pokemon-atmosphere *,.pokemon-atmosphere.is-running *{animation:none!important}.hero-flames{opacity:.48}.hero-embers{display:none}.hero-motion-toggle{transition:none}}
 </style>`;
 

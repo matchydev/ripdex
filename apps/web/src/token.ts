@@ -12,6 +12,14 @@ export function tokenHeader() {
   return `<a class="token-buy" href="/#rip-contract" data-token-buy>${ripMark()}Buy $RIP <span aria-hidden="true">↗</span></a>`;
 }
 
+export function tokenHeroContract(env: Record<string, string | undefined> = process.env) {
+  const { address } = tokenConfig(env);
+  return `<div class="hero-contract" id="rip-contract" tabindex="-1">
+    <button class="hero-ca-button" type="button" data-copy-ca ${address ? '' : 'aria-disabled="true"'} aria-describedby="hero-contract-help"><span class="hero-ca-label">CA:</span><span class="hero-ca-address">${address || 'Coming soon'}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+    <span class="hero-contract-help" id="hero-contract-help">${address ? 'Copy the full official RIP contract address.' : 'The official RIP contract address will appear here after deployment. No contract address has been published yet.'}</span>
+  </div>`;
+}
+
 export function tokenSection() {
   const { address, buyUrl } = tokenConfig();
   return `<section class="token-section" id="rip-token" tabindex="-1" aria-labelledby="token-title">
@@ -24,14 +32,14 @@ export function tokenSection() {
     </div>
     <div class="rip-coin-scene" aria-hidden="true"><div class="rip-coin">${ripMark()}</div><div class="coin-shadow"></div></div>
   </div>
-  <div class="token-contract" id="rip-contract" tabindex="-1">
+  <div class="token-contract" id="rip-contract-details" tabindex="-1">
     <button type="button" class="contract-button" data-copy-ca ${address ? '' : 'aria-disabled="true"'} aria-describedby="contract-help"><span class="ca-label">CA:</span><span class="ca-address">${address || 'Coming soon'}</span><span class="ca-icon" aria-hidden="true">${address ? '⧉' : '↗'}</span></button>
     <p id="contract-help">${address ? 'Click to copy the full contract address. Always verify the address before trading.' : 'The official contract address will appear here after deployment. No $RIP contract has been published by RIPDEX yet.'}</p>
     ${buyUrl ? `<a class="token-detail-link" href="${buyUrl}" target="_blank" rel="noopener noreferrer">View $RIP on pons ↗</a>` : ''}
   </div>
   <div class="token-network"><div><span class="section-index">PLANNED LAUNCH</span><p>Powered by pons on Robinhood Chain</p></div><div class="network-logos"><a href="https://www.ponsfamily.com/" target="_blank" rel="noopener noreferrer" aria-label="pons official website"><img class="pons-logo" src="/art/brands/pons.png" alt=""><span>pons</span></a><a class="robinhood-logo" href="https://docs.robinhood.com/chain/" target="_blank" rel="noopener noreferrer"><img src="/art/brands/robinhood-chain.svg" alt="Robinhood Chain"></a></div></div>
   <div class="token-details" id="tokenomics">
-    <div><span class="section-index">01 / THE LAUNCH</span><h3>One place for the real details.</h3><ol class="launch-steps"><li><span>01</span><div><h4>Publish the plan</h4><p>Supply, allocation, fees, and launch timing will be announced before launch.</p></div></li><li><span>02</span><div><h4>Launch through pons</h4><p>The planned launch venue is pons, a token launch protocol on Robinhood Chain. The final launch settings are still to be confirmed.</p></div></li><li><span>03</span><div><h4>Verify. Then explore.</h4><p>Find the official contract and token page here. Once published, Buy $RIP will copy the address and bring you to this section.</p></div></li></ol></div>
+    <div><span class="section-index">01 / THE LAUNCH</span><h3>One place for the real details.</h3><ol class="launch-steps"><li><span>01</span><div><h4>Publish the plan</h4><p>Supply, allocation, fees, and launch timing will be announced before launch.</p></div></li><li><span>02</span><div><h4>Launch through pons</h4><p>The planned launch venue is pons, a token launch protocol on Robinhood Chain. The final launch settings are still to be confirmed.</p></div></li><li><span>03</span><div><h4>Verify. Then explore.</h4><p>Find the official contract and token page here. Once published, Buy $RIP will copy the address and take you to the contract below the RIPDEX title.</p></div></li></ol></div>
     <div><span class="section-index">02 / TOKENOMICS</span><h3>The numbers come next.</h3><dl class="tokenomics-list">${['Total supply','Launch allocation','Team & vesting','Liquidity','Trading fees','Launch date'].map(label => `<div><dt>${label}</dt><dd>Coming soon</dd></div>`).join('')}</dl><p class="token-small">Final figures will be published once the launch configuration is confirmed.</p></div>
   </div>
   <div class="token-faq"><details><summary>Is $RIP live yet?<span aria-hidden="true">+</span></summary><p>The $RIP launch is coming soon. This page will publish the confirmed launch date, contract address, and tokenomics.</p></details><details><summary>Will $RIP be listed in the Robinhood app?<span aria-hidden="true">+</span></summary><p>The plan is a token launch on Robinhood Chain through pons. This does not announce a listing in the Robinhood brokerage app or an endorsement by Robinhood or pons.</p></details><details><summary>Is my demo $RIP balance an onchain token?<span aria-hidden="true">+</span></summary><p>No. The current demo balance is used to try pack openings and the collection experience. It is not an onchain balance, and no conversion or redemption has been announced.</p></details></div>

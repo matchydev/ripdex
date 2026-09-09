@@ -135,3 +135,9 @@ The user requested a stronger replacement token image and disliked the text on t
 Removed both coin text overlays, the dashed inner circle and the busy purple coin face. The new presentation uses a simple graphite surface, restrained violet metal rim, slight tilt, and gentle motion with reduced-motion support. Coming soon and the launch information remain in the surrounding page content.
 
 Validation: 12 web tests pass. All eight main page routes return 200, reference v2, and contain parseable scripts. The PNG serves correctly; desktop 1440px and mobile 320px reviews show the loaded new mark and no horizontal overflow. Coin text content is empty. No launch settings or gameplay logic changed. Claude’s `b3c03c1` achievement artwork is included in this integration.
+
+## Follow-up — navigation order and hero contract
+
+The user requested Packs before Pokédex; the shared desktop/mobile navigation and footer now follow that order. They also requested CA directly below the large RIPDEX title. `tokenHeroContract()` renders that hero control using the same validated configuration and copy handler as the detailed token section. The hero now owns the single canonical `#rip-contract` target, so the persistent Buy button reaches it from every page. The lower contract details use `#rip-contract-details`. Both currently show Coming soon, and no placeholder is copied. Mobile artwork is repositioned to leave room below the title.
+
+Validation: 12 web tests pass. Browser checks confirm direct placement under the title, no horizontal overflow at 320/1440px, one canonical anchor, and header Buy navigation both within the homepage and from `/packs`, with the expected Coming soon notice. Full configured addresses can wrap; the complete value remains available for copying.

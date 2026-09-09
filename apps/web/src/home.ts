@@ -29,7 +29,7 @@ import type {
   PackConfig,
 } from '../../../packages/pokemon-core/src/index.ts';
 import { esc, money, layout, tile } from './render.ts';
-import { tokenSection } from './token.ts';
+import { tokenSection, tokenHeroContract } from './token.ts';
 import { ripMark } from './brand.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
 import { POKEMON_HERO_HTML, POKEMON_HERO_CSS, POKEMON_HERO_JS, POKEMON_HERO_TOGGLE } from './pokemon-hero.ts';
@@ -383,6 +383,7 @@ export function homePage(
     ${POKEMON_HERO_TOGGLE}
     <div class="hero-top" data-reveal>${ripMark()}<span>THE POKÉMON COLLECTOR’S CLUB</span></div>
     <h1 id="home-title" data-reveal>RIP<span>DEX</span></h1>
+    ${tokenHeroContract()}
     <div class="hero-main">
       <div class="hero-copy" data-reveal-group="70">
         <h2 data-reveal>A world of Pokémon.<br>One card at a time.</h2>
