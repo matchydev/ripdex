@@ -11,20 +11,37 @@ direction: `art-direction/ART_DIRECTION.md`. The API key is read from
 
 Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
 
-| Asset | Purpose | Page(s) | Prompt | Model | Size | Quality | Transparent | Filepath | Version | Implemented | Notes |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| Grail pack | Flagship sealed-pack wrapper (showcase) | home / packs / rip | `art-prompts/grail-pack.md` | gpt-image-2.5-sunburst | 1024×1536 | high | yes | `public/art/packs/grail-pack.png` | v1 | ⛔ blocked | Pipeline verified end-to-end (key valid, request reached the API). Generation returned **429 — no credits on the OpenAI account**. Add billing, then re-run; the wrapper auto-maps to the featured pack in the 3D scene. |
+| Asset | Purpose | Prompt | Size | Transparent | Filepath | Implemented | Notes |
+|---|---|---|---|---|---|---|---|
+| Grail pack | Featured/showcase wrapper | `grail-pack.md` | 1024×1536 | (baked dark bg) | `public/art/packs/grail-pack.png` | ✅ home scene + rip screen | Showcase; maps to the featured pack. |
+| Base Set wrapper | Pack wrapper (antique gold) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/base-set-rip.png` | ✅ rip screen + home | Edit-derived for a coherent family. |
+| 151 wrapper | Pack wrapper (crimson) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/151-rip.png` | ✅ rip screen | |
+| Jungle wrapper | Pack wrapper (emerald) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/jungle-rip.png` | ✅ rip screen | |
+| Obsidian wrapper | Pack wrapper (ember orange) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/obsidian-flames-rip.png` | ✅ rip screen | |
+| Kanto wrapper | Pack wrapper (amber) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/kanto-starters-rip.png` | ✅ rip screen | |
+| Grail vault | Grail reveal environment | `grail-environment.md` | 1920×1088 | no (backdrop) | `public/art/environments/grail-vault.png` | ✅ grail takeover | Centre negative space for the card. |
+| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | (baked dark bg) | `public/art/achievements/medal-base.png` | ⏳ awaiting collection UI wiring | Gunmetal + violet enamel + gold facet. |
+| Grail Puller medal | Gold prestige medal | edit of medal-base | 1024×1024 | ✅ yes | `public/art/achievements/grail-puller.png` | ⏳ awaiting collection UI wiring | Full gold; for grail-tier achievements. |
 
-## Planned (generate in this order once billing is funded)
+## Hand-off / remaining
 
-1. **Grail pack** — the showcase. Prove the whole workflow, iterate to premium, before anything else.
-2. Other pack wrappers — `charizard-chase`, `base-set-rip`, `151-rip`, `jungle-rip`, `obsidian-flames-rip`, `kanto-starters-rip` (file each as `<packId>.png`; the case gallery and pack scene pick them up automatically). Use `pnpm art:edit` from the approved grail pack to keep the family coherent, re-theming per case accent.
-3. Grail reveal environment — atmospheric scene with intentional centre negative space for the real card (`public/art/environments/`).
-4. Achievement set — one canonical enamel-pin / stamped-medal, then edit-derive the rest (`public/art/achievements/`, transparent).
-5. Homepage supporting artwork.
-6. Social backgrounds — background only; `social.ts` overlays exact card/name/value/tier/branding as real text.
-7. Subtle textures / decorative assets.
+- **Achievement medals → collection/profile UI.** The medal family is generated
+  (`medal-base` for standard achievements, `grail-puller` for grail-tier). The
+  achievements render in `apps/web/src/wallet-pages.ts` (Codex's active lane), so
+  wiring the medal images onto the unlocked/locked badge states is best done
+  there. Suggested mapping: grail-related achievements → `grail-puller.png`, the
+  rest → `medal-base.png`, greyscaled/dimmed while locked. More distinct medals
+  can be edit-derived from `medal-base` per achievement if desired.
+- **Optional polish:** the pack wrappers and the base medal carry a baked dark
+  studio background rather than true alpha; on the dark UI it blends, but a
+  background-removal edit (`pnpm art:edit ... --transparent`) would let them
+  float perfectly. The gold medal already came out transparent.
 
 ## Iteration log
 
-- **grail-pack v1** — attempted 2026-09-09. Blocked at generation: OpenAI account has no API credits (429). Brief written to full art-direction spec; awaiting billing to generate and begin the inspect → implement → critique → edit loop.
+- **2026-09-09** — Generated and shipped: grail pack (showcase), all five other
+  pack wrappers (edit-derived, re-themed per case accent), the grail reveal
+  environment (vault), and the achievement medal family (canonical + gold).
+  Wrappers wired into the rip screen + home pack scene; vault wired into the
+  grail takeover. Medals awaiting collection-UI wiring (Codex's lane).
+- Credits ran out mid-session twice (429); auto-reload recovered each time.
