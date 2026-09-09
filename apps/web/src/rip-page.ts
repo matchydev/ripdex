@@ -710,7 +710,7 @@ ${BRAND_HEAD}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <title>${packName} — RIPDEX</title>
 <style>${RIP_CSS + TOKEN_CSS + BRAND_CSS}
-#s-select{grid-template-columns:minmax(0,1fr)}#s-select .center{min-width:0;max-width:100%}#s-select .specs{max-width:100%}#chrome.hide{opacity:1;pointer-events:auto}#chrome{z-index:20}.chrome-right{flex-wrap:wrap;justify-content:flex-end}.chrome-right .token-buy{min-height:34px}.bal:before{content:"DEMO";font-size:8px;color:var(--text-3);margin-right:5px}@media(max-width:480px){#chrome{inset:12px;align-items:flex-start;gap:10px}#chrome .brand{font-size:15px}.chrome-right{gap:6px;max-width:205px}.chrome-right .bal{font-size:11px}.chrome-right .odds-link{font-size:9px}.chrome-right .token-buy{font-size:10px;min-height:30px;padding:0 10px}}
+#s-select{grid-template-columns:minmax(0,1fr);padding-top:76px}#s-select .pack-hold{width:min(var(--card-w),max(120px,calc((100dvh - 420px) * .7168)))}#s-select .center{min-width:0;max-width:100%}#s-select .specs{max-width:100%}#chrome.hide{opacity:1;pointer-events:auto}#chrome{z-index:20}.chrome-right{flex-wrap:wrap;justify-content:flex-end}.chrome-right .token-buy{min-height:34px}.bal:before{content:"DEMO";font-size:8px;color:var(--text-3);margin-right:5px}@media(max-width:480px){#chrome{inset:12px 12px auto;align-items:flex-start;gap:10px}#chrome .brand{font-size:15px}.chrome-right{gap:6px;max-width:205px}.chrome-right .bal{font-size:11px}.chrome-right .odds-link{font-size:9px}.chrome-right .token-buy{font-size:10px;min-height:30px;padding:0 10px}}
 </style>
 </head><body>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -751,7 +751,7 @@ ${BRAND_HEAD}
       </div>
       <div data-reveal>
         <button class="cta" id="ripBtn" data-magnetic="0.14">RIP PACK <span class="kbd">↵</span></button>
-        <a class="ghost" href="/packs">VIEW FULL ODDS</a>
+        <a class="ghost" href="/packs#odds-${esc(pack.id)}">VIEW FULL ODDS</a>
       </div>
     </div>
   </section>
@@ -1336,7 +1336,7 @@ sellBtn.onclick = async () => {
 const mb = document.getElementById('muteBtn');
 if (mb){ mb.classList.toggle('off', muted); mb.onclick = () => setMuted(!muted); }
 refreshBalance();
-new Image().src = ${JSON.stringify(hero)};
+new Image().src = ${JSON.stringify(packArt)};
 </script>
 ${tokenUI()}
 </body></html>`;

@@ -149,11 +149,30 @@ const EXPLORER_JS = `<script>
  const cards = [...root.querySelectorAll('.explorer-pack')];
  const input = document.getElementById('pack-search');
  const sort = document.getElementById('pack-sort');
+ const setTabs = [...root.querySelectorAll('[data-pack-set]')];
  let set = '', selected = [];
  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const money = n => n == null ? 'Unpriced' : new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
  const rip = n => BigInt(n).toLocaleString() + ' $RIP';
  const pct = n => (n * 100).toLocaleString('en-US',{maximumFractionDigits:4}) + '%';
+ function syncUrl() {
+  const url = new URL(location.href);
+  const values = {packSearch:input.value.trim(), packSet:set, packSort:sort.value==='curated'?'':sort.value};
+  Object.entries(values).forEach(([key,value]) => { if(value)url.searchParams.set(key,value);else url.searchParams.delete(key); });
+  if(url.href!==location.href)history.replaceState(history.state,'',url.href);
+ }
+ function selectSet(value) {
+  set = setTabs.some(t=>t.dataset.packSet===value) ? value : '';
+  setTabs.forEach(t=>{const active=t.dataset.packSet===set;t.classList.toggle('active',active);t.setAttribute('aria-pressed',String(active));});
+ }
+ function restoreFilters() {
+  const params = new URL(location.href).searchParams;
+  input.value = params.get('packSearch') || '';
+  selectSet(params.get('packSet') || '');
+  const order = params.get('packSort');
+  sort.value = [...sort.options].some(o=>o.value===order) ? order : 'curated';
+  filter();
+ }
  function filter() {
   const q = input.value.trim().toLowerCase();
   const visible = cards.filter(c => { const show = (!q || c.dataset.search.includes(q)) && (!set || c.dataset.sets.split(' ').includes(set)); c.hidden = !show; return show; });
@@ -165,12 +184,16 @@ const EXPLORER_JS = `<script>
   order.forEach(c => root.querySelector('#pack-results').append(c));
   document.getElementById('pack-count').textContent = visible.length + (visible.length === 1 ? ' pack' : ' packs');
   document.getElementById('pack-empty').hidden = visible.length > 0;
+  syncUrl();
  }
- root.querySelectorAll('[data-pack-set]').forEach(b => b.addEventListener('click',() => {
-  set=b.dataset.packSet; root.querySelectorAll('[data-pack-set]').forEach(t=>{t.classList.toggle('active',t===b);t.setAttribute('aria-pressed',String(t===b));}); filter();
+ setTabs.forEach(b => b.addEventListener('click',() => {
+  selectSet(b.dataset.packSet);filter();
  }));
  input.addEventListener('input',filter);sort.addEventListener('change',filter);
- document.getElementById('pack-reset').addEventListener('click',()=>{input.value='';sort.value='curated';root.querySelector('[data-pack-set=""]').click();input.focus();});
+ document.getElementById('pack-reset').addEventListener('click',()=>{input.value='';sort.value='curated';selectSet('');filter();input.focus();});
+ addEventListener('popstate',restoreFilters);
+ addEventListener('pageshow',restoreFilters);
+ restoreFilters();
  const dialog = document.getElementById('pack-dialog');
  const comparison = document.getElementById('compare-dialog');
  function open(d) { if (!d.open) d.showModal(); document.documentElement.classList.add('dialog-open'); }

@@ -89,3 +89,26 @@ Created a custom beveled violet R with a diagonal pack-tear notch using the buil
 Replaced the old lightning/dot mark in both header implementations. Applied the new R to the footer, homepage announcement and desktop kicker, token coin, desktop Buy button, demo balance, and rip card back. A download link in the token section serves the original artwork. All catalog, packs, grails, live, binder, detail, home and rip routes share the identity. Small mobile controls retain enough space by hiding only the decorative Buy-button icon. Also constrained the rip screen's select grid/specs to the available width.
 
 Validation: all nine existing web tests pass; eight routes return 200, include the brand/favicon, and have parseable scripts. The PNG returns 200 with image/png. Browser review confirms image loading, readable headers and token artwork at desktop and narrow mobile widths. No token or gameplay logic changed.
+
+## Fifth pass — integration with Claude's themed wrappers
+
+Pulled Claude's `cf09e8e` and merge `886ed7e`. All six wrappers resolve on the homepage, library, previews, comparison and opening screens while preserving RIP branding and the launch controls.
+
+- Pack filters now persist in `packSearch`, `packSet` and `packSort` query parameters. Search/set/sort restore on load, history navigation and page restoration; invalid values normalize; reset preserves unrelated parameters, hash and history state. Three browser-script tests cover these behaviors.
+- Artwork responses include weak ETags and support conditional requests. Validated matching weak/strong/list/wildcard conditions return bodyless 304; mismatches return the image. A directory is not treated as an image.
+- Wrapper lookup prefers WebP when a sibling exists, retains PNG fallback, and checks actual files. No artwork was regenerated or recompressed in this pass.
+- The rip screen preloads its actual displayed wrapper, and both odds links target the current pack. The select screen reserves room for the persistent header and sizes its wrapper to the available height. Fixed the mobile header's bottom inset so its transparent box no longer stretches across the screen and intercepts pack controls.
+
+198 tests pass (186 core + 12 web). Also verified all six opening routes use their wrappers and correct odds/preload URLs, conditional image responses, search/set/sort restoration and clearing in the browser, and desktop/mobile wrapper placement.
+
+### Next handoff to Claude
+
+The next useful work in the art/system lane:
+
+1. Produce smaller WebP delivery versions of the existing wrappers, keeping the original PNG masters. Six current PNGs total about 17 MB. `public/art/packs/<packId>.webp` and `grail-pack.webp` are now preferred automatically; retain each existing composition and alpha. Target a useful display size around 768 px tall, and verify the result visually. A separate thumbnail pipeline can follow if warranted.
+2. Continue the authored achievement-medal brief. The grail-vault environment arrived in `a3268a7` during this integration and is now included. Use the shared RIP mark from `public/art/brands/rip-r-v1.png` where branding is needed; keep pons and Robinhood Chain marks outside collectible/token artwork.
+3. Before any real-money integration, address the existing documented authentication and persisted nonce/seed-rotation work. The launch remains Coming soon and demo balances remain separate.
+
+Pull `ripdex-upgrades` before editing, preserve `brand.ts` / `token.ts` and the discovery behavior, then push the art/system changes to the same branch. This handoff is repository-based; no direct desktop Claude session was controlled.
+
+Late integration: rebased cleanly onto Claude’s `a3268a7` grail-vault environment. Combined tests and route/script checks pass. The mobile RIP button was also verified with a DOM hit test: the header ends at 77px and no longer covers the button.

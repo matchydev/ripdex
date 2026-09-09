@@ -130,18 +130,29 @@ function notFound(res: ServerResponse, what: string): void {
 }
 
 /** Serve a file from public/art read-only. Path traversal is refused. */
-async function serveArt(res: ServerResponse, urlPath: string): Promise<void> {
+async function serveArt(req: IncomingMessage, res: ServerResponse, urlPath: string): Promise<void> {
   const resolved = resolve(ART_DIR, urlPath.slice('/art/'.length));
   const within = relative(ART_DIR, resolved);
   if (within === '' || within.startsWith('..') || isAbsolute(within)) {
     return notFound(res, 'No such asset.');
   }
   try {
+    const info = await stat(resolved);
+    if (!info.isFile()) return notFound(res, 'No such asset.');
+    const etag = `W/"${info.size.toString(16)}-${info.mtimeMs.toString(16)}"`;
+    const cacheHeaders = { 'Cache-Control': 'public, max-age=3600', ETag: etag };
+    const incoming = req.headers['if-none-match'];
+    const tags = (Array.isArray(incoming) ? incoming.join(',') : incoming ?? '').split(',').map(tag => tag.trim().replace(/^W\//, ''));
+    if (tags.includes('*') || tags.includes(etag.replace(/^W\//, ''))) {
+      res.writeHead(304, cacheHeaders);
+      res.end();
+      return;
+    }
     const buf = await readFile(resolved);
     res.writeHead(200, {
       'Content-Type': ART_TYPES[extname(resolved).toLowerCase()] ?? 'application/octet-stream',
       'Content-Length': buf.length,
-      'Cache-Control': 'public, max-age=3600',
+      ...cacheHeaders,
       'X-Content-Type-Options': 'nosniff',
     });
     res.end(buf);
@@ -152,8 +163,7 @@ async function serveArt(res: ServerResponse, urlPath: string): Promise<void> {
 
 async function fileExists(p: string): Promise<boolean> {
   try {
-    await stat(p);
-    return true;
+    return (await stat(p)).isFile();
   } catch {
     return false;
   }
@@ -168,8 +178,8 @@ async function packWrappers(): Promise<Record<string, string>> {
   const out: Record<string, string> = {};
   for (const pack of PACKS) {
     const names: string[] = [];
-    if (pack.id === FEATURED_PACK_ID) names.push('grail-pack.png', 'grail-pack.webp');
-    names.push(`${pack.id}.png`, `${pack.id}.webp`);
+    if (pack.id === FEATURED_PACK_ID) names.push('grail-pack.webp', 'grail-pack.png');
+    names.push(`${pack.id}.webp`, `${pack.id}.png`);
     for (const name of names) {
       if (await fileExists(join(ART_PACK_DIR, name))) {
         out[pack.id] = `/art/packs/${name}`;
@@ -241,7 +251,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
   const url = new URL(req.url ?? '/', `http://localhost:${PORT}`);
   const path = decodeURIComponent(url.pathname);
 
-  if (path.startsWith('/art/')) return serveArt(res, path);
+  if (path.startsWith('/art/')) return serveArt(req, res, path);
 
   if (path === '/') {
     // The homepage LIVE PULLS rail reads the real ledger, so it fills the moment
