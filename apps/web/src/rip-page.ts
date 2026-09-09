@@ -141,6 +141,14 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
   box-shadow:0 0 0 1px var(--line);background:var(--glass);
   transition:color .2s var(--ease),box-shadow .2s var(--ease)}
 .odds-link:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
+.chrome-right{display:flex;align-items:center;gap:8px}
+.mute-btn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:26px;padding:0;
+  color:var(--text-3)}
+.mute-btn:hover{color:var(--text)}
+.mute-btn .sl{opacity:0;transition:opacity .18s var(--ease)}
+.mute-btn.off{color:var(--text-4)}
+.mute-btn.off .wv{opacity:0}
+.mute-btn.off .sl{opacity:1}
 
 /* ============================== stages ============================= */
 #stage{position:relative;z-index:2;height:100vh;height:100dvh;display:grid;place-items:center;padding:20px}
@@ -311,51 +319,70 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   letter-spacing:-.008em;color:var(--text-4);transition:color .2s var(--ease)}
 .ghost:hover{color:var(--text-2)}
 
-/* =========================== rolling card ==========================
-   Not a spinner: candidate silhouettes are dealt toward the camera and
-   discarded behind a frosted plate, so the wait reads as a decision being
-   made rather than a progress bar being filled. */
-.roller{position:relative;width:var(--card-w);aspect-ratio:var(--card-ar);margin:0 auto 30px;
-  perspective:900px;perspective-origin:50% 45%}
-.deck{position:absolute;inset:0;transform-style:preserve-3d}
-.deck i{position:absolute;inset:0;border-radius:14px;opacity:0;
-  background:linear-gradient(165deg,rgba(255,255,255,.11),rgba(255,255,255,.03));
-  box-shadow:0 0 0 1px var(--line-hi);
-  animation:deal 2.6s var(--ease) infinite;animation-delay:calc(var(--i,0) * -.371s)}
-.deck i::before{content:"";position:absolute;left:9%;right:9%;top:7.5%;height:52%;border-radius:7px;
-  background:rgba(255,255,255,.09);box-shadow:inset 0 0 0 1px var(--line-hi)}
-.deck i::after{content:"";position:absolute;left:9%;width:46%;bottom:15%;height:6.5%;border-radius:4px;
-  background:rgba(255,255,255,.12)}
-@keyframes deal{
-  0%{opacity:0;transform:translate3d(0,28px,-280px) rotateY(-17deg) scale(.94)}
-  20%{opacity:.85}
-  60%{opacity:.5}
-  100%{opacity:0;transform:translate3d(0,-20px,96px) rotateY(13deg) scale(1.04)}}
-.plate{position:absolute;inset:0;border-radius:14px;overflow:hidden;
-  background:linear-gradient(180deg,rgba(11,12,18,.40),rgba(8,9,12,.70));
-  backdrop-filter:blur(2px);
-  box-shadow:0 0 0 1px var(--line-hi),inset 0 -70px 60px -60px rgba(113,112,255,.5),
-    0 30px 70px -30px rgba(0,0,0,.9)}
-.plate::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 30%,rgba(113,112,255,.26) 45%,rgba(255,255,255,.22) 51%,rgba(113,112,255,.2) 57%,transparent 70%);
-  background-size:230% 100%;animation:shim 1.6s linear infinite}
-@keyframes shim{to{background-position:-230% 0}}
-.plate .scan{position:absolute;left:0;right:0;top:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--accent-hi),transparent);
-  box-shadow:0 0 18px rgba(113,112,255,.8);animation:scan 2.2s var(--ease) infinite}
-@keyframes scan{0%{top:-2%;opacity:0}14%{opacity:1}86%{opacity:1}100%{top:100%;opacity:0}}
+/* ============================== reel ==============================
+   The case-opening reel — the genre's signature mechanic. A horizontal
+   strip of REAL pool cards streams past a fixed centre marker and
+   decelerates onto the card you actually pulled.
+
+   Three things keep it honest, in line with the rest of the product:
+   - The outcome is settled server-side by /api/rip BEFORE this runs. The
+     reel PLACES the winner at the landing index; it never chooses it.
+   - Filler tiles are drawn with the pool's real weights (see runReel), so
+     a grail whips past as rarely as it drops — no salted highlights.
+   - The tiles flanking the winner are ordinary weighted draws. There are
+     no manufactured near-misses and no fake countdown.
+   The only cue tied to the result is the marker taking the pull's tier
+   colour during the final settle, and the outcome is already fixed by then. */
+.reel-wrap{position:relative;width:100%;max-width:1120px;margin:8px auto 0;--tier-glow:var(--accent-hi)}
+.reel-view{position:relative;z-index:1;overflow:hidden;width:100%;
+  -webkit-mask:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
+          mask:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent)}
+.reel-track{display:flex;gap:11px;padding:26px 0;width:max-content;will-change:transform;
+  transform:translateX(0)}
+.reel-card{position:relative;flex:0 0 var(--reel-w,clamp(94px,15vw,122px));aspect-ratio:63/88;
+  border-radius:6px;overflow:hidden;background:#0a0b10;
+  box-shadow:0 0 0 1px var(--line-hi),0 12px 26px -14px rgba(0,0,0,.85)}
+/* Each tile pools a blurred copy of its own art behind it — the same
+   bridge-colour trick the catalog grid uses, so warm scans sit on the dark
+   page instead of fighting the violet. */
+.reel-card::before{content:"";position:absolute;inset:-32%;z-index:0;
+  background-image:var(--art);background-size:cover;background-position:center;
+  filter:blur(24px) saturate(1.5);opacity:.5}
+.reel-card img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+/* A crisp framed border on every tile so the cards read as distinct objects as
+   they flash past, not one continuous strip. Painted above the art. */
+.reel-card::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18),inset 0 0 0 3px rgba(0,0,0,.30)}
+.reel-card.t-TIER_3{box-shadow:0 0 0 1px rgba(74,222,155,.34),0 0 16px -6px rgba(74,222,155,.4)}
+.reel-card.t-TIER_4{box-shadow:0 0 0 1px rgba(224,176,255,.4),0 0 18px -5px rgba(224,176,255,.45)}
+.reel-card.t-GRAIL{box-shadow:0 0 0 1px rgba(245,196,81,.55),0 0 22px -4px rgba(245,196,81,.55)}
+.reel-card.win.locked{animation:reelPop .5s var(--spring)}
+@keyframes reelPop{0%{transform:scale(1)}45%{transform:scale(1.075)}100%{transform:scale(1)}}
+
+/* The centre marker: a glowing beam with a chevron above and below, in the
+   design's one accent until the settle recolours it to the pull's tier. */
+.reel-marker{position:absolute;top:-2px;bottom:-2px;left:50%;width:2px;z-index:4;
+  transform:translateX(-50%);pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--tier-glow) 22%,var(--tier-glow) 78%,transparent);
+  box-shadow:0 0 20px 3px color-mix(in srgb,var(--tier-glow) 55%,transparent);
+  transition:background .5s var(--ease),box-shadow .5s var(--ease)}
+.reel-marker::before,.reel-marker::after{content:"";position:absolute;left:50%;width:0;height:0;
+  transform:translateX(-50%);filter:drop-shadow(0 0 5px var(--tier-glow))}
+.reel-marker::before{top:-9px;border-width:9px 6px 0;border-style:solid;
+  border-color:var(--tier-glow) transparent transparent}
+.reel-marker::after{bottom:-9px;border-width:0 6px 9px;border-style:solid;
+  border-color:transparent transparent var(--tier-glow)}
+/* A soft pool of light behind the strip, tier-tinted in the settle. */
+.reel-glow{position:absolute;left:50%;top:50%;width:min(58vw,360px);height:168%;z-index:0;
+  transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;filter:blur(42px);opacity:.45;
+  background:radial-gradient(ellipse,color-mix(in srgb,var(--tier-glow) 42%,transparent),transparent 68%);
+  transition:opacity .6s var(--ease),background .6s var(--ease)}
+.reel-wrap.settle .reel-glow{opacity:.95}
+
 .status{text-align:center}
 .status .big{font-size:12.5px;font-weight:560;letter-spacing:.05em;color:var(--text-2)}
 .status .big b{color:var(--text);font-weight:590}
-.bar{width:min(78vw,300px);height:2px;background:rgba(255,255,255,.08);margin:20px auto 0;
-  border-radius:2px;overflow:hidden}
-.bar i{display:block;height:100%;width:35%;border-radius:2px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);
-  /* linear, not an ease: an indeterminate bar that accelerates and decelerates
-     reads as progress toward something. This one is a heartbeat, not a measure. */
-  animation:slide 1.05s linear infinite}
-@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(330%)}}
-.seedline{margin-top:14px;font-size:10px;font-weight:520;letter-spacing:.05em;color:var(--text-4)}
+.seedline{margin-top:16px;font-size:10px;font-weight:520;letter-spacing:.05em;color:var(--text-4)}
 
 /* =============================== tear ============================== */
 #tearWrap{position:relative;width:var(--card-w);aspect-ratio:var(--card-ar);
@@ -410,6 +437,9 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   box-shadow:0 0 0 1px rgba(255,255,255,.09)}
 .front{background:#050609}
 .front img{width:100%;height:100%;display:block;object-fit:contain}
+/* Framed border on the revealed card, above the foil layers. */
+.front::after{content:"";position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.14),inset 0 0 0 4px rgba(0,0,0,.22)}
 
 /* --- per-rarity foil shaders. Physics, not palette: these stay. --- */
 .foil{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .8s var(--ease)}
@@ -563,11 +593,29 @@ function packObject(hero: string, packName: string, depth: boolean): string {
     </div>`;
 }
 
-export function ripPage(pack: PackConfig, best: CardListing | null, topValue: number): string {
+/**
+ * One pool outcome, resolved to what the reel needs to draw it: a thumbnail,
+ * its tier and its real pool weight. Assembled server-side in the /rip handler
+ * so the client never resolves a card, only presents one.
+ */
+export interface ReelCard {
+  v: string;
+  img: string;
+  tier: string;
+  value: number | null;
+  name: string;
+  weight: number;
+}
+
+export function ripPage(
+  pack: PackConfig,
+  best: CardListing | null,
+  topValue: number,
+  reel: ReelCard[],
+): string {
   const hero = heroFor(pack, best);
   const packName = esc(pack.name);
   const embers = '<i></i>'.repeat(14);
-  const deck = [0, 1, 2, 3, 4, 5, 6].map((i) => `<i style="--i:${i}"></i>`).join('');
 
   return `<!doctype html>
 <html lang="en"><head>
@@ -584,7 +632,17 @@ export function ripPage(pack: PackConfig, best: CardListing | null, topValue: nu
 <div class="filmgrain" aria-hidden="true"></div>
 <div id="chrome">
   <a class="brand" href="/"><span class="dot"></span>RIPDEX</a>
-  <a class="odds-link" href="/packs">ODDS →</a>
+  <div class="chrome-right">
+    <button class="odds-link mute-btn" id="muteBtn" type="button" aria-label="Toggle sound">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+        <path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"></path>
+        <path class="wv" d="M15.5 8.8a4 4 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+        <path class="wv" d="M18 6.5a7 7 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path>
+        <line class="sl" x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></line>
+      </svg>
+    </button>
+    <a class="odds-link" href="/packs">ODDS →</a>
+  </div>
 </div>
 <div id="stage">
   <section class="step on" id="s-select">
@@ -609,14 +667,16 @@ export function ripPage(pack: PackConfig, best: CardListing | null, topValue: nu
     </div>
   </section>
 
-  <section class="step" id="s-roll"><div class="status">
-    <div class="roller scene-near">
-      <div class="deck" aria-hidden="true">${deck}</div>
-      <div class="plate"><i class="scan"></i></div>
+  <section class="step" id="s-reel"><div style="width:100%">
+    <div class="center" style="margin-bottom:20px">
+      <span class="eyebrow"><span class="pulse-dot"></span><span id="reelEyebrow">SETTLING</span></span>
     </div>
-    <div class="big" id="rollText"><b>PACK LOCKED</b></div>
-    <div class="bar"><i></i></div>
-    <div class="seedline mono">SEED COMMITTED · OUTCOME SETTLED SERVER-SIDE</div>
+    <div class="reel-wrap" id="reelWrap">
+      <div class="reel-glow" aria-hidden="true"></div>
+      <div class="reel-view"><div class="reel-track" id="reelTrack" aria-hidden="true"></div></div>
+      <div class="reel-marker" aria-hidden="true"></div>
+    </div>
+    <div class="center"><div class="seedline mono">SEED COMMITTED · OUTCOME SETTLED SERVER-SIDE · PROVABLY FAIR</div></div>
   </div></section>
 
   <section class="step" id="s-tear"><div>
@@ -639,7 +699,6 @@ export function ripPage(pack: PackConfig, best: CardListing | null, topValue: nu
         <div class="coat"></div><div class="grain"></div>
       </div>
     </div><div class="pedestal" aria-hidden="true"></div></div>
-    <div class="hint" id="flipHint" style="position:static;transform:none;margin-top:20px;text-align:center">TAP TO REVEAL</div>
     <div class="reveal-meta" id="meta">
       <div class="nm" id="mName"></div><div class="st" id="mSet"></div>
       <div class="val" id="mVal"></div><div class="vk">REFERENCE VALUE</div>
@@ -660,45 +719,122 @@ export function ripPage(pack: PackConfig, best: CardListing | null, topValue: nu
 ${MOTION_JS}
 <script type="module">
 const PACK_ID = ${JSON.stringify(pack.id)};
+// The pool, weighted exactly as it drops. Filler for the reel only — the pull
+// itself is settled server-side by /api/rip and merely PLACED on the strip.
+const REEL = ${JSON.stringify(reel)};
+const REEL_TOTAL = REEL.reduce((s,c) => s + c.weight, 0) || 1;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const show = (id) => document.querySelectorAll('.step').forEach(s => s.classList.toggle('on', s.id === id));
 const fmt = (n) => '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const preload = (src) => new Promise(done => { const im = new Image(); im.onload = im.onerror = () => done(); im.src = src; });
+
+/* ------------------------------- sound -------------------------------
+   Synthesized with the Web Audio API — zero dependencies, no asset loads. A
+   dry tick every time a tile crosses the marker (so the ticking decelerates
+   with the reel, like a roulette wheel), a brighter two-note when a strong card
+   flashes past, a whoosh on the tear, and a tier-scaled hit on the landing.
+   Audio only starts on the RIP gesture (autoplay policy); mute persists. */
+let audioCtx = null, masterGain = null, muted = false;
+try { muted = localStorage.getItem('ripdex_muted') === '1'; } catch (e) {}
+function ensureAudio(){
+  if (!audioCtx){
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.5;
+      masterGain.connect(audioCtx.destination);
+    } catch (e) { audioCtx = null; }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+  return audioCtx;
+}
+function blip(freq, dur, type, gain, sweep){
+  const a = ensureAudio(); if (!a || muted) return;
+  const t = a.currentTime;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t);
+  if (sweep) o.frequency.exponentialRampToValueAtTime(Math.max(40, freq + sweep), t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(gain, t + 0.006);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(masterGain);
+  o.start(t); o.stop(t + dur + 0.02);
+}
+const sTick = (frac) => blip(300 + frac * 150, 0.028, 'square', 0.05, 0);
+function sFlash(tier){
+  const base = tier === 'GRAIL' ? 900 : tier === 'TIER_4' ? 740 : 600;
+  blip(base, 0.07, 'triangle', 0.08, 0);
+  setTimeout(() => blip(base * 1.5, 0.09, 'triangle', 0.07, 0), 50);
+}
+const sTear = () => blip(1200, 0.18, 'sawtooth', 0.05, -900);
+function sLand(tier){
+  blip(150, 0.24, 'sine', 0.14, -60);
+  if (tier === 'TIER_3' || tier === 'TIER_4' || tier === 'GRAIL'){
+    const notes = tier === 'GRAIL' ? [523, 659, 784, 1047, 1319]
+      : tier === 'TIER_4' ? [494, 659, 784, 988] : [440, 554, 659];
+    notes.forEach((f, i) => setTimeout(() => blip(f, 0.55, 'triangle', 0.06, 0), 130 + i * 95));
+  }
+}
+function setMuted(m){
+  muted = m;
+  try { localStorage.setItem('ripdex_muted', m ? '1' : '0'); } catch (e) {}
+  const b = document.getElementById('muteBtn'); if (b) b.classList.toggle('off', m);
+  if (!m) ensureAudio();
+}
+
+// While the reel spins, sample its live transform each frame and fire a tick
+// when the tile under the marker changes — ticks thin out as it decelerates.
+let reelRaf = 0;
+function reelSound(track, view, dur){
+  if (!ensureAudio() || muted) return;
+  const tiles = track.children;
+  if (!tiles.length) return;
+  const tileFull = tiles[0].offsetWidth + 11; // gap
+  const first = tiles[0].offsetLeft + tiles[0].offsetWidth / 2;
+  const center = view.clientWidth / 2;
+  let lastIdx = -1, lastTickAt = 0;
+  const t0 = performance.now();
+  cancelAnimationFrame(reelRaf);
+  const frame = () => {
+    const now = performance.now();
+    const tr = getComputedStyle(track).transform;
+    const tx = tr && tr !== 'none' ? new DOMMatrix(tr).m41 : 0;
+    const idx = Math.round((center - tx - first) / tileFull);
+    if (idx !== lastIdx && idx >= 0 && idx < tiles.length){
+      lastIdx = idx;
+      if (now - lastTickAt > 24){ lastTickAt = now; sTick(Math.min(1, (now - t0) / dur)); }
+      const cls = tiles[idx].className;
+      if (cls.indexOf('t-GRAIL') >= 0) sFlash('GRAIL');
+      else if (cls.indexOf('t-TIER_4') >= 0) sFlash('TIER_4');
+      else if (cls.indexOf('t-TIER_3') >= 0) sFlash('TIER_3');
+    }
+    if (now - t0 < dur + 80) reelRaf = requestAnimationFrame(frame);
+  };
+  reelRaf = requestAnimationFrame(frame);
+}
 
 let result = null;
+let ripPromise = null;
+const reelTimers = [];
 
-async function rip(){
-  show('s-roll');
-  document.getElementById('rollText').innerHTML = '<b>PACK LOCKED</b>';
-  await wait(750);
-  document.getElementById('rollText').innerHTML = 'ROLLING CARD…';
-
-  let data;
-  try {
-    const res = await fetch('/api/rip', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ packId: PACK_ID })
-    });
-    data = await res.json();
+// Kick the settled draw the moment the pack is chosen, then hand off to the
+// tear. The round trip hides behind the tear gesture, so the reel never waits
+// on the network with the user watching.
+function startRip(){
+  ensureAudio(); // the click is the gesture that unlocks Web Audio
+  result = null;
+  document.getElementById('reelWrap').classList.remove('settle');
+  ripPromise = fetch('/api/rip', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ packId: PACK_ID })
+  }).then(async res => {
+    const data = await res.json();
     if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
-  } catch (err) {
-    document.getElementById('errText').textContent = String(err.message || err);
-    show('s-err');
-    return;
-  }
-  result = data;
-
-  // §21: the outcome is settled server-side; preload the full-resolution art
-  // BEFORE the reveal so the animation never stalls on a download.
-  await new Promise(done => {
-    const im = new Image();
-    im.onload = im.onerror = done;
-    im.src = result.imageLarge;
+    return data;
   });
-  const img = document.getElementById('cardImg');
-  img.src = result.imageLarge;
-  img.alt = result.name + ' — ' + result.setName + ' ' + result.number;
-
-  await wait(420);
+  ripPromise.catch(() => {}); // afterTear surfaces the failure; don't warn twice
   startTear();
 }
 
@@ -737,20 +873,138 @@ async function finishTear(){
   s.style.transform = 'translate(70%,-90px) rotate(34deg)';
   s.style.opacity = '0';
   document.getElementById('tearHint').style.display = 'none';
+  sTear();
   await wait(430);
+  afterTear();
+}
+
+// The pack is open: settle the network, preload the hero art (§21 — the reveal
+// never stalls on a download), then spin the reel onto the pull.
+async function afterTear(){
+  let data;
+  try {
+    data = await ripPromise;
+  } catch (err) {
+    document.getElementById('errText').textContent = String((err && err.message) || err);
+    show('s-err');
+    return;
+  }
+  result = data;
+  const img = document.getElementById('cardImg');
+  img.src = result.imageLarge;
+  img.alt = result.name + ' — ' + result.setName + ' ' + result.number;
+  await preload(result.imageLarge);
+  runReel();
+}
+
+/* ------------------------------- the reel -------------------------------
+   Filler tiles are drawn with the pool's real weights, so a grail is as rare
+   on the strip as it is in the pack. The winner is spliced in at a fixed index
+   and the whole track decelerates so that tile lands under the centre marker.
+   The tiles either side of the winner are ordinary weighted draws — no salted
+   near-misses, and nothing here decides the outcome. */
+const tierClass = (t) => String(t || '').replace(/[^A-Za-z0-9_]/g,'');
+const tierColor = (t) =>
+  t === 'GRAIL'  ? 'var(--gold)' :
+  t === 'TIER_4' ? '#e0b0ff' :
+  t === 'TIER_3' ? 'var(--em)' : 'var(--accent-hi)';
+const tierWord = (t) =>
+  t === 'GRAIL'  ? 'GRAIL' :
+  t === 'TIER_4' ? 'RARE PULL' :
+  t === 'TIER_3' ? 'GOOD PULL' : 'LANDED';
+
+function weightedPick(){
+  let t = Math.random() * REEL_TOTAL;
+  for (const c of REEL){ t -= c.weight; if (t < 0) return c; }
+  return REEL[REEL.length - 1];
+}
+function winnerCard(){
+  return REEL.find(c => c.v === result.variantId) ||
+    { v: result.variantId, img: result.imageLarge, tier: result.tier, name: result.name, weight: 1 };
+}
+function buildTile(c, isWinner){
+  const d = document.createElement('div');
+  d.className = 'reel-card t-' + tierClass(c.tier) + (isWinner ? ' win' : '');
+  d.style.setProperty('--art', 'url("' + String(c.img).replace(/["\\\\]/g,'') + '")');
+  const im = document.createElement('img');
+  im.src = c.img; im.alt = ''; im.loading = 'eager'; im.decoding = 'async';
+  d.appendChild(im);
+  return d;
+}
+
+async function runReel(){
+  const rw = document.getElementById('reelWrap');
+  const track = document.getElementById('reelTrack');
+  reelTimers.forEach(clearTimeout); reelTimers.length = 0;
+  rw.classList.remove('settle');
+  rw.style.setProperty('--tier-glow', 'var(--accent-hi)');
+  document.getElementById('reelEyebrow').textContent = 'OPENING';
+  track.style.transition = 'none';
+  track.style.transform = 'translateX(0)';
+  track.innerHTML = '';
+
+  const N = 84, K = 76;
+  const win = winnerCard();
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < N; i++) frag.appendChild(buildTile(i === K ? win : weightedPick(), i === K));
+  track.appendChild(frag);
+  show('s-reel');
+
+  // Commit the strip at translateX(0) with a forced reflow, then measure and
+  // animate from that committed state. A reflow, not requestAnimationFrame,
+  // because rAF is paused while the tab is hidden — which would strand the reel
+  // half-open if the ripper glanced away — whereas a CSS transition keeps running.
+  const winTile = track.children[K];
+  const view = rw.querySelector('.reel-view');
+  void track.offsetWidth;
+  const center = view.clientWidth / 2;
+  // A small off-centre stop reads more like a physical landing than a snap to
+  // dead centre — kept well inside the tile so the winner is never ambiguous.
+  const jitter = (Math.random() * 2 - 1) * winTile.offsetWidth * 0.26;
+  const finalX = center - (winTile.offsetLeft + winTile.offsetWidth / 2) + jitter;
+
+  // A long, front-loaded decel: whips fast, then crawls the last stretch for
+  // real suspense. Longer runway (N/K above) keeps the opening quick to start
+  // even at this length.
+  const dur = reduceMotion ? 500 : 7000;
+  track.style.transition = 'transform ' + dur + 'ms cubic-bezier(.10,.82,.10,1)';
+  track.style.transform = 'translateX(' + finalX + 'px)';
+  reelSound(track, view, dur);
+
+  // The settle: in the final stretch, when the strip has slowed, the marker and
+  // floor take the pull's tier colour. Honest — the outcome is already fixed.
+  reelTimers.push(setTimeout(() => {
+    rw.style.setProperty('--tier-glow', tierColor(result.tier));
+    rw.classList.add('settle');
+    document.getElementById('reelEyebrow').textContent = tierWord(result.tier);
+  }, Math.max(0, dur - 1700)));
+
+  await wait(dur + 90);
+  winTile.classList.add('locked');
+  sLand(result.tier);
+  await wait(reduceMotion ? 80 : 620);
   present();
 }
 
 const card = document.getElementById('card');
 async function present(){
   const ch = result.choreography;
-  card.classList.remove('flipped','grail');
-  card.style.transitionDuration = ch.flipMs + 'ms';
+  // The reel already turned the card face-up, so it presents face-up rather
+  // than flipping — a second reveal of what you can already see. The foil,
+  // tilt, tier dimming and grail takeover are unchanged.
+  card.style.transition = 'none';
+  card.classList.remove('grail');
+  card.classList.add('flipped');
   card.setAttribute('data-foil', result.foil);
+  void card.offsetWidth;            // commit the face-up state without animating
+  // A short transition for the pointer tilt: responsive, but it eases back to
+  // flat on pointer-leave instead of snapping. (The old flip duration is gone
+  // with the flip.)
+  card.style.transition = 'transform .3s var(--ease)';
+  card.style.setProperty('--tilt','');
   document.getElementById('meta').classList.remove('on');
   document.getElementById('after').classList.remove('on');
   document.getElementById('grailTag').classList.remove('on');
-  document.getElementById('flipHint').style.display='';
   show('s-card');
 
   if (ch.fullTakeover){
@@ -758,22 +1012,17 @@ async function present(){
     document.getElementById('grailFx').classList.add('on');
     sparks();
     card.classList.add('grail');
+    setTimeout(() => document.getElementById('grailTag').classList.add('on'), 480);
   } else if (ch.dimBackground){
     const fx = document.getElementById('grailFx');
     fx.style.background = 'radial-gradient(62% 62% at 50% 48%,rgba(6,7,12,.58),rgba(5,6,9,.9))';
     fx.classList.add('on');
   }
 
-  await wait(ch.suspenseMs);
-  const flip = async () => {
-    card.removeEventListener('click', flip);
-    document.getElementById('flipHint').style.display='none';
-    if (ch.fullTakeover) document.getElementById('grailTag').classList.add('on');
-    card.classList.add('flipped');
-    await wait(ch.flipMs + ch.metadataDelayMs);
-    fill();
-  };
-  card.addEventListener('click', flip);
+  // Hold on the card before the numbers land — suspense scaled by tier, the
+  // same choreography a grail uses to linger over the reveal.
+  await wait(ch.suspenseMs + ch.metadataDelayMs);
+  fill();
 }
 
 function fill(){
@@ -828,15 +1077,20 @@ function sparks(){
 }
 
 function reset(){
+  reelTimers.forEach(clearTimeout); reelTimers.length = 0;
   document.getElementById('chrome').classList.remove('hide');
   const fx = document.getElementById('grailFx');
   fx.classList.remove('on'); fx.style.background=''; fx.innerHTML='';
-  card.classList.remove('flipped','grail');
+  card.classList.remove('flipped','grail'); card.style.setProperty('--tilt','');
+  const rw = document.getElementById('reelWrap');
+  rw.classList.remove('settle'); rw.style.setProperty('--tier-glow','var(--accent-hi)');
+  document.getElementById('reelTrack').innerHTML = '';
+  document.getElementById('reelEyebrow').textContent = 'SETTLING';
   show('s-select');
 }
 
-document.getElementById('ripBtn').onclick = rip;
-document.getElementById('packArt').onclick = rip;
+document.getElementById('ripBtn').onclick = startRip;
+document.getElementById('packArt').onclick = startRip;
 // The CTA prints a ↵ affordance, so Enter has to actually rip. Scoped to the
 // select step — an unguarded global would fire a second rip mid-reveal — and
 // yielded to focused controls so Enter on RIP ANOTHER still means that button.
@@ -846,10 +1100,13 @@ addEventListener('keydown', (e) => {
   if (t instanceof Element && t.closest('a,button,input,textarea,select,[contenteditable]')) return;
   if (!document.getElementById('s-select').classList.contains('on')) return;
   e.preventDefault();
-  rip();
+  startRip();
 });
-document.getElementById('retryBtn').onclick = () => { reset(); setTimeout(rip, 300); };
-document.getElementById('againBtn').onclick = () => { reset(); setTimeout(rip, 420); };
+document.getElementById('retryBtn').onclick = () => { reset(); setTimeout(startRip, 300); };
+document.getElementById('againBtn').onclick = () => { reset(); setTimeout(startRip, 420); };
+// Sound toggle — reflects the persisted mute state and flips it on click.
+const mb = document.getElementById('muteBtn');
+if (mb){ mb.classList.toggle('off', muted); mb.onclick = () => setMuted(!muted); }
 new Image().src = ${JSON.stringify(hero)};
 </script>
 </body></html>`;

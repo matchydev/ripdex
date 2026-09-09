@@ -98,6 +98,9 @@ const HOME_CSS = `
   box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(0,0,0,.9)}
 .plane-art{background-size:176%;background-position:50% 32%;background-repeat:no-repeat;
   background-color:var(--panel)}
+/* A generated pack wrapper is already the right shape: fill the plane, don't
+   crop a card into it. */
+.plane-art.has-wrapper{background-size:cover;background-position:50% 45%}
 .plane-veil{background:
   linear-gradient(180deg,rgba(8,9,10,.06) 0%,rgba(8,9,10,.55) 58%,rgba(8,9,10,.94) 100%),
   linear-gradient(128deg,rgba(113,112,255,.20),transparent 56%)}
@@ -310,14 +313,22 @@ const FLOAT: Record<string, string> = {
  * three nodes, because those three transforms would otherwise overwrite one
  * another.
  */
-function pack3d(pack: PackConfig, index: CatalogIndex, slot: string, featured: boolean): string {
-  const art = heroImage(pack, index);
+function pack3d(
+  pack: PackConfig,
+  index: CatalogIndex,
+  slot: string,
+  featured: boolean,
+  wrapper?: string,
+): string {
+  // A generated wrapper is already pack-shaped, so it fills the plane edge to
+  // edge (.has-wrapper). A card hero is cropped into the pack silhouette instead.
+  const art = wrapper ?? heroImage(pack, index);
   return `<div class="slot slot-${slot}">
   <div class="bob floaty" style="${FLOAT[slot] ?? FLOAT.c}">
-    <a class="pack3d card3d depth grounded" href="/packs" data-depth="${featured ? '1.1' : '0.85'}"
-       aria-label="${esc(pack.name)}">
+    <a class="pack3d card3d depth grounded" href="/rip/${encodeURIComponent(pack.id)}" data-depth="${featured ? '1.1' : '0.85'}"
+       aria-label="Open ${esc(pack.name)}">
       <span class="plane plane-slab" data-layer="-16"></span>
-      <span class="plane plane-art" data-layer="0" style="background-image:url('${esc(art)}')"></span>
+      <span class="plane plane-art${wrapper ? ' has-wrapper' : ''}" data-layer="0" style="background-image:url('${esc(art)}')"></span>
       <span class="plane plane-rim" data-layer="2"></span>
       <span class="plane plane-veil" data-layer="12"></span>
       <span class="plane plane-gloss" data-layer="18"></span>
@@ -339,6 +350,7 @@ export function homePage(
   grails: CardListing[],
   featuredId: string,
   feed: HomeFeedItem[],
+  wrappers: Record<string, string> = {},
 ): string {
   const featured = packs.find((p) => p.id === featuredId) ?? packs[0];
   const others = packs.filter((p) => p.id !== featured?.id);
@@ -409,7 +421,7 @@ export function homePage(
         </div>`,
           )
           .join('')}</div>
-        ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c')).join('')}
+        ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c', wrappers[a.pack.id])).join('')}
       </div>
     </div>
   </div>

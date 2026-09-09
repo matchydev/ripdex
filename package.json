@@ -15,6 +15,8 @@
     "pokemon:sync:prices": "pnpm --filter @ripdex/pokemon-core pokemon:sync:prices",
     "pokemon:verify-assets": "pnpm --filter @ripdex/pokemon-core pokemon:verify-assets",
     "demo": "node packages/pokemon-core/demo/server.mjs",
-    "web": "node apps/web/server.ts"
+    "web": "node apps/web/server.ts",
+    "art:generate": "node tools/openai-art.ts",
+    "art:edit": "node tools/openai-edit.ts"
   }
 }

@@ -8,7 +8,7 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "test": "node --test test/core.test.ts test/ingest.test.ts test/query.test.ts",
+    "test": "node --test",
     "pokemon:sync:sets": "node scripts/sync-sets.ts",
     "pokemon:sync:cards": "node scripts/sync-cards.ts",
     "pokemon:sync:prices": "node scripts/sync-prices.ts",

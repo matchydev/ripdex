@@ -8,7 +8,8 @@
 
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { createHash } from 'node:crypto';
-import { join, dirname } from 'node:path';
+import { readFile, stat } from 'node:fs/promises';
+import { join, dirname, resolve, extname, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
@@ -22,6 +23,7 @@ import {
   oddsTable,
   validatePackConfig,
   buildFeed,
+  relativeTime,
   buildCollection,
   sortCollection,
   paginateBinder,
@@ -34,12 +36,13 @@ import {
   type CardSort,
   type CatalogIndex,
   type CardListing,
+  type FeedEvent,
 } from '../../packages/pokemon-core/src/index.ts';
 import { loadPacks, packVariantIds, FEATURED_PACK_ID } from './packs/index.ts';
 import { cardsPage, detailPage, grailsPage, packsPage, tile, layout } from './src/render.ts';
 import { homePage } from './src/home.ts';
 import { buildCardPullData, ripdexDataSection, CARD_STATS_CSS } from './src/card-stats.ts';
-import { ripPage } from './src/rip-page.ts';
+import { ripPage, type ReelCard } from './src/rip-page.ts';
 import { RipEngine } from './src/rip-engine.ts';
 import { livePage, collectionPage } from './src/wallet-pages.ts';
 
@@ -54,6 +57,15 @@ const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 500);
 // floor: with a small catalog the strict threshold leaves one card, and a rail
 // of one reads as broken. /grails still applies GRAIL_MIN.
 const HOME_RAIL_MIN = Number(process.env.RIPDEX_HOME_RAIL_MIN ?? 25);
+// OpenAI-generated RIPDEX artwork, served read-only under /art/*. This is
+// visual production output, never a data provider and never on a rip path.
+const PUBLIC_DIR = process.env.RIPDEX_PUBLIC_DIR ?? join(HERE, '..', '..', 'public');
+const ART_DIR = join(PUBLIC_DIR, 'art');
+const ART_PACK_DIR = join(ART_DIR, 'packs');
+const ART_TYPES: Record<string, string> = {
+  '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg', '.avif': 'image/avif', '.svg': 'image/svg+xml',
+};
 
 const BINDER_SORTS = new Set<string>(['set', 'value', 'pull-date', 'rarity']);
 
@@ -113,6 +125,57 @@ function notFound(res: ServerResponse, what: string): void {
   );
 }
 
+/** Serve a file from public/art read-only. Path traversal is refused. */
+async function serveArt(res: ServerResponse, urlPath: string): Promise<void> {
+  const resolved = resolve(ART_DIR, urlPath.slice('/art/'.length));
+  const within = relative(ART_DIR, resolved);
+  if (within === '' || within.startsWith('..') || isAbsolute(within)) {
+    return notFound(res, 'No such asset.');
+  }
+  try {
+    const buf = await readFile(resolved);
+    res.writeHead(200, {
+      'Content-Type': ART_TYPES[extname(resolved).toLowerCase()] ?? 'application/octet-stream',
+      'Content-Length': buf.length,
+      'Cache-Control': 'public, max-age=3600',
+      'X-Content-Type-Options': 'nosniff',
+    });
+    res.end(buf);
+  } catch {
+    return notFound(res, 'No such asset.');
+  }
+}
+
+async function fileExists(p: string): Promise<boolean> {
+  try {
+    await stat(p);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Which packs have an OpenAI-generated wrapper on disk. A pack with no wrapper
+ * is simply absent from the map, so the pack scene falls back to its card hero.
+ * The featured pack additionally honours the showcase `grail-pack` asset.
+ */
+async function packWrappers(): Promise<Record<string, string>> {
+  const out: Record<string, string> = {};
+  for (const pack of PACKS) {
+    const names: string[] = [];
+    if (pack.id === FEATURED_PACK_ID) names.push('grail-pack.png', 'grail-pack.webp');
+    names.push(`${pack.id}.png`, `${pack.id}.webp`);
+    for (const name of names) {
+      if (await fileExists(join(ART_PACK_DIR, name))) {
+        out[pack.id] = `/art/packs/${name}`;
+        break;
+      }
+    }
+  }
+  return out;
+}
+
 /** Read a JSON request body, capped so a request cannot exhaust memory. */
 async function readBody(req: IncomingMessage, limit = 8192): Promise<string> {
   const chunks: Buffer[] = [];
@@ -136,15 +199,86 @@ function demoSeed(req: IncomingMessage): string {
     .digest('hex').slice(0, 12);
 }
 
+/**
+ * A representative live-feed slice for the ticker and homepage rail: mostly
+ * recent pulls, with a major (grail/tier-4) sprinkled in about every seventh
+ * slot and a notable (tier-3) about every fourth, so the stream shows what
+ * ripping actually looks like instead of a wall of the same common — the same
+ * reasoning `watchLiveCursor` documents. Adjacent identical pulls (one wallet
+ * spamming one card) collapse to a single entry. All events are real ledger rips.
+ */
+function liveMix(events: readonly FeedEvent[], limit: number): FeedEvent[] {
+  const by = (p: string) => events.filter((e) => e.prominence === p);
+  const major = by('major');
+  const notable = by('notable');
+  const normal = by('normal');
+  const out: FeedEvent[] = [];
+  let mi = 0;
+  let ni = 0;
+  let ci = 0;
+  let last = '';
+  for (let i = 0; out.length < limit; i++) {
+    let e: FeedEvent | null = null;
+    if (i % 7 === 3 && mi < major.length) e = major[mi++];
+    else if (i % 4 === 2 && ni < notable.length) e = notable[ni++];
+    else if (ci < normal.length) e = normal[ci++];
+    else if (ni < notable.length) e = notable[ni++];
+    else if (mi < major.length) e = major[mi++];
+    else break;
+    const key = e.card.cardId + e.wallet;
+    if (key === last) continue;
+    last = key;
+    out.push(e);
+  }
+  return out;
+}
+
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? '/', `http://localhost:${PORT}`);
   const path = decodeURIComponent(url.pathname);
 
+  if (path.startsWith('/art/')) return serveArt(res, path);
+
   if (path === '/') {
-    return html(res, homePage(index, PACKS, topGrails(index, 20, HOME_RAIL_MIN), FEATURED_PACK_ID, []));
+    // The homepage LIVE PULLS rail reads the real ledger, so it fills the moment
+    // any pack has been opened rather than sitting on the empty state.
+    const { events } = buildFeed(await ledger.recent(400), index, PACKS, {});
+    const now = new Date();
+    const feed = liveMix(events, 24).map((e) => ({
+      wallet: e.wallet,
+      cardName: e.card.name,
+      imageSmall: e.card.imageSmall,
+      value: e.referenceValue,
+      when: relativeTime(e.openedAt, now),
+      prominence: e.prominence,
+      href: `/pokemon/${encodeURIComponent(e.card.setId)}/${encodeURIComponent(e.card.number)}`,
+    }));
+    return html(
+      res,
+      homePage(index, PACKS, topGrails(index, 20, HOME_RAIL_MIN), FEATURED_PACK_ID, feed, await packWrappers()),
+    );
   }
 
   if (path === '/cards') return html(res, cardsPage(index));
+
+  // The site-wide live-rip ticker in the header polls this. Real recent pulls
+  // from the ledger — the social proof that the whole site is being ripped.
+  if (path === '/api/ticker') {
+    const { events } = buildFeed(await ledger.recent(400), index, PACKS, {});
+    const now = new Date();
+    return json(res, {
+      items: liveMix(events, 55).map((e) => ({
+        w: e.wallet,
+        n: e.card.name,
+        img: e.card.imageSmall,
+        v: e.referenceValue,
+        tier: e.tier,
+        pack: e.packName,
+        when: relativeTime(e.openedAt, now),
+        href: `/pokemon/${encodeURIComponent(e.card.setId)}/${encodeURIComponent(e.card.number)}`,
+      })),
+    });
+  }
 
   if (path === '/api/cards') {
     const result = queryCards(index, toQuery(url.searchParams));
@@ -211,7 +345,24 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     const top = Math.max(
       ...pack.pool.map((e) => index.byVariantId.get(e.variantId)?.variant.referenceValue ?? 0),
     );
-    return html(res, ripPage(pack, best, top));
+    // The reel strip is filler cards drawn client-side, weighted by the SAME
+    // real weights as the pool so a grail whips past as rarely as it drops. It
+    // is presentation only — the outcome is settled server-side by /api/rip — so
+    // this resolves every pool entry to its thumbnail, tier and weight up front.
+    const reel: ReelCard[] = [];
+    for (const entry of pack.pool) {
+      const hit = index.byVariantId.get(entry.variantId);
+      if (!hit) continue;
+      reel.push({
+        v: entry.variantId,
+        img: hit.card.imageSmall,
+        tier: hit.variant.tier ?? 'TIER_1',
+        value: hit.variant.referenceValue,
+        name: hit.card.name,
+        weight: entry.weight,
+      });
+    }
+    return html(res, ripPage(pack, best, top, reel));
   }
 
   if (path === '/api/rip' && req.method === 'POST') {

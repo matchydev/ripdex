@@ -78,6 +78,65 @@ const RECIPES: PackRecipe[] = [
       texture: 'clean',
     },
   },
+  {
+    // Vintage Jungle: a small set, but stacked — Snorlax, Jolteon, Scyther.
+    id: 'jungle-rip',
+    name: 'JUNGLE RIP',
+    version: '1',
+    priceRip: '600000',
+    setId: 'base2',
+    size: 14,
+    heroCardId: 'base2-11',
+    artwork: {
+      wrapperAssetKey: 'wrapper/jungle-rip',
+      heroAssetKey: 'hero/jungle',
+      accentColor: '#43B85F',
+      backgroundColor: '#060A07',
+      foilTone: 'cool',
+      texture: 'aged',
+    },
+  },
+  {
+    // The big modern set. Cheaper case, deeper pool, a Charizard ex up top.
+    id: 'obsidian-flames-rip',
+    name: 'OBSIDIAN FLAMES',
+    version: '1',
+    priceRip: '45000',
+    setId: 'sv3',
+    size: 30,
+    heroCardId: 'sv3-223',
+    artwork: {
+      wrapperAssetKey: 'wrapper/obsidian-flames',
+      heroAssetKey: 'hero/obsidian',
+      accentColor: '#F0562A',
+      backgroundColor: '#0B0605',
+      foilTone: 'crimson',
+      texture: 'gloss',
+    },
+  },
+  {
+    // A cross-set themed case: the three Kanto starter lines, cheap Charmanders
+    // to a $897 Base Set Charizard. The clearest "themed gambling case".
+    id: 'kanto-starters-rip',
+    name: 'KANTO STARTERS',
+    version: '1',
+    priceRip: '90000',
+    nameMatches: [
+      'Charizard', 'Charmeleon', 'Charmander',
+      'Blastoise', 'Wartortle', 'Squirtle',
+      'Venusaur', 'Ivysaur', 'Bulbasaur',
+    ],
+    size: 22,
+    heroCardId: 'base1-4',
+    artwork: {
+      wrapperAssetKey: 'wrapper/kanto-starters',
+      heroAssetKey: 'hero/kanto-starters',
+      accentColor: '#E9A23B',
+      backgroundColor: '#0A0806',
+      foilTone: 'warm',
+      texture: 'clean',
+    },
+  },
 ];
 
 /**
