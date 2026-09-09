@@ -23,6 +23,7 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
 | Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | (baked dark bg) | `public/art/achievements/medal-base.png` | ✅ collection achievements | Violet when unlocked; grey when locked, with explicit status text. |
 | Grail Puller medal | Gold prestige medal | edit of medal-base | 1254×1254 | ✅ yes | `public/art/achievements/grail-puller.png` | ✅ collection GRAIL_HUNTER | Stable achievement ID selects the gold medal, not its display name. |
 | RIP R v2 | Current token/site mark | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-r-v2.png` | ✅ shared headers, favicon, coin, footer, rip screen | Generated with Codex's built-in image tool; silver-lavender face and violet sides, no extra lettering. |
+| RIP full coin v2 | Main token artwork | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-token-coin-v2.png` | ✅ main $RIP section and download | Built-in image generation using the R v2 reference; complete silver/violet coin, no extra lettering. |
 
 ## Hand-off / remaining
 

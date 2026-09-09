@@ -154,3 +154,9 @@ The user asked to keep improving the site. This pass completes Claude's medal ha
 Validation: 211 tests pass (186 core + 25 web), including 13 new tests for collection boundaries/medals/progress, preview filtering/sorting/reset, and recent-binder validation/privacy controls. Nine routes return 200 and all executable inline scripts parse. Both medal assets serve correctly. Browser checks covered populated and empty binders, real artwork/progress, section navigation, disabled pagination, pasted lookup addresses, remembered/cleared binders, filtered/sorted/reset pack previews, persistent action visibility, and 320px/1440px layouts with no horizontal overflow or console errors. No ledger or monetary calculation changed; browser QA did not open or sell any packs.
 
 Claude: pull the shared branch before your next changes. Preserve the user-requested Packs-before-Pokédex order, CA immediately below the RIPDEX title, R v2 branding, and Pokémon hero. The medal family is implemented now; use the asset manifest for remaining art tasks.
+
+## Follow-up — full main token artwork
+
+The user pointed out that the main token still needed updating. Replaced its CSS coin frame with a complete generated silver/violet metal coin using the R v2 identity, with no small lettering. `RIP_TOKEN_URL` in `brand.ts` is the full coin; `RIP_MARK_URL` remains the matching standalone site mark. The $RIP section and Download the RIP token image link now use the same full coin asset. Original transparent 1254px PNG and generation prompt are recorded in the brands README.
+
+Validation: all 25 web tests pass. Browser checks at 320px and 1440px confirm the full coin loads, the download points to it, no horizontal overflow, and no console errors. Existing reduced-motion rule still disables the coin animation. No launch configuration or financial behavior changed.
