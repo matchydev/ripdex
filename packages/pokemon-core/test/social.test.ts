@@ -161,6 +161,7 @@ interface TextNode {
   weight: number;
   spacing: number;
   anchor: string;
+  mono: boolean;
   width: number;
 }
 

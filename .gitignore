@@ -15,3 +15,6 @@ web.err
 
 # Seeded rip ledger — regenerate with apps/web/scripts/seed-rips.ts
 **/data/ledger/
+
+# Scratch files left by tooling
+__adv.tmp*
