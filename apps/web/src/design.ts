@@ -63,6 +63,20 @@ export const DESIGN_CSS = `
 
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px;
 
+  /* Compatibility aliases for the previous palette.
+     An undefined custom property does not fall back — the whole declaration is
+     invalid and silently does nothing, so a page still referencing --ink or
+     --surface renders half-styled with no error anywhere. These keep every
+     surface coherent while the page files are migrated one at a time. Delete
+     this block once a grep for the old names across apps/web/src comes
+     back empty. */
+  --ink:var(--text);
+  --surface:var(--glass);
+  --surface-2:rgba(255,255,255,.055);
+  --muted:var(--text-3);
+  --faint:var(--text-4);
+  --line-2:var(--line-hi);
+
   --sh-1:0 0 0 1px var(--line), 0 2px 4px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.2);
   --sh-2:0 0 0 1px var(--line-hi), 0 4px 8px rgba(0,0,0,.4), 0 20px 48px rgba(0,0,0,.3);
   --sh-3:0 0 0 1px var(--line-hi), 0 8px 16px rgba(0,0,0,.5), 0 40px 90px rgba(0,0,0,.45);
