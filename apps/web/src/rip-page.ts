@@ -647,6 +647,7 @@ export function ripPage(pack: PackConfig, best: CardListing | null, topValue: nu
     </div>
     <div class="rowbtns" id="after">
       <a class="btn2" id="cardLink" href="#">VIEW CARD</a>
+      <a class="btn2" id="shareLink" href="#" target="_blank" rel="noopener">SHARE CARD</a>
       <button class="btn2 pri" id="againBtn">RIP ANOTHER</button>
     </div>
   </div></section>
@@ -793,6 +794,10 @@ function fill(){
     // renders "RIP RIP_55DAC0".
     '<span class="chip">RIP ' + result.openingId.replace(/^rip_/,'').slice(0,10).toUpperCase() + '</span>';
   document.getElementById('cardLink').href = result.href;
+  // The graphic is drawn from the ledger row, so it is addressable the moment
+  // the rip is recorded — which happens before this reveal ever runs.
+  document.getElementById('shareLink').href =
+    '/og/rip/' + encodeURIComponent(result.openingId) + '.svg';
   document.getElementById('meta').classList.add('on');
   setTimeout(() => document.getElementById('after').classList.add('on'), 260);
 }

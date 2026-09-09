@@ -128,15 +128,22 @@ export interface WalletStats {
 }
 
 /**
- * The ledger port. Reads are intentionally narrow: these six queries are
- * exactly what the binder, the feed and achievements need, so an adapter over
- * `pack_opening` can serve each of them with one index.
+ * The ledger port. Reads are intentionally narrow: these seven queries are
+ * exactly what the binder, the feed, achievements and the share card need, so
+ * an adapter over `pack_opening` can serve each of them with one index.
  */
 export interface OpeningLedger {
   readonly name: string;
 
   /** Idempotent by openingId. A retry must return `stored: false`. */
   record(opening: StoredOpening): Promise<RecordOpeningResult>;
+
+  /**
+   * One rip by id, or null when it is not in the ledger. Null rather than a
+   * throw: the id comes off a URL, so "no such rip" is a 404 the caller
+   * renders, not an exceptional condition.
+   */
+  get(openingId: string): Promise<StoredOpening | null>;
 
   /** Newest first. */
   listByWallet(wallet: string, opts?: ListOpeningsOptions): Promise<StoredOpening[]>;
@@ -434,6 +441,11 @@ export class JsonOpeningLedger implements OpeningLedger {
     }
     rows.sort(newestFirst);
     return opts.limit === undefined ? rows : rows.slice(0, Math.max(0, opts.limit));
+  }
+
+  async get(openingId: string): Promise<StoredOpening | null> {
+    await this.load();
+    return this.openings.get(openingId) ?? null;
   }
 
   async recent(limit: number): Promise<StoredOpening[]> {

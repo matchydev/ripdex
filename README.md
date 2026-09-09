@@ -3,7 +3,7 @@
 Onchain Pokémon pack ripping.
 
 ```bash
-pnpm test                              # 184 tests
+pnpm test                              # 197 tests
 pnpm pokemon:sync:sets                 # import set metadata
 pnpm pokemon:sync:cards --set=sv3pt5   # import cards, derive variants
 pnpm pokemon:sync:prices --set=sv3pt5  # one price row per variant per day
@@ -60,6 +60,7 @@ text belongs in configuration, to be supplied by legal/brand.
 | `/rip/:packId` | §6, §7 | The rip: tear, flip, tier-scaled reveal |
 | `/live` | §12 | Every rip, newest first, tier-driven prominence |
 | `/collection/:wallet` | §13–15 | 3×3 binder, set completion, duplicates, achievements |
+| `/og/rip/:openingId.svg` | §18 | Share graphic for one rip, drawn from the ledger row |
 
 `POST /api/rip` runs the real §17 sequence and records to the ledger before the
 reveal animation begins.
@@ -74,9 +75,26 @@ Drives the genuine opening sequence rather than fabricating rows, and reveals
 the server seed so every seeded rip can be recomputed. 6000 rips produced one
 grail — the published 0.0269% playing out, not a placed hero pull.
 
+## Share graphics
+
+`/og/rip/:openingId.svg` renders the rip's most valuable pull, ties broken by
+draw slot. Every number on it — value, odds, tier, currency — comes from the
+frozen ledger row rather than from today's catalog, so a card that has since
+doubled still shares at the price it was actually pulled at. That makes the
+image immutable for a given rip, which is why it is served `immutable` with a
+one-year max-age: scrapers cache an OG image against its URL and rarely come
+back. The catalog is joined for presentation only, and a miss degrades to a card
+that still states the right value and odds without the art.
+
+SVG rather than PNG, because rasterizing needs a dependency and this repo has
+none. Scrapers that insist on a raster need a CDN in front doing the conversion.
+The reveal links to it as SHARE CARD.
+
 ## Not built
 
-Wallet auth and the chain itself, the `$RIP` token, image CDN derivatives
-(§21), and the OG image route that would serve `renderShareCard`. The Postgres
-adapter is written and tested against a fake client but has never run against a
-live database.
+Wallet auth and the chain itself, the `$RIP` token, and image CDN derivatives
+(§21). There is no per-rip permalink page yet, so the share graphic is reachable
+by URL but no page carries `og:image` meta pointing at it. The Postgres adapter
+is written and tested against a fake client but has never run against a live
+database, and it implements `CatalogStore` only — `OpeningLedger` has just the
+one JSON adapter.
