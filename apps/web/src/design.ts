@@ -296,6 +296,55 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
   transform:scaleX(0);background:linear-gradient(90deg,var(--accent),var(--accent-hi));
   box-shadow:0 0 12px rgba(113,112,255,.8)}
 
+/* ============================ real 3D ============================== */
+/* Genuine depth, not a fake shadow. A .scene establishes the camera; children
+   with .depth become their own 3D space, and [data-layer] planes inside them
+   sit at different Z so they separate as the card turns. That parallax between
+   planes is the whole difference between a rotated picture and an object. */
+.scene{perspective:1400px;perspective-origin:50% 45%}
+.scene-near{perspective:900px}
+.depth{transform-style:preserve-3d;will-change:transform;
+  transition:transform .5s var(--ease)}
+[data-layer]{transform-style:preserve-3d;will-change:transform}
+
+/* A card built as stacked planes: art at the back, gloss and badges forward. */
+.card3d{position:relative;transform-style:preserve-3d}
+.card3d .plane{position:absolute;inset:0;border-radius:inherit;backface-visibility:hidden}
+.card3d .plane-art{transform:translateZ(0px)}
+.card3d .plane-gloss{transform:translateZ(18px);pointer-events:none;
+  background:linear-gradient(125deg,transparent 38%,rgba(255,255,255,.16) 50%,transparent 62%);
+  opacity:0;transition:opacity .35s var(--ease)}
+.card3d:hover .plane-gloss{opacity:1}
+.card3d .plane-badge{transform:translateZ(34px)}
+/* Rim light on the leading edge, so the object reads as lit from one side. */
+.card3d .plane-rim{transform:translateZ(2px);pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.16)}
+
+/* Contact shadow that lives on the ground plane rather than on the object. */
+.grounded{position:relative}
+.grounded::after{content:"";position:absolute;left:8%;right:8%;bottom:-7%;height:14%;
+  border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.62),transparent 70%);
+  filter:blur(14px);transform:translateZ(-60px);transition:all .5s var(--ease);z-index:-1}
+.grounded:hover::after{left:14%;right:14%;bottom:-11%;filter:blur(20px);opacity:.85}
+
+/* Slow idle float. Vary --float-dur / --float-delay per element so a row of
+   objects never beats in sync — synchronised floating reads as a loop, not life. */
+@keyframes floatY{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,calc(var(--float-amp,10px) * -1),0)}}
+.floaty{animation:floatY var(--float-dur,7s) var(--ease) infinite;
+  animation-delay:var(--float-delay,0s)}
+
+/* Scroll-driven 3D entrance: rotates up onto its feet as it enters view. */
+[data-reveal-3d]{opacity:0;
+  transform:perspective(1200px) translateY(46px) rotateX(24deg) scale(.94);
+  transform-origin:50% 100%;
+  transition:opacity .9s var(--ease),transform .9s var(--ease);
+  transition-delay:var(--d,0ms)}
+[data-reveal-3d].in{opacity:1;transform:none}
+.no-motion [data-reveal-3d]{opacity:1!important;transform:none!important}
+
 /* =============================== forms ============================= */
 input[type=search],select,input[type=number]{
   background:var(--glass);color:var(--text);box-shadow:0 0 0 1px var(--line);border:0;
@@ -356,13 +405,13 @@ export const MOTION_JS = `
   function scanReveal(root) {
     root.querySelectorAll('[data-reveal-group]').forEach((group) => {
       const step = Number(group.dataset.revealGroup) || 55;
-      group.querySelectorAll('[data-reveal]:not([data-staggered])').forEach((el, i) => {
+      group.querySelectorAll('[data-reveal]:not([data-staggered]),[data-reveal-3d]:not([data-staggered])').forEach((el, i) => {
         el.dataset.staggered = '1';
         // Cap the delay: a 200-tile grid must not schedule an 11-second wait.
         el.style.setProperty('--d', Math.min(i * step, 480) + 'ms');
       });
     });
-    const items = [...root.querySelectorAll('[data-reveal]:not([data-observed])')];
+    const items = [...root.querySelectorAll('[data-reveal]:not([data-observed]),[data-reveal-3d]:not([data-observed])')];
     items.forEach((el) => {
       el.dataset.observed = '1';
       if (io) io.observe(el); else el.classList.add('in');
@@ -419,10 +468,50 @@ export const MOTION_JS = `
     });
   }
 
+  /* ---- layered 3D: planes inside a tilted card drift against each other ----
+     A single rotation moves every plane identically, which the eye reads as a
+     rotated picture. Giving each [data-layer] its own translateZ and a small
+     counter-translation is what makes it read as an object with thickness. */
+  function scanDepth(root) {
+    if (reduced) return;
+    root.querySelectorAll('[data-depth]:not([data-depthed])').forEach((el) => {
+      el.dataset.depthed = '1';
+      const strength = Number(el.dataset.depth) || 1;
+      const layers = [...el.querySelectorAll('[data-layer]')].map((n) => ({
+        node: n,
+        z: Number(n.dataset.layer) || 0,
+      }));
+      let raf = 0;
+      el.addEventListener('pointermove', (ev) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const r = el.getBoundingClientRect();
+          const x = (ev.clientX - r.left) / r.width - .5;
+          const y = (ev.clientY - r.top) / r.height - .5;
+          el.style.transform =
+            'rotateY(' + (x * 16 * strength).toFixed(2) + 'deg) rotateX(' +
+            (-y * 16 * strength).toFixed(2) + 'deg)';
+          el.style.setProperty('--mx', ((x + .5) * 100).toFixed(1) + '%');
+          el.style.setProperty('--my', ((y + .5) * 100).toFixed(1) + '%');
+          for (const l of layers) {
+            l.node.style.transform =
+              'translate3d(' + (-x * l.z * .55).toFixed(1) + 'px,' +
+              (-y * l.z * .55).toFixed(1) + 'px,' + l.z + 'px)';
+          }
+        });
+      });
+      el.addEventListener('pointerleave', () => {
+        el.style.transform = '';
+        for (const l of layers) l.node.style.transform = 'translateZ(' + l.z + 'px)';
+      });
+    });
+  }
+
   window.RIPDEX_MOTION = {
     scan(root) {
       const r = root || document;
-      scanReveal(r); scanTilt(r); scanSpotlight(r);
+      scanReveal(r); scanTilt(r); scanSpotlight(r); scanDepth(r);
     },
   };
   window.RIPDEX_MOTION.scan(document);
