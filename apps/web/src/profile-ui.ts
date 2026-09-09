@@ -39,6 +39,7 @@ export function profileUI(): string {
     <span class="pf-pnl" id="pfPnl" hidden></span>
   </div>
   <div class="pf-stats" id="pfStats" aria-live="polite"></div>
+  <div class="pf-achv" id="pfAchv" role="group" aria-label="Achievements"></div>
   <div class="pf-tabs" role="tablist" aria-label="Your pulls">
     <button type="button" class="pf-tab on" id="pfTabOwned" data-tab="owned" role="tab" aria-selected="true">Vault<i class="pf-count" id="pfOwnedCount"></i></button>
     <button type="button" class="pf-tab" id="pfTabSold" data-tab="sold" role="tab" aria-selected="false">Sold<i class="pf-count" id="pfSoldCount"></i></button>
@@ -97,6 +98,24 @@ export function profileUI(): string {
       stat('Total spent', rip(data.spent) + ' $RIP', '') +
       stat('Best pull', best ? usd(best.gradedValue) : '—', best && best.grade >= 10 ? 'gold' : '');
 
+    // Trophy shelf — earned first (most recent first), then closest-to-earning,
+    // then the rest, so the shelf reorders itself as you unlock things.
+    const shelf = document.getElementById('pfAchv');
+    const achv = (data.achievements || []).slice().sort(achvOrder);
+    if (!achv.length) {
+      shelf.innerHTML = '';
+    } else {
+      const won = achv.filter((a) => a.unlocked);
+      const lead = won[0] || achv[0];
+      const capDef = won.length
+        ? '★ ' + lead.name + ' — ' + lead.description
+        : 'Open packs to start earning trophies.';
+      shelf.innerHTML =
+        '<div class="pf-achv-head"><span>Trophies</span><i>' + won.length + ' / ' + achv.length + '</i></div>' +
+        '<div class="pf-medals">' + achv.map(medal).join('') + '</div>' +
+        '<p class="pf-achv-cap" id="pfAchvCap" data-def="' + esc(capDef) + '">' + esc(capDef) + '</p>';
+    }
+
     const owned = data.owned || [];
     const sold = data.sold || [];
     document.getElementById('pfOwnedCount').textContent = owned.length ? ' ' + owned.length : '';
@@ -123,6 +142,56 @@ export function profileUI(): string {
   function stat(label, value, cls) {
     return '<div class="pf-stat ' + cls + '"><span class="pf-stat-v">' + esc(value) + '</span><span class="pf-stat-l">' + esc(label) + '</span></div>';
   }
+
+  // A distinct engraved emblem per achievement, keyed by its stable id — the two
+  // medal PNGs (silver / grail-gold) are the frame, the emblem is the identity,
+  // so ten silver coins never read as ten of the same trophy. Monoline SVGs sized
+  // to sit inside the coin's rim.
+  const svg = (inner) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+  const EMBLEMS = {
+    FIRST_RIP: svg('<path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>'),
+    CENTURION: svg('<path d="M12 3l7 2.5v5.5c0 4-3 7-7 8.5-4-1.5-7-4.5-7-8.5V5.5z"/><path d="M9.3 12l1.8 1.8 3.6-3.6"/>'),
+    FIRE_STARTER: svg('<path d="M12 3c1 2.6 4 4 4 8a4 4 0 0 1-8 0c0-1.3.6-2.4 1.5-3 .1 1 .6 1.5 1.2 1.7C10.4 8.6 11 6 12 3z"/>'),
+    CHARIZARD_HUNTER: svg('<path d="M4 8l3.2 8h9.6L20 8l-4.6 3.3L12 5 8.6 11.3z"/>'),
+    KANTO_COLLECTOR: svg('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h6M14.5 12h6"/><circle cx="12" cy="12" r="2.5"/>'),
+    GRAIL_HUNTER: svg('<path d="M7.5 4h9M8 4c0 5 1.2 7.6 4 7.6S16 9 16 4M12 11.6V18M8.5 20h7"/>'),
+    ONE_IN_A_THOUSAND: svg('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>'),
+    FULL_SET: svg('<rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/>'),
+    HOLO_HOARDER: svg('<path d="M6 9.5 9 5h6l3 4.5-6 9.5z"/><path d="M6 9.5h12"/>'),
+    FIRST_EDITION: svg('<circle cx="12" cy="9" r="5"/><path d="M9.2 13.2 7.5 20l4.5-2.6L16.5 20l-1.7-6.8"/>'),
+    VAULT_BUILDER: svg('<path d="M12 4v16M15 7.2c-.8-1-2-1.5-3.2-1.5-1.8 0-3.3 1-3.3 2.6 0 3.6 6.8 1.8 6.8 5.6 0 1.9-1.7 2.9-3.6 2.9-1.4 0-2.7-.5-3.5-1.6"/>'),
+    _default: svg('<circle cx="12" cy="12" r="7"/><path d="M9.5 12l1.8 1.8 3.4-3.6"/>'),
+  };
+
+  // Earned first (recent first), then closest-to-earning by progress ratio.
+  function achvOrder(a, b) {
+    if (a.unlocked !== b.unlocked) return a.unlocked ? -1 : 1;
+    if (a.unlocked) {
+      const ua = a.unlockedAt || '', ub = b.unlockedAt || '';
+      return ua < ub ? 1 : ua > ub ? -1 : 0;
+    }
+    const ra = a.target > 0 ? a.current / a.target : 0;
+    const rb = b.target > 0 ? b.current / b.target : 0;
+    return rb - ra;
+  }
+
+  function medal(a) {
+    const grail = a.id === 'GRAIL_HUNTER';
+    // The plate only shows on LOCKED medals, so cap below 100: a value-summing
+    // badge (VAULT_BUILDER) at $996.50 / $1000 must not round up to a misleading
+    // "100%" while the coin is still dim and captioned "996.5 / 1000".
+    const pct = a.target > 0 ? Math.min(99, Math.floor((a.current / a.target) * 100)) : 0;
+    const src = '/art/achievements/' + (grail ? 'grail-puller' : 'medal-base') + '.png';
+    const emblem = EMBLEMS[a.id] || EMBLEMS._default;
+    const state = a.unlocked ? 'Unlocked' : a.current + ' / ' + a.target;
+    return '<button type="button" class="pf-medal' + (a.unlocked ? ' on' : '') + (grail ? ' grail' : '') +
+      '" data-name="' + esc(a.name) + '" data-desc="' + esc(a.description) + '" data-state="' + esc(state) +
+      '" title="' + esc(a.name) + ' — ' + esc(state) + '" aria-label="' + esc(a.name + ': ' + (a.unlocked ? 'unlocked' : 'in progress, ' + state)) + '">' +
+      '<span class="pf-medal-coin"><img src="' + src + '" alt="" loading="lazy" decoding="async">' +
+      '<span class="pf-medal-emb">' + emblem + '</span></span>' +
+      (a.unlocked ? '' : '<span class="pf-medal-pct">' + pct + '%</span>') +
+    '</button>';
+  }
   function ownedCard(p) {
     return '<div class="pf-card ' + gradeClass(p.grade) + '">' +
       '<div class="pf-card-img"><img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async">' +
@@ -142,11 +211,17 @@ export function profileUI(): string {
     '</div>';
   }
 
-  async function load() {
+  // withAchv=true asks the server to compute the (ledger-derived) trophy shelf —
+  // only the open drawer needs it. The header-chip fetch and the post-sell
+  // refresh pass false to keep the hot path off the ledger; a sell cannot change
+  // an achievement, so the last-known shelf is carried forward on those refreshes.
+  async function load(withAchv) {
     try {
-      const res = await fetch('/api/profile');
+      const res = await fetch(withAchv ? '/api/profile?achv=1' : '/api/profile');
       if (!res.ok) return;
-      data = await res.json();
+      const next = await res.json();
+      if (next.achievements === undefined && data && data.achievements) next.achievements = data.achievements;
+      data = next;
       render();
     } catch (e) { /* leave the chip on its last value */ }
   }
@@ -161,7 +236,7 @@ export function profileUI(): string {
     chip.setAttribute('aria-expanded', 'true');
     document.body.classList.add('pf-lock');
     closeBtn && closeBtn.focus();
-    load();
+    load(true);
   }
   function close() {
     drawer.classList.remove('is-open'); scrim.classList.remove('is-open');
@@ -180,6 +255,22 @@ export function profileUI(): string {
 
   drawer.querySelectorAll('.pf-tab').forEach((t) => t.addEventListener('click', () => { tab = t.dataset.tab; render(); }));
 
+  // Trophy description plate — hovering or focusing a medal names it and says how
+  // to earn it; leaving restores the default line. Delegated on the stable
+  // #pfAchv container so it survives every re-render of the medal shelf.
+  const shelfBox = document.getElementById('pfAchv');
+  const describe = (e) => {
+    const m = e.target.closest('.pf-medal');
+    const cap = document.getElementById('pfAchvCap');
+    if (!m || !cap) return;
+    cap.textContent = m.dataset.name + ' — ' + m.dataset.desc + ' · ' + m.dataset.state;
+  };
+  const restore = () => { const cap = document.getElementById('pfAchvCap'); if (cap && cap.dataset.def) cap.textContent = cap.dataset.def; };
+  shelfBox.addEventListener('pointerover', describe);
+  shelfBox.addEventListener('focusin', describe);
+  shelfBox.addEventListener('pointerleave', restore);
+  shelfBox.addEventListener('focusout', restore);
+
   // Sell — delegated so it survives every re-render of the grid.
   drawer.addEventListener('click', async (e) => {
     const btn = e.target.closest('.pf-sell');
@@ -192,7 +283,7 @@ export function profileUI(): string {
       if (res.ok && out.ok) {
         toast('Sold ' + name + ' for ' + rip(out.credited) + ' $RIP.');
         if (typeof out.balance === 'number') setChip(out.balance);
-        await load();
+        await load(false);
       } else {
         toast(out.error || 'Could not sell that pull.');
         btn.disabled = false; btn.textContent = 'Sell';
@@ -204,8 +295,9 @@ export function profileUI(): string {
     }
   });
 
-  // Populate the header chip on load without opening anything.
-  load();
+  // Populate the header chip on load without opening anything — balance only, so
+  // this every-page fetch never touches the ledger.
+  load(false);
 })();
 </script>`;
 }
@@ -251,6 +343,23 @@ body.pf-lock{overflow:hidden}
 .pf-stat-v{font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--text);font-variant-numeric:tabular-nums}
 .pf-stat.gold .pf-stat-v{color:var(--gold)}
 .pf-stat-l{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.pf-achv{border-bottom:1px solid var(--line)}
+.pf-achv:empty{display:none}
+.pf-achv-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 2px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.pf-achv-head i{font-style:normal;color:var(--text-2);font-variant-numeric:tabular-nums}
+.pf-medals{display:flex;flex-wrap:wrap;gap:15px 8px;padding:10px 20px 6px}
+.pf-medal{position:relative;flex:0 0 auto;width:44px;padding:0;border:none;background:none;cursor:pointer}
+.pf-medal-coin{position:relative;display:block;width:44px;height:44px;transition:transform .18s var(--ease)}
+.pf-medal-coin img{position:absolute;inset:0;width:44px;height:44px;object-fit:contain;filter:grayscale(1) brightness(.55);opacity:.7;transition:filter .25s var(--ease),opacity .25s var(--ease)}
+.pf-medal-emb{position:absolute;inset:0;display:grid;place-items:center;color:var(--text-4);transition:color .25s var(--ease)}
+.pf-medal-emb svg{width:19px;height:19px;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.7))}
+.pf-medal.on .pf-medal-coin img{filter:none;opacity:1}
+.pf-medal.on .pf-medal-emb{color:#fff}
+.pf-medal.grail.on .pf-medal-coin{filter:drop-shadow(0 0 7px rgba(245,196,81,.45))}
+.pf-medal:hover .pf-medal-coin,.pf-medal:focus-visible .pf-medal-coin{transform:translateY(-2px)}
+.pf-medal:focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:9px}
+.pf-medal-pct{position:absolute;left:0;right:0;bottom:-12px;text-align:center;font-size:8px;font-weight:800;color:var(--text-3);font-variant-numeric:tabular-nums}
+.pf-achv-cap{margin:0;padding:6px 20px 14px;font-size:11px;line-height:1.5;color:var(--text-3);min-height:2.1em}
 .pf-tabs{display:flex;gap:4px;padding:12px 16px 0}
 .pf-tab{position:relative;padding:8px 12px 12px;border:none;background:none;color:var(--text-3);font-size:12px;font-weight:650;cursor:pointer}
 .pf-tab .pf-count{font-style:normal;color:var(--text-3);font-weight:600}
@@ -293,5 +402,6 @@ body.pf-lock{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
  .pf-drawer,.pf-scrim{transition:none}
  .profile-chip{transition:none}
+ .pf-medal-coin,.pf-medal-coin img,.pf-medal-emb{transition:none}
 }
 `;

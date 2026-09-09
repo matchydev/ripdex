@@ -20,18 +20,21 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
 | Obsidian wrapper | Pack wrapper (ember orange) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/obsidian-flames-rip.png` | ✅ rip screen | |
 | Kanto wrapper | Pack wrapper (amber) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/kanto-starters-rip.png` | ✅ rip screen | |
 | Grail vault | Grail reveal environment | `grail-environment.md` | 1920×1088 | no (backdrop) | `public/art/environments/grail-vault.png` | ✅ grail takeover | Centre negative space for the card. |
-| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | (baked dark bg) | `public/art/achievements/medal-base.png` | ✅ collection achievements | Violet when unlocked; grey when locked, with explicit status text. |
-| Grail Puller medal | Gold prestige medal | edit of medal-base | 1254×1254 | ✅ yes | `public/art/achievements/grail-puller.png` | ✅ collection GRAIL_HUNTER | Stable achievement ID selects the gold medal, not its display name. |
+| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | ✅ alpha cutout | `public/art/achievements/medal-base.png` | ✅ collection + profile trophy shelf | Real alpha (~39% transparent, grey RGB baked under it); floats on dark. Full-colour when unlocked, greyscaled when locked. |
+| Grail Puller medal | Gold prestige medal | edit of medal-base | 1254×1254 | ✅ yes (clean) | `public/art/achievements/grail-puller.png` | ✅ collection + profile trophy shelf | Stable achievement ID `GRAIL_HUNTER` selects the gold medal, not its display name. |
 | RIP R v2 | Current token/site mark | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-r-v2.png` | ✅ shared headers, favicon, coin, footer, rip screen | Generated with Codex's built-in image tool; silver-lavender face and violet sides, no extra lettering. |
 | RIP full coin v2 | Main token artwork | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-token-coin-v2.png` | ✅ main $RIP section and download | Built-in image generation using the R v2 reference; complete silver/violet coin, no extra lettering. |
 
 ## Hand-off / remaining
 
-- **Achievement integration complete.** `apps/web/src/wallet-pages.ts` displays
-  both medals with explicit locked/unlocked states and accessible progress.
-  Only `GRAIL_HUNTER` requires a Grail-tier pull, so only that definition gets
-  the gold variant. More distinct standard medals can be derived later without
-  changing achievement qualification logic.
+- **Achievement integration complete on two surfaces.** `apps/web/src/wallet-pages.ts`
+  (the binder) and `apps/web/src/profile-ui.ts` (the top-right profile drawer's
+  trophy shelf) both display the two medals with locked/unlocked states and
+  accessible progress. Only `GRAIL_HUNTER` requires a Grail-tier pull, so only
+  that definition gets the gold variant. The profile shelf additionally overlays
+  a distinct inline-SVG emblem per achievement so ten shared silver medals read
+  as ten different trophies without generating new art. More distinct standard
+  medals can still be derived later without changing qualification logic.
 - **Delivery size remains the next art task.** Original pack PNGs total about
   17 MB. Smaller WebP siblings are supported by the existing wrapper lookup;
   retain PNG masters, the current compositions, and the shared RIP R v2 identity.
@@ -52,3 +55,10 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
   wired into the binder. The current RIP R v2 is also recorded above. The
   Charizard hero uses separate sourced artwork; its provenance lives in
   `public/art/characters/README.md` and is not part of the generated-asset list.
+- **2026-09-09, profile trophy shelf** — Both medals are also wired into the
+  top-right profile drawer (`apps/web/src/profile-ui.ts`), computed from the
+  ledger via the same `evaluateAchievements` the binder uses so the surfaces
+  agree. Each achievement carries a distinct engraved inline-SVG emblem over the
+  shared coin. Verified on-disk that `medal-base.png` already has a real alpha
+  cutout (the earlier "baked dark bg" note was stale), so it floats on the dark
+  drawer without a background-removal pass.

@@ -456,13 +456,47 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     return json(res, { balance: wallets.balance(demoSeed(req)), starting: STARTING_BALANCE });
   }
 
-  // The top-right profile panel: balance, session P&L and the owned-card grid.
+  // The top-right profile panel: balance, session P&L, the owned-card grid, and
+  // (only when the drawer asks) the achievement shelf. `account` is also the
+  // public provably-fair client seed (it appears in the live feed), so exposing
+  // it to link to the full binder reveals nothing new.
   if (path === '/api/profile') {
     const account = demoSeed(req);
-    const p = wallets.profile(account);
-    // `account` is also the public provably-fair client seed (it appears in the
-    // live feed), so exposing it to link to the full binder reveals nothing new.
-    return json(res, { ...p, wallet: account, starting: STARTING_BALANCE });
+    const payload: Record<string, unknown> = {
+      ...wallets.profile(account),
+      wallet: account,
+      starting: STARTING_BALANCE,
+    };
+    // The trophy shelf is decorative presentation derived from the ledger — the
+    // SAME source and evaluator the binder uses, so the two surfaces always
+    // agree. Two deliberate constraints:
+    //  - computed ONLY when the open drawer asks (?achv=1), never on the
+    //    every-page header-chip fetch, and never on the post-sell refresh (a sell
+    //    can't change a ledger-derived achievement), so the hot path stays cheap;
+    //  - wrapped so a corrupt/foreign ledger entry (parseVariantId throws by
+    //    design) degrades to an empty shelf instead of 500-ing the endpoint the
+    //    balance/P&L/vault — and the ever-present header chip — depend on.
+    // Each status is projected to a JSON-safe DTO: AchievementStatus.def carries
+    // functions JSON.stringify would drop, and progress.target — not def.target —
+    // is the live per-badge target.
+    if (url.searchParams.get('achv') === '1') {
+      try {
+        const openings = await ledger.listByWallet(account);
+        payload.achievements = evaluateAchievements(buildAchievementContext(openings, index)).map((a) => ({
+          id: a.def.id,
+          name: a.def.name,
+          description: a.def.description,
+          unlocked: a.unlocked,
+          unlockedAt: a.unlockedAt,
+          current: a.progress.current,
+          target: a.progress.target,
+        }));
+      } catch (err) {
+        console.error('profile achievements computation failed:', err);
+        payload.achievements = [];
+      }
+    }
+    return json(res, payload);
   }
 
   const card = /^\/pokemon\/([^/]+)\/([^/]+)$/.exec(path);
