@@ -148,6 +148,30 @@ table.odds td.n,table.pulls td.n{text-align:right}
 
 /* ---- grails ---- */
 .grails{display:grid;gap:24px;grid-template-columns:repeat(auto-fill,minmax(216px,1fr))}
+/* The crown band: the #1 grail lifted into a featured jewel above the wall, so
+   the vault opens on drama even when only a card or two clears the grail floor. */
+.grail-crown{display:grid;grid-template-columns:minmax(190px,290px) 1fr;gap:44px;align-items:center;
+  margin:6px 0 20px;padding:34px;border-radius:var(--r-xl);
+  background:radial-gradient(120% 130% at 0% 0%,var(--gold-glow),transparent 56%),var(--glass);
+  box-shadow:0 0 0 1px var(--gold-rim),0 30px 72px -34px rgba(245,196,81,.34)}
+.gc-card{position:relative;display:block;aspect-ratio:63/88;border-radius:4.5% / 3.2%;overflow:hidden;
+  box-shadow:0 26px 60px rgba(245,196,81,.26),0 0 0 1px var(--gold-rim),inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
+.gc-card::before{content:"";position:absolute;z-index:-1;inset:-8%;background-image:var(--art);
+  background-size:cover;background-position:50% 40%;filter:blur(46px) saturate(1.7);opacity:.5}
+.gc-card:not([style*="--art"])::before{display:none}
+.gc-card:hover{transform:translateY(-4px);box-shadow:0 34px 74px rgba(245,196,81,.36),0 0 0 1px rgba(245,196,81,.7),inset 0 1px 0 rgba(255,255,255,.24)}
+.gc-card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+.gc-rank{position:absolute;top:11px;left:11px;font-size:10px;font-weight:800;letter-spacing:.05em;
+  color:#08090a;background:var(--gold);padding:5px 10px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.gc-eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--gold)}
+.gc-name{font-size:clamp(30px,4vw,46px);letter-spacing:-.035em;line-height:1.04;margin:12px 0 6px;color:var(--text)}
+.gc-sub{color:var(--text-3);font-size:13px;margin:0 0 18px}
+.gc-value{font:700 clamp(38px,5vw,58px)/1 ui-monospace,Menlo,monospace;color:var(--gold);
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-bottom:22px}
+.gc-cta{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:680px){.grail-crown{grid-template-columns:1fr;gap:22px;padding:22px;text-align:center}
+  .gc-card{max-width:210px;margin:0 auto}.gc-cta{justify-content:center}}
 /* Gold rims the grail tiles. It is the only place gold appears on a surface
    rather than on a number, and it earns it: these are the chase cards. */
 .gcard .shot{box-shadow:0 0 0 1px rgba(245,196,81,.28),
@@ -477,6 +501,30 @@ export function grailTile(c: CardListing, i: number): string {
 }
 
 export function grailsPage(cards: CardListing[], minValue: number): string {
+  const [top, ...rest] = cards;
+  const href = (c: CardListing) =>
+    `/pokemon/${encodeURIComponent(c.setId)}/${encodeURIComponent(c.number)}`;
+  const crown = top
+    ? `<section class="grail-crown" data-reveal>
+    <a class="gc-card" href="${href(top)}" aria-label="${esc(top.name)}"${
+        cssUrl(top.imageSmall) ? ` style="--art:url(${cssUrl(top.imageSmall)})"` : ''
+      }>
+      <img src="${esc(top.imageLarge)}" alt="${esc(top.name)}" loading="lazy" decoding="async">
+      <span class="gc-rank">#1 GRAIL</span>
+    </a>
+    <div class="gc-body">
+      <span class="gc-eyebrow">THE CROWN JEWEL</span>
+      <h2 class="gc-name">${esc(top.name)}</h2>
+      <p class="gc-sub">${esc(top.setName)} · ${esc(top.number)}${top.rarity ? ` · ${esc(top.rarity)}` : ''}</p>
+      <div class="gc-value">${money(top.headlineValue)}</div>
+      <div class="gc-cta">${
+        top.availableInPacks
+          ? '<a class="btn btn-primary btn-lg" href="/packs">Rip a pack <span aria-hidden="true">→</span></a>'
+          : ''
+      }<a class="btn btn-ghost btn-lg" href="${href(top)}">View card <span aria-hidden="true">↗</span></a></div>
+    </div>
+  </section>`
+    : '';
   const body = `
 <div class="eyebrow" data-reveal>THE VAULT</div>
 <h1 class="page" data-reveal>The Grails</h1>
@@ -484,9 +532,14 @@ export function grailsPage(cards: CardListing[], minValue: number): string {
     minValue,
   )} or more, by reference value. <b class="mono" data-count="${cards.length}">0</b> of them.</p>
 <div class="catalog-shortcuts"><a href="/cards?sort=value-desc">Explore all cards by value ↗</a><a href="/packs">Find packs containing grails ↗</a></div>
-<div class="grails" data-reveal-group="45">
-  ${cards.map((c, i) => grailTile(c, i)).join('')}
-</div>
+${crown}
+${
+    rest.length
+      ? `<h2 class="sec">MORE OF THE WALL</h2><div class="grails" data-reveal-group="45">${rest
+          .map((c, i) => grailTile(c, i + 1))
+          .join('')}</div>`
+      : ''
+  }
 ${cards.length === 0 ? '<div class="empty">No cards above that value in the catalog yet. Ingest more sets.</div>' : ''}`;
 
   return layout('The Grails — RIPDEX', '/grails', body);
