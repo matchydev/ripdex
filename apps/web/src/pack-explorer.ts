@@ -132,10 +132,18 @@ export const EXPLORER_CSS = `<style>
 #pack-dialog{overflow:hidden}#pack-dialog>.dialog-close{position:absolute;right:14px;top:14px;margin:0;float:none}
 #pack-dialog-body{display:flex;flex-direction:column;max-height:calc(100dvh - 50px)}
 .preview-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:16px}
-.preview-hero{display:grid;grid-template-columns:180px minmax(0,1fr);gap:30px;align-items:center;padding:32px;background:radial-gradient(ellipse at 15% 50%,rgba(113,112,255,.16),transparent 60%);box-shadow:0 1px 0 var(--line)}
-.preview-hero>img{width:130px;height:182px;object-fit:cover;justify-self:center;transform:rotate(-6deg);border-radius:6px;box-shadow:0 16px 30px rgba(0,0,0,.5)}
-.preview-kicker{font-size:9px;color:var(--accent-hi);letter-spacing:.14em}.preview-hero h2{font-size:30px;line-height:1.1;letter-spacing:-.04em;margin:12px 0}.preview-hero p{font-size:12px;color:var(--text-3);margin:12px 0;line-height:1.6}
-.preview-price{font:600 19px ui-monospace,monospace;margin-top:18px}.preview-price span{font-size:10px;color:var(--text-4)}
+.preview-hero{display:grid;grid-template-columns:190px minmax(0,1fr);gap:32px;align-items:center;padding:34px 32px;background:radial-gradient(ellipse at 12% 45%,rgba(113,112,255,.2),transparent 58%);box-shadow:0 1px 0 var(--line)}
+.preview-hero>img{width:150px;height:210px;object-fit:cover;justify-self:center;transform:rotate(-5deg);border-radius:8px;box-shadow:0 22px 44px rgba(0,0,0,.55),0 0 70px -22px rgba(113,112,255,.5)}
+.preview-kicker{font-size:9px;color:var(--accent-hi);letter-spacing:.14em;font-weight:600}.preview-hero h2{font-size:clamp(28px,4vw,38px);line-height:1.05;letter-spacing:-.04em;margin:10px 0 0}
+.preview-jackpot{display:flex;gap:30px;margin:16px 0 20px}
+.pj-label{display:block;font-size:9px;letter-spacing:.1em;color:var(--text-4);text-transform:uppercase;margin-bottom:5px}
+.pj-val{display:block;font:800 clamp(24px,3vw,30px) ui-monospace,Menlo,monospace;letter-spacing:-.03em;color:var(--gold);font-variant-numeric:tabular-nums}
+.pj-odds{display:block;font:800 clamp(24px,3vw,30px) ui-monospace,Menlo,monospace;letter-spacing:-.03em;color:var(--accent-hi);font-variant-numeric:tabular-nums}
+.preview-open{width:fit-content}
+.outcome{position:relative}
+.outcome-grail{box-shadow:0 0 0 1px rgba(245,196,81,.42)!important;background:radial-gradient(150% 220% at 0% 0%,var(--gold-glow),transparent 55%),var(--glass)!important}
+.outcome-tag{position:absolute;top:6px;left:6px;z-index:2;font-size:7px;font-weight:800;letter-spacing:.04em;color:#08090a;background:var(--gold);padding:2px 5px;border-radius:4px}
+.ov.t-GRAIL{color:var(--gold)!important}.ov.t-TIER_4{color:#e0b0ff!important}.ov.t-TIER_3{color:var(--em)!important}
 .preview-body{padding:28px 32px}.preview-body h3{font-size:16px;font-weight:580;letter-spacing:-.02em;margin:0 0 8px}
 .preview-sub{color:var(--text-3);font-size:11px;margin:0 0 18px}.preview-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:22px;margin-bottom:22px;box-shadow:0 1px 0 var(--line)}.preview-facts span{display:block;font-size:9px;color:var(--text-4);margin-bottom:6px}.preview-facts b{font:500 14px ui-monospace,monospace}
 .outcome-controls{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px}.outcome-controls label{font-size:10px;color:var(--text-3)}.outcome-controls input,.outcome-controls select{display:block;width:100%;min-width:0;height:42px;margin-top:7px;font-size:11px}
@@ -222,9 +230,13 @@ const EXPLORER_JS = `<script>
  });
  function preview(id) {
   const p=byId.get(id);if(!p)return;
+  const gc=p.outcomes.filter(o=>(o.value||0)>=100).reduce((s,o)=>s+o.probability,0);
+  const gcLabel=gc<=0?'':(gc>=0.01?(gc*100).toFixed(1)+'%':'1 in '+Math.round(1/gc).toLocaleString());
   document.getElementById('pack-dialog-body').innerHTML =
-   '<div class="preview-scroll"><div class="preview-hero"><img src="'+esc(p.art)+'" alt=""><div><span class="preview-kicker">PACK CONTENTS / '+p.outcomes.length+' OUTCOMES</span><h2 id="pack-dialog-title">'+esc(p.name)+'</h2><p>Inspect every possible card and its exact probability.</p><div class="preview-price">'+esc(rip(p.price))+' <span>/ '+p.count+' '+(p.count===1?'card':'cards')+'</span></div></div></div>'+
-   '<div class="preview-body"><div class="preview-facts"><div><span>LOWEST REFERENCE</span><b>'+money(p.min)+'</b></div><div><span>HIGHEST REFERENCE</span><b>'+money(p.max)+'</b></div><div><span>MEAN PER DRAW</span><b>'+money(p.expected)+'</b></div></div><h3>What is inside</h3><p class="preview-sub">Each printing has its own reference value and published probability.</p>'+
+   '<div class="preview-scroll"><div class="preview-hero"><img src="'+esc(p.art)+'" alt=""><div><span class="preview-kicker">RIP THIS PACK · '+p.outcomes.length+' POSSIBLE PULLS</span><h2 id="pack-dialog-title">'+esc(p.name)+'</h2>'+
+    '<div class="preview-jackpot"><div><span class="pj-label">TOP PULL</span><span class="pj-val">'+money(p.max)+'</span></div>'+(gcLabel?'<div><span class="pj-label">GRAIL CHANCE</span><span class="pj-odds">'+gcLabel+'</span></div>':'')+'</div>'+
+    '<a class="btn btn-primary btn-lg preview-open" href="/rip/'+encodeURIComponent(p.id)+'">Open for '+esc(rip(p.price))+' <span aria-hidden="true">→</span></a></div></div>'+
+   '<div class="preview-body"><h3>Every card you could pull</h3><p class="preview-sub">Every printing has its own odds. Search or sort the '+p.outcomes.length+' outcomes below.</p>'+
    '<div class="outcome-controls"><label for="outcome-search">Search outcomes<input type="search" id="outcome-search" placeholder="Card, variant or number…" aria-controls="preview-outcomes" autocomplete="off"></label><label for="outcome-sort">Sort outcomes<select id="outcome-sort" aria-controls="preview-outcomes"><option value="probability">Probability: most likely</option><option value="value-desc">Value: high to low</option><option value="name">Name: A to Z</option></select></label></div>'+
    '<div class="outcome-result-bar"><span id="outcome-count" role="status" aria-live="polite" aria-atomic="true"></span><button type="button" class="outcome-reset" id="outcome-reset" hidden>Reset</button></div><div class="outcome-list" id="preview-outcomes"></div><div class="outcome-empty" id="outcome-empty" hidden><h4>No matching outcomes</h4><p>Try a different card name, printing or card number.</p><button type="button" class="btn btn-ghost" id="outcome-empty-reset">Show all outcomes</button></div>'+
    '<p class="preview-sub" style="margin-top:20px;margin-bottom:0">USD figures are card reference values, not guaranteed resale proceeds or a conversion rate for $RIP. Probabilities come from the published pack weights.</p></div></div><div class="preview-actions"><a class="text-link" href="/packs#odds-'+encodeURIComponent(p.id)+'">Full odds table ↗</a><a class="btn btn-primary" href="/rip/'+encodeURIComponent(p.id)+'">Go to pack →</a></div>';
@@ -243,7 +255,7 @@ const EXPLORER_JS = `<script>
     }
     return b.probability-a.probability||names();
    });
-   document.getElementById('preview-outcomes').innerHTML=outcomes.map(o=>'<a class="outcome" href="'+esc(o.href||'#')+'"><img src="'+esc(o.image)+'" alt="" loading="lazy"><span><strong>'+esc(o.name)+'</strong><small>'+esc(o.label)+' · '+esc(o.set)+' #'+esc(o.number)+'</small></span><b>'+esc(o.probabilityLabel)+'<small>'+money(o.value)+'</small></b></a>').join('');
+   document.getElementById('preview-outcomes').innerHTML=outcomes.map(o=>{var g=(o.value||0)>=100;return '<a class="outcome'+(g?' outcome-grail':'')+'" href="'+esc(o.href||'#')+'"><img src="'+esc(o.image)+'" alt="" loading="lazy">'+(g?'<span class="outcome-tag">GRAIL</span>':'')+'<span><strong>'+esc(o.name)+'</strong><small>'+esc(o.label)+' · '+esc(o.set)+' #'+esc(o.number)+'</small></span><b>'+esc(o.probabilityLabel)+'<small class="ov'+(o.tier?' t-'+o.tier:'')+'">'+money(o.value)+'</small></b></a>';}).join('');
    document.getElementById('outcome-count').textContent=outcomes.length+' of '+p.outcomes.length+(p.outcomes.length===1?' outcome':' outcomes');
    document.getElementById('outcome-empty').hidden=outcomes.length>0;
    reset.hidden=!terms.length&&order.value==='probability';
