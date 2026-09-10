@@ -28,7 +28,7 @@ import type {
   CatalogIndex,
   PackConfig,
 } from '../../../packages/pokemon-core/src/index.ts';
-import { esc, money, layout, grailTile } from './render.ts';
+import { esc, money, layout, grailTile, cssUrl } from './render.ts';
 import { tokenSection, tokenHeroContract } from './token.ts';
 import { ripMark } from './brand.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
@@ -259,8 +259,13 @@ const HOME_CSS = `
 .activity-list{height:310px;overflow-y:auto;scrollbar-width:thin}.activity-row{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 0;box-shadow:0 1px 0 var(--line)}.activity-row img{width:32px;height:45px;border-radius:3px;object-fit:cover}.activity-row b{display:block;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.activity-row small{display:block;font-size:8px;color:var(--text-4);margin-top:3px}.activity-row em{display:block;font-size:8px;font-style:normal;color:var(--text-4);margin-top:2px}.activity-row strong{font:9px ui-monospace,monospace;color:var(--text-2)}.activity-footer{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:var(--text-3);padding-top:16px}.activity-empty{font-size:11px;color:var(--text-3)}
 .home-inner{max-width:1440px;padding:0 32px}.set-section{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:24px 0 30px}
 .set-door{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;min-height:106px;padding:18px;overflow:hidden;box-shadow:0 0 0 1px var(--line);border-radius:10px;background:linear-gradient(150deg,var(--elevated),var(--panel));transition:box-shadow .25s,transform .25s var(--ease)}
-.set-door:hover{box-shadow:0 0 0 1px rgba(113,112,255,.35)}.set-door>div:first-child{z-index:2}.set-door span{font-size:8px;letter-spacing:.06em;color:var(--text-4)}.set-door h2{font-size:17px;letter-spacing:-.03em;font-weight:590;margin:6px 0}.set-door small{font-size:9px;color:var(--text-3)}
-.set-door-art{position:absolute;right:-9px;top:14px;bottom:0;width:102px;z-index:0;opacity:.65;transition:transform .5s var(--ease)}.set-door-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#11121b,transparent)}.set-door-art img{position:absolute;width:62px;right:0;top:10px;border-radius:3px;transform:rotate(14deg)}.set-door-art img:first-child{right:42px;top:23px;transform:rotate(-13deg)}.set-door:hover .set-door-art{transform:translateY(-7px)}
+.set-door:hover{box-shadow:0 0 0 1px rgba(113,112,255,.35),0 14px 30px -18px rgba(0,0,0,.6);transform:translateY(-3px)}.set-door-copy{position:relative;z-index:2}.set-door span{font-size:8px;letter-spacing:.06em;color:var(--text-4)}.set-door h2{font-size:17px;letter-spacing:-.03em;font-weight:590;margin:6px 0}.set-door small{font-size:9px;color:var(--text-3)}
+/* Each set-door is lit by its own top card — a bloom of that set's headline
+   card colour, so a Base door glows differently from a Jungle door. */
+.set-door[style*="--art"]::before{content:"";position:absolute;z-index:-1;inset:0;background-image:var(--art);
+  background-size:cover;background-position:72% 28%;filter:blur(30px) saturate(1.6);opacity:.17;transition:opacity .3s var(--ease)}
+.set-door:hover[style*="--art"]::before{opacity:.32}
+.set-door-art{position:absolute;right:-9px;top:12px;bottom:0;width:116px;z-index:0;opacity:.82;transition:transform .5s var(--ease)}.set-door-art::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--panel),transparent)}.set-door-art img{position:absolute;width:72px;right:0;top:8px;border-radius:4px;box-shadow:0 6px 14px rgba(0,0,0,.4);transform:rotate(13deg)}.set-door-art img:first-child{right:48px;top:22px;transform:rotate(-12deg)}.set-door:hover .set-door-art{transform:translateY(-6px)}
 .discovery-section{padding-top:28px;scroll-margin-top:150px}.discovery-hint{font-size:11px;color:var(--text-4)}.discovery-section .section-head{margin-bottom:24px}.discovery-section h2{font-size:29px}.section{padding:42px 0}.section-index{font-size:9px;margin-bottom:10px}
 .rail-actions{display:flex;align-items:center;gap:8px}.rail-actions button{height:34px;width:34px;border-radius:7px;box-shadow:0 0 0 1px var(--line-hi);font-size:16px}.rail-actions button:hover{background:var(--accent-dim)}.rail-actions .text-link{margin-left:8px}
 html.dialog-open{overflow:hidden}
@@ -420,7 +425,8 @@ export function homePage(
    const cards = index.cards.filter((c) => c.setId === set.id);
    const art = [...cards].sort((a, b) => (b.headlineValue ?? 0) - (a.headlineValue ?? 0)).slice(0, 2);
    const year = cards[0]?.year;
-   return `<a class="set-door" href="/cards?setId=${encodeURIComponent(set.id)}"><div><span>${year ? year+' / ' : ''}${set.count} CARDS</span><h2>${esc(set.name)}</h2><small>Explore set ↗</small></div><div class="set-door-art" aria-hidden="true">${art.map((c) => `<img src="${esc(c.imageSmall)}" alt="" loading="lazy">`).join('')}</div></a>`;
+   const glow = cssUrl(art[0]?.imageSmall);
+   return `<a class="set-door" href="/cards?setId=${encodeURIComponent(set.id)}"${glow ? ` style="--art:url(${glow})"` : ''}><div class="set-door-copy"><span>${year ? year+' / ' : ''}${set.count} CARDS</span><h2>${esc(set.name)}</h2><small>Explore set ↗</small></div><div class="set-door-art" aria-hidden="true">${art.map((c) => `<img src="${esc(c.imageSmall)}" alt="" loading="lazy">`).join('')}</div></a>`;
  }).join('')}
 </section>
 ${tokenSection()}
