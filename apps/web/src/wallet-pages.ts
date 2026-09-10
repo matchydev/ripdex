@@ -249,21 +249,33 @@ const WALLET_CSS = `
 .setrow .pc{font-size:11px;font-weight:510;color:var(--text-4);margin-top:7px;
   letter-spacing:-.006em;font-variant-numeric:tabular-nums}
 
-.achv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
-.achv .a{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;align-items:center;
-  padding:22px 0;border-bottom:1px solid var(--line)}
-.a .medal{width:76px;height:84px;object-fit:contain;display:block;filter:grayscale(1) brightness(.62);
-  transition:transform .3s var(--ease),filter .3s var(--ease);border-radius:50%}
-.a.on .medal{filter:none}.a:hover .medal{transform:translateY(-3px)}
-.a .nm{font-size:14px;font-weight:590;letter-spacing:-.018em;color:var(--text);margin:0}
-.a .ds{font-size:12px;color:var(--text-3);margin:5px 0 0;line-height:1.55}
-.a .achievement-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.03em;
-  color:var(--text-3);margin-bottom:7px}
+/* A trophy shelf: each achievement is a medal on a plinth — greyscaled while
+   locked, lit (accent, or gold for the grail) when earned. */
+.achv{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:14px}
+.achv .a{display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:22px 16px 18px;border-radius:var(--r-md);background:var(--panel);box-shadow:0 0 0 1px var(--line);
+  transition:box-shadow .25s var(--ease),transform .25s var(--ease)}
+.achv .a>div{width:100%}
+.achv .a:hover{transform:translateY(-3px);box-shadow:0 0 0 1px var(--line-hi),0 14px 28px -18px rgba(0,0,0,.6)}
+.a.on{box-shadow:0 0 0 1px var(--line-hi)}
+.a.on:hover{box-shadow:0 0 0 1px var(--accent),0 14px 28px -16px var(--accent-dim)}
+.a.grail.on{box-shadow:0 0 0 1px var(--gold-rim)}
+.a.grail.on:hover{box-shadow:0 0 0 1px var(--gold-rim),0 14px 30px -16px var(--gold-glow)}
+.a .medal{width:66px;height:74px;object-fit:contain;display:block;filter:grayscale(1) brightness(.6);opacity:.8;
+  transition:transform .3s var(--ease),filter .3s var(--ease),opacity .3s var(--ease)}
+.a.on .medal{filter:none;opacity:1}
+.a.grail.on .medal{filter:drop-shadow(0 0 12px rgba(245,196,81,.4))}
+.a:hover .medal{transform:translateY(-3px)}
+.a .achievement-status{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:600;color:var(--text-4);margin-top:12px}
 .a.on .achievement-status{color:var(--accent-hi)}
 .a.grail.on .achievement-status{color:var(--gold)}
-.a .pr{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--text-3);
-  margin-top:8px;font-variant-numeric:tabular-nums}
-.abar{height:4px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:10px;overflow:hidden}
+.a .nm{font-size:13.5px;font-weight:600;letter-spacing:-.018em;color:var(--text);margin:6px 0 0}
+.a .ds{font-size:11px;color:var(--text-3);margin:5px 0 0;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.a .pr{display:flex;justify-content:center;gap:12px;font-size:10px;color:var(--text-4);
+  margin-top:9px;font-variant-numeric:tabular-nums}
+.abar{height:4px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:11px;overflow:hidden;width:100%}
 .abar i{display:block;height:100%;width:var(--pct,0%);border-radius:2px;transform-origin:0 50%;
   background:var(--accent)}
 .a.in .abar i{animation:barGrow .7s var(--ease) both}
@@ -290,7 +302,7 @@ const WALLET_CSS = `
 .wallet-chip{margin-bottom:18px}.collection-nav{margin-bottom:16px}
 .collection-nav+.wstats{margin:16px 0 22px}.collection-nav+.wstats .b{padding-top:18px;padding-bottom:18px}
 .collection-nav+.wstats .v{margin-top:9px}
-@media(max-width:680px){.achv{grid-template-columns:1fr}.collection-nav{gap:22px}.collection-heading{align-items:flex-start;flex-direction:column;gap:7px}.collection-heading p{text-align:left}}
+@media(max-width:680px){.achv{grid-template-columns:repeat(2,minmax(0,1fr))}.collection-nav{gap:22px}.collection-heading{align-items:flex-start;flex-direction:column;gap:7px}.collection-heading p{text-align:left}}
 @media(prefers-reduced-motion:reduce){.a .medal,.collection-nav a{transition:none}.a:hover .medal{transform:none}.a.in .abar i{animation:none}}
 
 .dupes{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
