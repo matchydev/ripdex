@@ -247,6 +247,26 @@ function liveMix(events: readonly FeedEvent[], limit: number): FeedEvent[] {
   return out;
 }
 
+/**
+ * The set of achievement ids a wallet has already unlocked, read from the
+ * provably-fair ledger. Best-effort: any ledger/achievement failure returns
+ * null, so the caller can skip trophy detection without ever failing the rip
+ * that owns the request. Used to diff before/after a rip for the trophy moment.
+ */
+async function unlockedAchievementIds(account: string): Promise<Set<string> | null> {
+  try {
+    const openings = await ledger.listByWallet(account);
+    return new Set(
+      evaluateAchievements(buildAchievementContext(openings, index))
+        .filter((a) => a.unlocked)
+        .map((a) => a.def.id),
+    );
+  } catch (err) {
+    console.error('achievement snapshot failed:', err);
+    return null;
+  }
+}
+
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? '/', `http://localhost:${PORT}`);
   const path = decodeURIComponent(url.pathname);
@@ -404,6 +424,10 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
         402,
       );
     }
+    // Snapshot the already-unlocked achievements BEFORE the rip records to the
+    // ledger, so we can tell the client which trophies THIS pull newly earns.
+    // Best-effort (returns null on failure) and never on the rip's critical path.
+    const beforeUnlocked = await unlockedAchievementIds(account);
     try {
       const outcome = await engine.rip(packId, account);
       wallets.recordPull(account, {
@@ -420,7 +444,21 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
         sellValue: outcome.sellValue,
         at: new Date().toISOString(),
       });
-      return json(res, { ...outcome, balance });
+      // The trophy moment: achievements now unlocked that were not before. Fully
+      // isolated — a ledger/achievement error here degrades to no trophy, never a
+      // failed rip (the pull is already recorded and paid for).
+      let unlockedAchievements: { id: string; name: string; description: string }[] = [];
+      if (beforeUnlocked) {
+        try {
+          const openings = await ledger.listByWallet(account);
+          unlockedAchievements = evaluateAchievements(buildAchievementContext(openings, index))
+            .filter((a) => a.unlocked && !beforeUnlocked.has(a.def.id))
+            .map((a) => ({ id: a.def.id, name: a.def.name, description: a.def.description }));
+        } catch (err) {
+          console.error('achievement diff failed:', err);
+        }
+      }
+      return json(res, { ...outcome, balance, unlockedAchievements });
     } catch (err) {
       wallets.credit(account, cost); // refund — never take $RIP for a failed rip
       console.error(err);

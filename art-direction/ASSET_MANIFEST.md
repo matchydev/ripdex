@@ -20,8 +20,8 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
 | Obsidian wrapper | Pack wrapper (ember orange) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/obsidian-flames-rip.png` | ✅ rip screen | |
 | Kanto wrapper | Pack wrapper (amber) | edit of grail-pack | 1024×1536 | (baked bg) | `public/art/packs/kanto-starters-rip.png` | ✅ rip screen | |
 | Grail vault | Grail reveal environment | `grail-environment.md` | 1920×1088 | no (backdrop) | `public/art/environments/grail-vault.png` | ✅ grail takeover | Centre negative space for the card. |
-| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | ✅ alpha cutout | `public/art/achievements/medal-base.png` | ✅ collection + profile trophy shelf | Real alpha (~39% transparent, grey RGB baked under it); floats on dark. Full-colour when unlocked, greyscaled when locked. |
-| Grail Puller medal | Gold prestige medal | edit of medal-base | 1254×1254 | ✅ yes (clean) | `public/art/achievements/grail-puller.png` | ✅ collection + profile trophy shelf | Stable achievement ID `GRAIL_HUNTER` selects the gold medal, not its display name. |
+| Achievement medal (base) | Canonical medal | `achievement-medal.md` | 1024×1024 | ✅ alpha cutout | `public/art/achievements/medal-base.png` | ✅ collection + profile shelf + rip trophy moment | Real alpha (~39% transparent, grey RGB baked under it); floats on dark. Full-colour when unlocked, greyscaled when locked. |
+| Grail Puller medal | Gold prestige medal | edit of medal-base | 1254×1254 | ✅ yes (clean) | `public/art/achievements/grail-puller.png` | ✅ collection + profile shelf + rip trophy moment | Stable achievement ID `GRAIL_HUNTER` selects the gold medal, not its display name. |
 | RIP R v2 | Current token/site mark | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-r-v2.png` | ✅ shared headers, favicon, coin, footer, rip screen | Generated with Codex's built-in image tool; silver-lavender face and violet sides, no extra lettering. |
 | RIP full coin v2 | Main token artwork | `public/art/brands/README.md` | 1254×1254 | ✅ yes | `public/art/brands/rip-token-coin-v2.png` | ✅ main $RIP section and download | Built-in image generation using the R v2 reference; complete silver/violet coin, no extra lettering. |
 
@@ -62,3 +62,9 @@ Default model: `gpt-image-2.5-sunburst` (drafts: `gpt-image-2.5-flare`).
   shared coin. Verified on-disk that `medal-base.png` already has a real alpha
   cutout (the earlier "baked dark bg" note was stale), so it floats on the dark
   drawer without a background-removal pass.
+- **2026-09-09, rip trophy moment** — Both medals now also appear on the rip
+  screen (`apps/web/src/rip-page.ts`): when a pull unlocks a new achievement,
+  `/api/rip` returns the newly-earned ones (a before/after ledger diff, fully
+  isolated so it can never fail a paid rip) and a gold banner with the medal +
+  a Web-Audio fanfare drops in after the card reveal. grail-puller for
+  `GRAIL_HUNTER`, medal-base for the rest — same mapping as the other surfaces.

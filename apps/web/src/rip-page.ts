@@ -576,9 +576,31 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   76%{opacity:1}
   100%{opacity:0;transform:translate(-50%,-46px) scale(1)}}
 @keyframes profitStill{0%,90%{opacity:1}100%{opacity:0}}
+/* The trophy moment: a gold banner drops from the top when a rip unlocks a new
+   achievement. A body-level overlay (like the coins), cleared on reset. */
+.trophy-pop{position:fixed;left:50%;top:82px;z-index:12;transform:translate(-50%,-24px);opacity:0;pointer-events:none;
+  display:flex;align-items:center;gap:14px;padding:13px 20px 13px 13px;border-radius:14px;max-width:min(420px,92vw);
+  background:linear-gradient(135deg,rgba(32,29,20,.97),rgba(17,16,13,.97));border:1px solid rgba(245,196,81,.5);
+  box-shadow:0 0 0 1px rgba(0,0,0,.4),0 18px 50px rgba(0,0,0,.6),0 0 40px rgba(245,196,81,.16)}
+.trophy-pop.on{animation:trophyIn 3.4s var(--ease) forwards}
+.trophy-medal{flex:0 0 auto;width:52px;height:52px;display:grid;place-items:center}
+.trophy-medal img{width:52px;height:52px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5))}
+.trophy-medal.grail img{filter:drop-shadow(0 0 10px rgba(245,196,81,.55))}
+.trophy-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.trophy-eyebrow{font:800 9px/1 'Inter',ui-sans-serif;letter-spacing:.16em;color:var(--gold)}
+.trophy-name{font:750 17px/1.15 'Inter',ui-sans-serif;letter-spacing:-.02em;color:#fff}
+.trophy-desc{font:500 11px/1.35 'Inter',ui-sans-serif;color:#c8c3b4}
+@keyframes trophyIn{
+  0%{opacity:0;transform:translate(-50%,-24px) scale(.94)}
+  7%{opacity:1;transform:translate(-50%,6px) scale(1.03)}
+  12%{transform:translate(-50%,0) scale(1)}
+  86%{opacity:1;transform:translate(-50%,0) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-16px) scale(1)}}
+@keyframes trophyStill{0%,88%{opacity:1}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){
   .coin{display:none}
   .profit-pop.on{animation:profitStill 2.4s linear forwards!important;transform:translate(-50%,0)}
+  .trophy-pop.on{animation:trophyStill 2.8s linear forwards!important;transform:translate(-50%,0)}
 }
 
 /* ========================== grail takeover =========================
@@ -911,6 +933,48 @@ function profitPop(text){
   let p = document.getElementById('profitPop');
   if (!p){ p = document.createElement('div'); p.className = 'profit-pop'; p.id = 'profitPop'; document.body.appendChild(p); }
   p.textContent = text; p.classList.remove('on'); void p.offsetWidth; p.classList.add('on');
+}
+
+// The trophy moment: when a rip unlocks new achievements (server tells us which
+// in the /api/rip response), a gold banner drops in with the medal and a short
+// ascending fanfare. Multiple unlocks queue and play one after another. The
+// achievement name/description are static catalog strings, escaped anyway.
+const escHtml = (s) => String(s == null ? '' : s)
+  .replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+let trophyQueue = [], trophyBusy = false;
+function sTrophy(){
+  if (muted) return;
+  [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => blip(f, 0.5, 'triangle', 0.07, 0), i * 110));
+  setTimeout(() => { blip(1319, 0.6, 'triangle', 0.06, 0); blip(1047, 0.6, 'sine', 0.04, 0); }, 470);
+}
+function trophyMoment(list){
+  if (!Array.isArray(list) || !list.length) return;
+  trophyQueue.push(...list);
+  if (!trophyBusy) nextTrophy();
+}
+function nextTrophy(){
+  const a = trophyQueue.shift();
+  if (!a){ trophyBusy = false; return; }
+  trophyBusy = true;
+  let el = document.getElementById('trophyPop');
+  if (!el){
+    el = document.createElement('div'); el.className = 'trophy-pop'; el.id = 'trophyPop';
+    // Announce the unlock to screen readers — the fanfare is wordless and the
+    // banner is the only text channel. Mirrors the page's #toast live region.
+    el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite'); el.setAttribute('aria-atomic', 'true');
+    document.body.appendChild(el);
+  }
+  const grail = a.id === 'GRAIL_HUNTER';
+  const src = '/art/achievements/' + (grail ? 'grail-puller' : 'medal-base') + '.png';
+  el.innerHTML =
+    '<div class="trophy-medal' + (grail ? ' grail' : '') + '"><img src="' + src + '" alt=""></div>' +
+    '<div class="trophy-txt"><span class="trophy-eyebrow"><span aria-hidden="true">🏆 </span>TROPHY UNLOCKED</span>' +
+    '<span class="trophy-name">' + escHtml(a.name) + '</span>' +
+    '<span class="trophy-desc">' + escHtml(a.description) + '</span></div>';
+  el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+  sTrophy();
+  // Tracked in reelTimers so reset() cancels the whole trophy chain on a re-rip.
+  reelTimers.push(setTimeout(() => { el.classList.remove('on'); reelTimers.push(setTimeout(nextTrophy, 300)); }, reduceMotion ? 2600 : 3400));
 }
 function setMuted(m){
   muted = m;
@@ -1245,6 +1309,14 @@ function fill(){
   document.getElementById('cardLink').href = result.href;
   document.getElementById('meta').classList.add('on');
   setTimeout(() => document.getElementById('after').classList.add('on'), 260);
+  // Any trophies this rip newly earned drop in just after the numbers settle.
+  // Capture the list now (a fast RIP ANOTHER nulls result before this fires) and
+  // register the timer in reelTimers so reset() cancels it — otherwise a quick
+  // re-rip could throw on a null result or paint this trophy over the next.
+  if (result.unlockedAchievements && result.unlockedAchievements.length){
+    const earned = result.unlockedAchievements;
+    reelTimers.push(setTimeout(() => trophyMoment(earned), reduceMotion ? 300 : 780));
+  }
 }
 
 const holder = document.getElementById('holder');
@@ -1291,6 +1363,8 @@ function reset(){
   document.getElementById('toast').classList.remove('on');
   const co = document.getElementById('coins'); if (co) co.innerHTML = '';
   const pp = document.getElementById('profitPop'); if (pp) pp.classList.remove('on');
+  trophyQueue.length = 0; trophyBusy = false;
+  const tp = document.getElementById('trophyPop'); if (tp) tp.classList.remove('on');
   show('s-select');
 }
 
