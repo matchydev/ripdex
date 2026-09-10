@@ -236,6 +236,13 @@ table.odds td.n,table.pulls td.n{text-align:right}
 .ticker:focus-within .ticker-track{animation-play-state:paused}
 .controls{position:sticky;top:104px;z-index:30;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding:16px 18px;background:rgba(15,16,17,.72);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 0 0 1px var(--line),0 14px 32px -20px rgba(0,0,0,.75);border-radius:var(--r-md);margin-bottom:30px}
 .controls input:not([type=checkbox]),.controls select{min-width:0;width:100%}
+/* Skeleton tiles fill the grid during a fetch, so filtering never flashes a void. */
+.skel-tile{display:block}
+.sk-shot{aspect-ratio:63/88;border-radius:4.5% / 3.2%;background:var(--panel);box-shadow:0 0 0 1px var(--line);position:relative;overflow:hidden}
+.sk-shot::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 32%,rgba(255,255,255,.055) 48%,transparent 64%);background-size:220% 100%;animation:shim 1.5s linear infinite}
+.sk-meta{height:12px;width:68%;margin-top:13px;border-radius:4px;background:var(--panel);box-shadow:0 0 0 1px var(--line)}
+.sk-meta2{height:10px;width:42%;margin-top:8px;border-radius:4px;background:var(--panel);box-shadow:0 0 0 1px var(--line)}
+@media(prefers-reduced-motion:reduce){.sk-shot::after{animation:none}}
 .controls #q{grid-column:span 3;height:46px;font-size:14px;background-color:var(--panel)}
 .controls #setId{grid-column:span 2;height:46px}.controls #sort{height:46px}
 .filter-more{grid-column:1/-1;grid-row:3}
@@ -614,6 +621,9 @@ function params(p) {
   return u;
 }
 
+const SKEL = Array.from({ length: 12 }, () =>
+  '<div class="skel-tile" aria-hidden="true"><div class="sk-shot"></div><div class="sk-meta"></div><div class="sk-meta2"></div></div>').join('');
+
 async function load(reset) {
   if (!reset && (loading || done)) return;
   if (reset) {
@@ -621,11 +631,13 @@ async function load(reset) {
     page = 1; done = false;
     const url = params(1); url.delete('page');
     history.replaceState(null,'',location.pathname + (url.size ? '?' + url.toString() : ''));
-    $('grid').innerHTML = '';
+    // Show skeleton placeholders during the fetch instead of a blank void.
+    $('grid').innerHTML = SKEL;
     $('empty').hidden = true;
   }
   controller = new AbortController();
   const current = ++requestId;
+  const firstPage = page === 1;
   loading = true;
   $('grid').setAttribute('aria-busy', 'true');
   $('count').textContent = 'Loading cards…';
@@ -634,6 +646,8 @@ async function load(reset) {
     if (!res.ok) throw new Error('Unable to load cards');
     const data = await res.json();
     if (current !== requestId) return;
+    // Clear the skeletons before the first real page lands.
+    if (firstPage) $('grid').innerHTML = '';
     $('grid').insertAdjacentHTML('beforeend', data.html);
     window.RIPDEX_MOTION?.scan($('grid'));
     $('count').textContent = data.totalCount.toLocaleString() + (data.totalCount === 1 ? ' CARD' : ' CARDS');
@@ -642,6 +656,7 @@ async function load(reset) {
     page++;
   } catch (error) {
     if (current !== requestId || error.name === 'AbortError') return;
+    if (firstPage) $('grid').innerHTML = '';
     $('count').textContent = 'Could not load cards. Change a filter or reset to retry.';
     done = true;
   } finally {
