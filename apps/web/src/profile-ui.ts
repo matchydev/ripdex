@@ -73,9 +73,31 @@ export function profileUI(): string {
 
   const toastEl = document.getElementById('pfToast');
   let toastTimer;
-  const toast = (msg) => { if (!toastEl) return; toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.hidden = true, 4200); };
+  const toast = (msg, win) => { if (!toastEl) return; toastEl.textContent = msg; toastEl.classList.toggle('win', !!win); toastEl.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.hidden = true, 4200); };
 
   const setChip = (n) => { const el = document.getElementById('pfChipNum'); if (el && typeof n === 'number') el.textContent = rip(n); };
+
+  // Cashing out is the vault's whole thrill — roll the balance up to its new
+  // total and pop the numbers green rather than snapping the figure silently.
+  function countBalance(from, to){
+    const chip = document.getElementById('pfChipNum'), bal = document.getElementById('pfBal');
+    if (reduced || !(to > from)){ if (chip) chip.textContent = rip(to); if (bal) bal.textContent = rip(to); return; }
+    const t0 = performance.now(), ms = 620;
+    const stepFn = (t) => {
+      const p = Math.min(1, (t - t0) / ms);
+      const e = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+      const v = Math.round(from + (to - from) * e);
+      if (chip) chip.textContent = rip(v);
+      if (bal) bal.textContent = rip(v);
+      if (p < 1) requestAnimationFrame(stepFn);
+    };
+    requestAnimationFrame(stepFn);
+  }
+  function pulseWin(){
+    ['pfChipNum','pfBal'].forEach((id) => { const el = document.getElementById(id); if (!el) return; el.classList.remove('bal-pop'); void el.offsetWidth; el.classList.add('bal-pop'); });
+    const pchip = document.getElementById('open-profile');
+    if (pchip){ pchip.classList.remove('win-flash'); void pchip.offsetWidth; pchip.classList.add('win-flash'); }
+  }
 
   function render() {
     if (!data) return;
@@ -281,8 +303,16 @@ export function profileUI(): string {
       const res = await fetch('/api/sell', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ openingId: id }) });
       const out = await res.json();
       if (res.ok && out.ok) {
-        toast('Sold ' + name + ' for ' + rip(out.credited) + ' $RIP.');
-        if (typeof out.balance === 'number') setChip(out.balance);
+        toast('Sold ' + name + ' for ' + rip(out.credited) + ' $RIP.', true);
+        const cardEl = btn.closest('.pf-card');
+        if (!reduced && typeof out.balance === 'number' && typeof out.credited === 'number') {
+          countBalance(out.balance - out.credited, out.balance);
+          pulseWin();
+          if (cardEl) cardEl.classList.add('selling');
+          await new Promise((r) => setTimeout(r, 640));
+        } else if (typeof out.balance === 'number') {
+          setChip(out.balance);
+        }
         await load(false);
       } else {
         toast(out.error || 'Could not sell that pull.');
@@ -331,6 +361,15 @@ body.pf-lock{overflow:hidden}
 .pf-balance{display:flex;flex-direction:column;gap:6px;padding:22px 20px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--accent-dim),transparent)}
 .pf-bal-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);font-weight:700}
 .pf-bal-num{display:flex;align-items:center;gap:9px;font-size:36px;font-weight:750;letter-spacing:-.03em;color:var(--text);font-variant-numeric:tabular-nums}
+/* Selling pays off visibly: the balance numbers pop green, the chip border
+   flashes emerald, and the sold card fades out before the grid refreshes. */
+@keyframes balPop{0%{transform:scale(1)}30%{transform:scale(1.07);color:var(--em)}100%{transform:scale(1)}}
+.bal-pop{display:inline-block;animation:balPop .6s var(--ease)}
+@keyframes chipWin{0%,100%{border-color:var(--line-hi)}35%{border-color:var(--em);box-shadow:0 0 0 1px var(--em)}}
+.profile-chip.win-flash{animation:chipWin .7s var(--ease)}
+.pf-toast.win{color:var(--em);box-shadow:0 0 0 1px rgba(74,222,155,.4),0 14px 40px rgba(0,0,0,.5)}
+.pf-card.selling{opacity:0;transform:scale(.93);transition:opacity .3s var(--ease),transform .3s var(--ease)}
+@media(prefers-reduced-motion:reduce){.bal-pop,.profile-chip.win-flash{animation:none}.pf-card.selling{transition:none}}
 .pf-bal-num img,.pf-bal-num svg{width:28px;height:28px}
 .pf-bal-num .u{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--text-3)}
 .pf-pnl{font-size:12px;font-weight:650;font-variant-numeric:tabular-nums}
