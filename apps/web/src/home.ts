@@ -220,6 +220,27 @@ const HOME_CSS = `
 .dex-outro .section-index{color:var(--accent-hi)}
 .dex-outro h2{font-size:clamp(28px,3.4vw,42px);letter-spacing:-.03em;line-height:1.05;margin:10px 0 8px}
 .dex-outro p{font-size:13px;color:var(--text-3);max-width:42ch;margin-bottom:0}
+/* One Piece — a "next universe" coming-soon tease, warm amber to set it apart. */
+.coming-soon .cs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.cs-index{color:var(--warn)}
+.cs-badge{flex:0 0 auto;font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--warn);padding:6px 12px;border-radius:100px;background:rgba(216,164,78,.12);box-shadow:0 0 0 1px rgba(216,164,78,.32)}
+.op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-top:22px}
+.op-case,.op-card{border-radius:var(--r-md);overflow:hidden;background:linear-gradient(160deg,var(--elevated),var(--panel));box-shadow:0 0 0 1px var(--line);opacity:.92;transition:opacity .25s,box-shadow .25s,transform .25s var(--ease)}
+.op-case{grid-column:span 2;display:flex;flex-direction:column}
+.op-case-art{position:relative;aspect-ratio:16/10;display:grid;place-items:center;background:radial-gradient(120% 130% at 50% 30%,rgba(216,164,78,.16),transparent 60%),repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 10px,transparent 10px 20px)}
+.op-flag{font-size:46px;filter:grayscale(.15) brightness(.92);opacity:.72}
+.op-lock{position:absolute;bottom:10px;right:12px;font-size:15px;opacity:.7}
+.op-case-info{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.op-case-info h3{font-size:14px;margin:0;letter-spacing:-.02em}
+.op-soon{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
+.op-card-art{position:relative;aspect-ratio:63/88;display:grid;place-items:center;background:radial-gradient(120% 120% at 50% 28%,rgba(216,164,78,.12),transparent 62%),var(--panel)}
+.op-q{font-size:48px;font-weight:800;color:var(--text-4);opacity:.32}
+.op-rank{position:absolute;top:8px;left:8px;font-size:8px;font-weight:800;letter-spacing:.05em;color:#08090a;background:var(--gold);padding:3px 7px;border-radius:5px;opacity:.85}
+.op-card-meta{padding:9px 11px}
+.op-name{display:block;font-size:12px;font-weight:600;letter-spacing:-.01em;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.op-sub{display:block;font-size:10px;color:var(--text-4);margin-top:2px}
+.op-card:hover,.op-case:hover{opacity:1;transform:translateY(-3px);box-shadow:0 0 0 1px rgba(216,164,78,.34)}
+@media(max-width:680px){.op-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.op-case{grid-column:1/-1}}
 @media(min-width:1400px){.hero h1{font-size:196px}}
 @media(max-width:900px){
  .hero{min-height:0}.hero-inner{padding:28px 24px}.home-inner{padding:0 24px}
@@ -443,6 +464,32 @@ ${tokenSection()}
     <div class="rail-actions"><button type="button" data-rail-step="-1" aria-label="Previous featured cards">←</button><button type="button" data-rail-step="1" aria-label="Next featured cards">→</button><a class="text-link" href="/grails">All grails ↗</a></div>
   </div>
   ${grails.length ? `<div class="rail grail-rail" id="grail-rail" tabindex="0" aria-label="Featured cards, scroll horizontally" data-reveal-group="45">${grails.slice(0, 8).map((c, i) => grailTile(c, i)).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
+</section>
+<section class="section coming-soon" id="one-piece" aria-labelledby="op-title">
+  <div class="section-head cs-head" data-reveal>
+    <div><span class="section-index cs-index">NEXT UNIVERSE · COMING SOON</span><h2 id="op-title">One Piece.</h2><p>The grails of the Grand Line are sailing in. Rip for the game’s most-chased alt-arts and manga rares.</p></div>
+    <span class="cs-badge">SOON</span>
+  </div>
+  <div class="op-grid" data-reveal-group="55">
+    <div class="op-case" data-reveal aria-label="Grand Line Case — coming soon">
+      <div class="op-case-art"><span class="op-flag" aria-hidden="true">☠️</span><span class="op-lock" aria-hidden="true">🔒</span></div>
+      <div class="op-case-info"><h3>Grand Line Case</h3><span class="op-soon">Coming soon</span></div>
+    </div>
+    ${[
+      { name: 'Monkey D. Luffy', sub: 'Leader · Alt Art' },
+      { name: 'Shanks', sub: 'Comic Parallel' },
+      { name: 'Roronoa Zoro', sub: 'Manga Rare' },
+      { name: 'Boa Hancock', sub: 'Alt Art' },
+      { name: 'Portgas D. Ace', sub: 'Alt Art' },
+    ]
+      .map(
+        (g) => `<div class="op-card" data-reveal>
+      <div class="op-card-art"><span class="op-q" aria-hidden="true">?</span><span class="op-rank">GRAIL</span></div>
+      <div class="op-card-meta"><span class="op-name">${esc(g.name)}</span><span class="op-sub">${esc(g.sub)}</span></div>
+    </div>`,
+      )
+      .join('')}
+  </div>
 </section>
 <section class="section" aria-labelledby="how-title">
   <div class="section-head" data-reveal><div><span class="section-index">HOW IT WORKS</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>
