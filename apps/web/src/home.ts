@@ -206,7 +206,13 @@ const HOME_CSS = `
 .fair{display:grid;grid-template-columns:repeat(2,1fr);gap:24px 40px;padding:10px 0 30px}
 .fair h3{font-size:11px;font-weight:560;letter-spacing:.06em}
 .fair p{font-size:12px;color:var(--text-3);line-height:1.8}.fair code{overflow-wrap:anywhere;color:var(--text-2)}
-.dex-outro{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:22px 0}
+/* The page peaks here: the final CTA is a full accent-washed panel, not another
+   hairline row, so the home page builds toward conversion instead of flatlining. */
+.section.dex-outro{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:46px 44px;margin:24px 0 4px;
+  border-radius:var(--r-xl);box-shadow:0 0 0 1px var(--line-hi),0 30px 72px -36px rgba(0,0,0,.7);
+  background:radial-gradient(130% 170% at 0% 0%,var(--accent-dim),transparent 56%),linear-gradient(160deg,var(--elevated),var(--panel) 72%)}
+.dex-outro .section-index{color:var(--accent-hi)}
+.dex-outro h2{font-size:clamp(28px,3.4vw,42px);letter-spacing:-.03em;line-height:1.05;margin:10px 0 8px}
 .dex-outro p{font-size:13px;color:var(--text-3);max-width:42ch;margin-bottom:0}
 @media(min-width:1400px){.hero h1{font-size:196px}}
 @media(max-width:900px){
@@ -236,7 +242,7 @@ const HOME_CSS = `
  .pull-list,.fair{grid-template-columns:1fr}.steps{grid-template-columns:1fr;gap:22px}
  .steps li{display:grid;grid-template-columns:30px 1fr;gap:0 12px;padding-top:20px}
  .steps .ix{grid-row:span 2;padding-top:5px}.steps h3{margin:0 0 8px}.steps p{max-width:none}
- .dex-outro{display:block}.dex-outro .btn{margin-top:24px}
+ .section.dex-outro{display:block;padding:32px 24px}.dex-outro .btn{margin-top:24px}
 }
 @media(max-width:360px){
  .hero .pack-scene{--pw:98px;--ph:137px;--spread:85px;height:185px}
