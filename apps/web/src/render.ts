@@ -397,10 +397,11 @@ export function tile(c: CardListing): string {
     <img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy" decoding="async">
     ${c.availableInPacks ? '<span class="rip-badge">AVAILABLE TO RIP</span>' : ''}
     ${c.variants.length > 1 ? `<span class="vcount">${c.variants.length} VARIANTS</span>` : ''}
+    ${c.headlineTier === 'GRAIL' ? '<span class="rank">GRAIL</span>' : ''}
   </div>
   <div class="meta">
     <div class="nm">${esc(c.name)}</div>
-    <div class="sub">${esc(c.setName)} · ${esc(c.number)} · ${esc(c.rarity ?? '—')}</div>
+    <div class="sub">${esc(c.setName)}${c.rarity ? ` <span class="rar">${esc(c.rarity)}</span>` : ''}</div>
     <div class="val ${tierClass}">${money(c.headlineValue)}</div>
   </div>
 </a>`;
@@ -448,7 +449,7 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
     <div class="detail-value${isGrail ? ' is-grail' : ''}">
       <div>
         <div class="dv-k">${isGrail ? 'GRAIL · REFERENCE VALUE' : 'REFERENCE VALUE'}</div>
-        <div class="dv-val ${tierClass}">${money(c.headlineValue)}</div>
+        <div class="dv-val ${tierClass}"${c.headlineValue !== null ? ` data-count="${c.headlineValue}" data-count-prefix="$" data-count-dp="2"` : ''}>${money(c.headlineValue)}</div>
         <div class="dv-sub">${
           c.headlineValue === null
             ? 'No confirmed reference price'
@@ -560,7 +561,7 @@ export function grailsPage(cards: CardListing[], minValue: number): string {
       <span class="gc-eyebrow">THE CROWN JEWEL</span>
       <h2 class="gc-name">${esc(top.name)}</h2>
       <p class="gc-sub">${esc(top.setName)} · ${esc(top.number)}${top.rarity ? ` · ${esc(top.rarity)}` : ''}</p>
-      <div class="gc-value">${money(top.headlineValue)}</div>
+      <div class="gc-value"${top.headlineValue !== null ? ` data-count="${top.headlineValue}" data-count-prefix="$" data-count-dp="2"` : ''}>${money(top.headlineValue)}</div>
       <div class="gc-cta">${
         top.availableInPacks
           ? '<a class="btn btn-primary btn-lg" href="/packs">Rip a pack <span aria-hidden="true">→</span></a>'
@@ -598,10 +599,7 @@ export function cardsPage(index: CatalogIndex): string {
   const body = `
 <div class="eyebrow" data-reveal>THE CATALOG</div>
 <h1 class="page" data-reveal>Pokédex</h1>
-<p class="lede" data-reveal><b class="mono" data-count="${index.cards.length}">${index.cards.length.toLocaleString()}</b> cards across
-  <b class="mono" data-count="${f.sets.length}">${f.sets.length}</b> sets,
-  <b class="mono" data-count="${index.byVariantId.size}">${index.byVariantId.size.toLocaleString()}</b> tracked variants.
-  Every printing priced separately.</p>
+<p class="lede" data-reveal><b class="mono" data-count="${index.cards.length}">${index.cards.length.toLocaleString()}</b> cards, every printing priced and every grade in play. Find the one you can’t stop thinking about.</p>
 
 <div class="controls" role="search" aria-label="Filter cards" data-reveal>
   <input type="search" aria-label="Search cards" id="q" placeholder="Charizard, Pikachu, Mew…" autocomplete="off">

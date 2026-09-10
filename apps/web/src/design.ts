@@ -301,6 +301,9 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .meta .sub{font-size:12px;font-weight:460;color:var(--text-4);margin-top:3px;letter-spacing:-.008em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta .rar{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:5px;font-size:9.5px;
+  font-weight:640;letter-spacing:.04em;text-transform:uppercase;color:var(--text-3);
+  background:var(--glass);box-shadow:0 0 0 1px var(--line);vertical-align:1px}
 .meta .val{font-size:14px;font-weight:600;margin-top:7px;letter-spacing:-.02em;
   font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 .val.t-GRAIL{color:var(--gold)}
