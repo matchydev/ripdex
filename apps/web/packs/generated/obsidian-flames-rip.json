@@ -1,7 +1,7 @@
 {
   "id": "obsidian-flames-rip",
   "name": "OBSIDIAN FLAMES",
-  "version": "1",
+  "version": "2",
   "cardsPerPack": 1,
   "priceRip": "45000",
   "distributionModel": {
@@ -47,252 +47,432 @@
       "weight": 748
     },
     {
-      "variantId": "sv3|222|holofoil|unlimited",
-      "weight": 2019
+      "variantId": "sv3|208|holofoil|unlimited",
+      "weight": 1181
     },
     {
-      "variantId": "sv3|186|reverse-holofoil|unlimited",
-      "weight": 3942
+      "variantId": "sv3|201|holofoil|unlimited",
+      "weight": 2202
     },
     {
-      "variantId": "sv3|218|holofoil|unlimited",
-      "weight": 7949
+      "variantId": "sv3|226|holofoil|unlimited",
+      "weight": 3390
     },
     {
-      "variantId": "sv3|216|holofoil|unlimited",
+      "variantId": "sv3|206|holofoil|unlimited",
+      "weight": 4069
+    },
+    {
+      "variantId": "sv3|135|holofoil|unlimited",
+      "weight": 6966
+    },
+    {
+      "variantId": "sv3|220|holofoil|unlimited",
+      "weight": 8216
+    },
+    {
+      "variantId": "sv3|42|holofoil|unlimited",
       "weight": 9594
+    },
+    {
+      "variantId": "sv3|96|holofoil|unlimited",
+      "weight": 10353
     },
     {
       "variantId": "sv3|15|holofoil|unlimited",
       "weight": 11368
     },
     {
+      "variantId": "sv3|123|holofoil|unlimited",
+      "weight": 12089
+    },
+    {
       "variantId": "sv3|166|reverse-holofoil|unlimited",
       "weight": 19714
     },
     {
-      "variantId": "sv3|28|reverse-holofoil|unlimited",
+      "variantId": "sv3|45|reverse-holofoil|unlimited",
+      "weight": 23831
+    },
+    {
+      "variantId": "sv3|97|reverse-holofoil|unlimited",
       "weight": 24409
     },
     {
-      "variantId": "sv3|84|reverse-holofoil|unlimited",
-      "weight": 25660
+      "variantId": "sv3|150|reverse-holofoil|unlimited",
+      "weight": 25017
     },
     {
-      "variantId": "sv3|160|reverse-holofoil|unlimited",
+      "variantId": "sv3|24|reverse-holofoil|unlimited",
       "weight": 26340
     },
     {
-      "variantId": "sv3|132|reverse-holofoil|unlimited",
+      "variantId": "sv3|141|reverse-holofoil|unlimited",
+      "weight": 26340
+    },
+    {
+      "variantId": "sv3|133|reverse-holofoil|unlimited",
+      "weight": 27061
+    },
+    {
+      "variantId": "sv3|110|reverse-holofoil|unlimited",
       "weight": 27826
     },
     {
-      "variantId": "sv3|162|reverse-holofoil|unlimited",
+      "variantId": "sv3|187|reverse-holofoil|unlimited",
+      "weight": 27826
+    },
+    {
+      "variantId": "sv3|57|reverse-holofoil|unlimited",
       "weight": 28639
+    },
+    {
+      "variantId": "sv3|78|reverse-holofoil|unlimited",
+      "weight": 29506
     },
     {
       "variantId": "sv3|191|reverse-holofoil|unlimited",
       "weight": 29506
     },
     {
-      "variantId": "sv3|136|reverse-holofoil|unlimited",
+      "variantId": "sv3|44|reverse-holofoil|unlimited",
       "weight": 30433
     },
     {
-      "variantId": "sv3|13|reverse-holofoil|unlimited",
+      "variantId": "sv3|154|reverse-holofoil|unlimited",
+      "weight": 30433
+    },
+    {
+      "variantId": "sv3|140|reverse-holofoil|unlimited",
+      "weight": 31425
+    },
+    {
+      "variantId": "sv3|23|reverse-holofoil|unlimited",
       "weight": 32490
     },
     {
-      "variantId": "sv3|109|reverse-holofoil|unlimited",
+      "variantId": "sv3|171|reverse-holofoil|unlimited",
+      "weight": 32490
+    },
+    {
+      "variantId": "sv3|76|reverse-holofoil|unlimited",
       "weight": 33637
     },
     {
-      "variantId": "sv3|35|reverse-holofoil|unlimited",
+      "variantId": "sv3|144|reverse-holofoil|unlimited",
+      "weight": 33637
+    },
+    {
+      "variantId": "sv3|106|reverse-holofoil|unlimited",
       "weight": 34876
     },
     {
-      "variantId": "sv3|145|reverse-holofoil|unlimited",
+      "variantId": "sv3|59|reverse-holofoil|unlimited",
       "weight": 34876
+    },
+    {
+      "variantId": "sv3|19|reverse-holofoil|unlimited",
+      "weight": 36219
     },
     {
       "variantId": "sv3|165|reverse-holofoil|unlimited",
       "weight": 36219
     },
     {
+      "variantId": "sv3|11|reverse-holofoil|unlimited",
+      "weight": 37680
+    },
+    {
       "variantId": "sv3|95|reverse-holofoil|unlimited",
       "weight": 37680
     },
     {
-      "variantId": "sv3|148|reverse-holofoil|unlimited",
+      "variantId": "sv3|46|reverse-holofoil|unlimited",
       "weight": 37680
     },
     {
-      "variantId": "sv3|92|reverse-holofoil|unlimited",
+      "variantId": "sv3|168|reverse-holofoil|unlimited",
+      "weight": 37680
+    },
+    {
+      "variantId": "sv3|12|reverse-holofoil|unlimited",
       "weight": 39276
     },
     {
-      "variantId": "sv3|90|reverse-holofoil|unlimited",
+      "variantId": "sv3|122|reverse-holofoil|unlimited",
+      "weight": 39276
+    },
+    {
+      "variantId": "sv3|67|reverse-holofoil|unlimited",
       "weight": 41026
     },
     {
-      "variantId": "sv3|149|reverse-holofoil|unlimited",
+      "variantId": "sv3|178|non-foil|unlimited",
+      "weight": 41026
+    },
+    {
+      "variantId": "sv3|151|reverse-holofoil|unlimited",
       "weight": 42955
+    },
+    {
+      "variantId": "sv3|114|non-foil|unlimited",
+      "weight": 47479
     }
   ],
   "_generated": {
     "note": "Generated by packs/generate.ts. Review before committing. Do not hand-edit.",
-    "totalWeight": 621879,
-    "expectedReferenceValue": 0.5169,
+    "totalWeight": 1157701,
+    "expectedReferenceValue": 0.4317,
     "outcomes": [
       {
         "card": "Charizard ex (Obsidian Flames 223) Holofoil",
         "value": 102.84,
-        "odds": "0.0314%"
+        "odds": "0.0168%"
       },
       {
         "card": "Ninetales (Obsidian Flames 199) Holofoil",
         "value": 40.51,
-        "odds": "0.0691%"
+        "odds": "0.0371%"
       },
       {
         "card": "Cleffa (Obsidian Flames 202) Holofoil",
         "value": 37.67,
-        "odds": "0.0736%"
+        "odds": "0.0396%"
       },
       {
         "card": "Charizard ex (Obsidian Flames 228) Holofoil",
         "value": 32.47,
-        "odds": "0.0835%"
+        "odds": "0.0448%"
       },
       {
         "card": "Gloom (Obsidian Flames 198) Holofoil",
         "value": 24.14,
-        "odds": "0.1074%"
+        "odds": "0.0577%"
       },
       {
         "card": "Pidgeot ex (Obsidian Flames 225) Holofoil",
         "value": 21.15,
-        "odds": "0.1201%"
+        "odds": "0.0645%"
       },
       {
         "card": "Charizard ex (Obsidian Flames 215) Holofoil",
         "value": 21.12,
-        "odds": "0.1203%"
+        "odds": "0.0646%"
       },
       {
-        "card": "Eiscue ex (Obsidian Flames 222) Holofoil",
-        "value": 6.57,
-        "odds": "0.3247%"
+        "card": "Pidgeotto (Obsidian Flames 208) Holofoil",
+        "value": 12.34,
+        "odds": "0.1020%"
       },
       {
-        "card": "Arven (Obsidian Flames 186) Reverse Holo",
-        "value": 2.99,
-        "odds": "0.6339%"
+        "card": "Bellibolt (Obsidian Flames 201) Holofoil",
+        "value": 5.93,
+        "odds": "0.1902%"
       },
       {
-        "card": "Geeta (Obsidian Flames 218) Holofoil",
-        "value": 1.31,
-        "odds": "1.2782%"
+        "card": "Geeta (Obsidian Flames 226) Holofoil",
+        "value": 3.57,
+        "odds": "0.2928%"
       },
       {
-        "card": "Revavroom ex (Obsidian Flames 216) Holofoil",
+        "card": "Varoom (Obsidian Flames 206) Holofoil",
+        "value": 2.88,
+        "odds": "0.3515%"
+      },
+      {
+        "card": "Absol ex (Obsidian Flames 135) Holofoil",
+        "value": 1.53,
+        "odds": "0.6017%"
+      },
+      {
+        "card": "Poppy (Obsidian Flames 220) Holofoil",
+        "value": 1.26,
+        "odds": "0.7097%"
+      },
+      {
+        "card": "Eiscue ex (Obsidian Flames 42) Holofoil",
         "value": 1.05,
-        "odds": "1.5427%"
+        "odds": "0.8287%"
+      },
+      {
+        "card": "Vespiquen ex (Obsidian Flames 96) Holofoil",
+        "value": 0.96,
+        "odds": "0.8943%"
       },
       {
         "card": "Decidueye ex (Obsidian Flames 15) Holofoil",
         "value": 0.86,
-        "odds": "1.8280%"
+        "odds": "0.9819%"
+      },
+      {
+        "card": "Glimmora ex (Obsidian Flames 123) Holofoil",
+        "value": 0.8,
+        "odds": "1.0442%"
       },
       {
         "card": "Eevee (Obsidian Flames 166) Reverse Holo",
         "value": 0.45,
-        "odds": "3.1701%"
+        "odds": "1.7029%"
       },
       {
-        "card": "Vulpix (Obsidian Flames 28) Reverse Holo",
+        "card": "Lapras (Obsidian Flames 45) Reverse Holo",
+        "value": 0.36,
+        "odds": "2.0585%"
+      },
+      {
+        "card": "Sinistea (Obsidian Flames 97) Reverse Holo",
         "value": 0.35,
-        "odds": "3.9250%"
+        "odds": "2.1084%"
       },
       {
-        "card": "Togetic (Obsidian Flames 84) Reverse Holo",
-        "value": 0.33,
-        "odds": "4.1262%"
+        "card": "Kingambit (Obsidian Flames 150) Reverse Holo",
+        "value": 0.34,
+        "odds": "2.1609%"
       },
       {
-        "card": "Altaria (Obsidian Flames 160) Reverse Holo",
+        "card": "Capsakid (Obsidian Flames 24) Reverse Holo",
         "value": 0.32,
-        "odds": "4.2356%"
+        "odds": "2.2752%"
       },
       {
-        "card": "Houndour (Obsidian Flames 132) Reverse Holo",
+        "card": "Scizor (Obsidian Flames 141) Reverse Holo",
+        "value": 0.32,
+        "odds": "2.2752%"
+      },
+      {
+        "card": "Houndoom (Obsidian Flames 133) Reverse Holo",
+        "value": 0.31,
+        "odds": "2.3375%"
+      },
+      {
+        "card": "Bonsly (Obsidian Flames 110) Reverse Holo",
         "value": 0.3,
-        "odds": "4.4745%"
+        "odds": "2.4036%"
       },
       {
-        "card": "Pidgey (Obsidian Flames 162) Reverse Holo",
+        "card": "Brassius (Obsidian Flames 187) Reverse Holo",
+        "value": 0.3,
+        "odds": "2.4036%"
+      },
+      {
+        "card": "Frogadier (Obsidian Flames 57) Reverse Holo",
         "value": 0.29,
-        "odds": "4.6052%"
+        "odds": "2.4738%"
+      },
+      {
+        "card": "Bellibolt (Obsidian Flames 78) Reverse Holo",
+        "value": 0.28,
+        "odds": "2.5487%"
       },
       {
         "card": "Patrol Cap (Obsidian Flames 191) Reverse Holo",
         "value": 0.28,
-        "odds": "4.7447%"
+        "odds": "2.5487%"
       },
       {
-        "card": "Darkrai (Obsidian Flames 136) Reverse Holo",
+        "card": "Armarouge (Obsidian Flames 44) Reverse Holo",
         "value": 0.27,
-        "odds": "4.8937%"
+        "odds": "2.6287%"
       },
       {
-        "card": "Rowlet (Obsidian Flames 13) Reverse Holo",
+        "card": "Varoom (Obsidian Flames 154) Reverse Holo",
+        "value": 0.27,
+        "odds": "2.6287%"
+      },
+      {
+        "card": "Salazzle (Obsidian Flames 140) Reverse Holo",
+        "value": 0.26,
+        "odds": "2.7144%"
+      },
+      {
+        "card": "Capsakid (Obsidian Flames 23) Reverse Holo",
         "value": 0.25,
-        "odds": "5.2245%"
+        "odds": "2.8064%"
       },
       {
-        "card": "Whiscash (Obsidian Flames 109) Reverse Holo",
+        "card": "Herdier (Obsidian Flames 171) Reverse Holo",
+        "value": 0.25,
+        "odds": "2.8064%"
+      },
+      {
+        "card": "Tadbulb (Obsidian Flames 76) Reverse Holo",
         "value": 0.24,
-        "odds": "5.4089%"
+        "odds": "2.9055%"
       },
       {
-        "card": "Darmanitan (Obsidian Flames 35) Reverse Holo",
-        "value": 0.23,
-        "odds": "5.6082%"
+        "card": "Bronzor (Obsidian Flames 144) Reverse Holo",
+        "value": 0.24,
+        "odds": "2.9055%"
       },
       {
-        "card": "Bronzong (Obsidian Flames 145) Reverse Holo",
+        "card": "Pupitar (Obsidian Flames 106) Reverse Holo",
         "value": 0.23,
-        "odds": "5.6082%"
+        "odds": "3.0125%"
+      },
+      {
+        "card": "Wugtrio (Obsidian Flames 59) Reverse Holo",
+        "value": 0.23,
+        "odds": "3.0125%"
+      },
+      {
+        "card": "Smoliv (Obsidian Flames 19) Reverse Holo",
+        "value": 0.22,
+        "odds": "3.1285%"
       },
       {
         "card": "Kangaskhan (Obsidian Flames 165) Reverse Holo",
         "value": 0.22,
-        "odds": "5.8241%"
+        "odds": "3.1285%"
+      },
+      {
+        "card": "Phantump (Obsidian Flames 11) Reverse Holo",
+        "value": 0.21,
+        "odds": "3.2547%"
       },
       {
         "card": "Claydol (Obsidian Flames 95) Reverse Holo",
         "value": 0.21,
-        "odds": "6.0591%"
+        "odds": "3.2547%"
       },
       {
-        "card": "Pawniard (Obsidian Flames 148) Reverse Holo",
+        "card": "Carvanha (Obsidian Flames 46) Reverse Holo",
         "value": 0.21,
-        "odds": "6.0591%"
+        "odds": "3.2547%"
       },
       {
-        "card": "Lunatone (Obsidian Flames 92) Reverse Holo",
+        "card": "Linoone (Obsidian Flames 168) Reverse Holo",
+        "value": 0.21,
+        "odds": "3.2547%"
+      },
+      {
+        "card": "Trevenant (Obsidian Flames 12) Reverse Holo",
         "value": 0.2,
-        "odds": "6.3157%"
+        "odds": "3.3926%"
       },
       {
-        "card": "Spoink (Obsidian Flames 90) Reverse Holo",
+        "card": "Glimmet (Obsidian Flames 122) Reverse Holo",
+        "value": 0.2,
+        "odds": "3.3926%"
+      },
+      {
+        "card": "Tynamo (Obsidian Flames 67) Reverse Holo",
         "value": 0.19,
-        "odds": "6.5971%"
+        "odds": "3.5437%"
       },
       {
-        "card": "Bisharp (Obsidian Flames 149) Reverse Holo",
+        "card": "Skwovet (Obsidian Flames 178) Normal",
+        "value": 0.19,
+        "odds": "3.5437%"
+      },
+      {
+        "card": "Togedemaru (Obsidian Flames 151) Reverse Holo",
         "value": 0.18,
-        "odds": "6.9073%"
+        "odds": "3.7104%"
+      },
+      {
+        "card": "Crabrawler (Obsidian Flames 114) Normal",
+        "value": 0.16,
+        "odds": "4.1011%"
       }
     ]
   }

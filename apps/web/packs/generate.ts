@@ -47,10 +47,10 @@ const RECIPES: PackRecipe[] = [
   {
     id: 'base-set-rip',
     name: 'BASE SET RIP',
-    version: '1',
+    version: '2',
     priceRip: '250000',
     setId: 'base1',
-    size: 24,
+    size: 46,
     heroCardId: 'base1-4',
     artwork: {
       wrapperAssetKey: 'wrapper/base-set-rip',
@@ -64,10 +64,10 @@ const RECIPES: PackRecipe[] = [
   {
     id: '151-rip',
     name: '151 RIP',
-    version: '1',
+    version: '2',
     priceRip: '60000',
     setId: 'sv3pt5',
-    size: 28,
+    size: 50,
     heroCardId: 'sv3pt5-151',
     artwork: {
       wrapperAssetKey: 'wrapper/151-rip',
@@ -82,10 +82,10 @@ const RECIPES: PackRecipe[] = [
     // Vintage Jungle: a small set, but stacked — Snorlax, Jolteon, Scyther.
     id: 'jungle-rip',
     name: 'JUNGLE RIP',
-    version: '1',
+    version: '2',
     priceRip: '600000',
     setId: 'base2',
-    size: 14,
+    size: 28,
     heroCardId: 'base2-11',
     artwork: {
       wrapperAssetKey: 'wrapper/jungle-rip',
@@ -100,10 +100,10 @@ const RECIPES: PackRecipe[] = [
     // The big modern set. Cheaper case, deeper pool, a Charizard ex up top.
     id: 'obsidian-flames-rip',
     name: 'OBSIDIAN FLAMES',
-    version: '1',
+    version: '2',
     priceRip: '45000',
     setId: 'sv3',
-    size: 30,
+    size: 50,
     heroCardId: 'sv3-223',
     artwork: {
       wrapperAssetKey: 'wrapper/obsidian-flames',
@@ -119,14 +119,14 @@ const RECIPES: PackRecipe[] = [
     // to a $897 Base Set Charizard. The clearest "themed gambling case".
     id: 'kanto-starters-rip',
     name: 'KANTO STARTERS',
-    version: '1',
+    version: '2',
     priceRip: '90000',
     nameMatches: [
       'Charizard', 'Charmeleon', 'Charmander',
       'Blastoise', 'Wartortle', 'Squirtle',
       'Venusaur', 'Ivysaur', 'Bulbasaur',
     ],
-    size: 22,
+    size: 34,
     heroCardId: 'base1-4',
     artwork: {
       wrapperAssetKey: 'wrapper/kanto-starters',
