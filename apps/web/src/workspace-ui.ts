@@ -56,7 +56,11 @@ export const WORKSPACE_UI = `
 export const WORKSPACE_CSS = `
 .header-tools{display:flex;align-items:center;gap:10px;margin-left:auto}
 .header-search,.header-binder{display:flex;align-items:center;gap:12px;padding:0 13px;height:36px;font-size:11px;border-radius:8px;color:var(--text-3);background:var(--glass);box-shadow:0 0 0 1px var(--line)}
-.header-search{min-width:156px;justify-content:space-between}.header-search kbd{font:10px ui-monospace,monospace;padding:2px 5px;border-radius:4px;box-shadow:0 0 0 1px var(--line-hi)}.header-binder{color:var(--text-2);background:var(--accent-dim)}.header-tools button:hover{box-shadow:0 0 0 1px var(--line-max);color:var(--text)}
+.header-search{min-width:156px;justify-content:space-between}.header-search kbd{font:10px ui-monospace,monospace;padding:2px 5px;border-radius:4px;box-shadow:0 0 0 1px var(--line-hi)}.header-binder{color:var(--text-2)}.header-tools button:hover{box-shadow:0 0 0 1px var(--line-max);color:var(--text)}
+/* Group the account actions (Buy $RIP + profile) behind a hairline divider, so
+   the row reads tools | account and the accent is spent once, on Buy $RIP. */
+.header-tools .token-buy{position:relative;margin-left:6px}
+.header-tools .token-buy::before{content:"";position:absolute;left:-9px;top:9px;bottom:9px;width:1px;background:var(--line-hi)}
 html.dialog-open{overflow:hidden}
 .utility-dialog{color:var(--text);border:0;border-radius:16px;width:min(590px,calc(100vw - 32px));padding:24px;background:#111218;box-shadow:0 0 0 1px var(--line-hi),0 30px 120px rgba(0,0,0,.8);max-height:calc(100dvh - 40px);overflow:auto}
 .utility-dialog::backdrop{background:rgba(3,4,8,.8);backdrop-filter:blur(8px)}
