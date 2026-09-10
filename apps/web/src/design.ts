@@ -304,7 +304,7 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .meta .val{font-size:14px;font-weight:600;margin-top:7px;letter-spacing:-.02em;
   font-family:ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 .val.t-GRAIL{color:var(--gold)}
-.val.t-TIER_4{color:#e0b0ff}
+.val.t-TIER_4{color:var(--accent-hi)}
 .val.t-TIER_3{color:var(--em)}
 .val.none{color:var(--text-4);font-weight:480}
 

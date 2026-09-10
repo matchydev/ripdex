@@ -98,7 +98,7 @@ button.reset:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
 .detail-value.is-grail .dv-k{color:var(--gold)}
 .dv-val{font:700 clamp(34px,4.2vw,52px)/1 ui-monospace,Menlo,monospace;letter-spacing:-.03em;
   margin:9px 0 7px;font-variant-numeric:tabular-nums;color:var(--text)}
-.dv-val.t-GRAIL{color:var(--gold)}.dv-val.t-TIER_4{color:#e0b0ff}.dv-val.t-TIER_3{color:var(--em)}
+.dv-val.t-GRAIL{color:var(--gold)}.dv-val.t-TIER_4{color:var(--accent-hi)}.dv-val.t-TIER_3{color:var(--em)}
 .dv-val.none{color:var(--text-4);font-weight:480;font-size:26px}
 .dv-sub{font-size:12px;color:var(--text-3)}
 .dv-actions{display:flex;align-items:center;gap:10px}

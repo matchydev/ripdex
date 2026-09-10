@@ -357,7 +357,7 @@ const PROMINENCE_TAG: Record<string, string> = {
 
 function feedRow(e: FeedEvent, now: Date): string {
   const href = `/pokemon/${encodeURIComponent(e.card.setId)}/${encodeURIComponent(e.card.number)}`;
-  return `<a class="card rip ${esc(e.prominence)}" href="${href}" data-reveal data-spotlight>
+  return `<a class="card rip ${esc(e.prominence)}" href="${href}" data-reveal>
   <div class="thumb scene scene-near">
     <div class="card3d depth" data-depth="1.15">
       <span class="plane plane-edge" aria-hidden="true"></span>

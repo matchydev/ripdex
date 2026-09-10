@@ -494,7 +494,7 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
   letter-spacing:-.03em;color:var(--text);
   font-family:ui-monospace,'SF Mono',Menlo,monospace;font-variant-numeric:tabular-nums}
 .reveal-meta .val.t-GRAIL{color:var(--gold);text-shadow:0 0 34px rgba(245,196,81,.4)}
-.reveal-meta .val.t-TIER_4{color:#e0b0ff}
+.reveal-meta .val.t-TIER_4{color:var(--accent-hi)}
 .reveal-meta .val.t-TIER_3{color:var(--em)}
 .reveal-meta .vk{margin-top:4px;font-size:9.5px;font-weight:540;letter-spacing:.06em;
   color:var(--text-4)}
@@ -1144,8 +1144,8 @@ async function afterTear(){
 const tierClass = (t) => String(t || '').replace(/[^A-Za-z0-9_]/g,'');
 const tierColor = (t) =>
   t === 'GRAIL'  ? 'var(--gold)' :
-  t === 'TIER_4' ? '#e0b0ff' :
-  t === 'TIER_3' ? 'var(--em)' : 'var(--accent-hi)';
+  t === 'TIER_4' ? 'var(--accent-hi)' :
+  t === 'TIER_3' ? 'var(--em)' : 'var(--text-2)';
 const tierWord = (t) =>
   t === 'GRAIL'  ? 'GRAIL' :
   t === 'TIER_4' ? 'RARE PULL' :
