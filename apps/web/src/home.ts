@@ -137,7 +137,14 @@ const HOME_CSS = `
 .home-wrap{max-width:none;padding:0 0 70px}
 .home-inner{max-width:1200px;margin:auto;padding:0 32px}
 .hero{position:relative;isolation:isolate;overflow:hidden;min-height:640px;
-  background:radial-gradient(ellipse at 72% 56%,rgba(113,112,255,.17),transparent 54%)}
+  background:
+    radial-gradient(64% 82% at 63% 46%,rgba(113,112,255,.2),transparent 60%),
+    radial-gradient(70% 64% at 60% 104%,rgba(240,122,52,.12),transparent 60%),
+    radial-gradient(130% 120% at 50% 4%,transparent 42%,rgba(4,5,8,.72) 96%)}
+/* A soft pool of light the packs sit in, so they read as the lit hero of the
+   stage rather than floating on flat dark. */
+.hero-main::before{content:"";position:absolute;z-index:0;right:2%;top:150px;width:56%;height:340px;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 42%,rgba(120,120,255,.16),transparent 70%);filter:blur(8px)}
 .hero-inner{position:relative;max-width:1200px;margin:auto;padding:38px 32px 32px}
 .hero-top{display:flex;justify-content:space-between;gap:20px;color:var(--text-3);font-size:10px;letter-spacing:.14em}
 .hero h1{position:relative;margin:14px 0 0;font-size:clamp(90px,15.5vw,196px);font-weight:650;

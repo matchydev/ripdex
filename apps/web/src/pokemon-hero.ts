@@ -47,14 +47,17 @@ export const POKEMON_HERO_CSS = `<style>
 .pokemon-atmosphere *{pointer-events:none;animation-play-state:paused!important}
 .pokemon-atmosphere.is-running *{animation-play-state:running!important}
 .hero-charizard-flight{position:absolute;right:0;top:-68px;width:53%;aspect-ratio:1;transform-origin:60% 80%;animation:charizard-breathe 6s ease-in-out infinite}
-.hero-charizard{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 16px 26px #f5751730)}
+/* The Charizard is a mood, not a mascot: sunk to a dark silhouette lurking behind
+   the packs, lit only by its own fire, so it reads as premium atmosphere rather
+   than bright clip-art competing with the product. */
+.hero-charizard{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:brightness(.3) saturate(.4) contrast(1.14) blur(2px) drop-shadow(0 18px 44px #f5751722)}
 .hero-firelight{position:absolute;right:0;top:8%;width:75%;height:80%;background:radial-gradient(ellipse at 63% 48%,#f67b1c18,transparent 65%);opacity:.65;animation:firelight-breathe 5.4s ease-in-out infinite}
 .hero-flames{position:absolute;right:var(--flame-x);top:var(--flame-y);width:var(--flame-width);height:auto;overflow:visible;opacity:.74;transform-origin:98% 49%;filter:drop-shadow(0 0 13px #ef842425);animation:flame-breath 6s ease-in-out infinite}
 .hero-flame-layer{transform-origin:98% 49%;animation:flame-flow 2.8s ease-in-out infinite alternate}
 .hero-flame-outer{opacity:.7}.hero-flame-mid{opacity:.8;animation-delay:-1.2s;animation-duration:2.3s}.hero-flame-core{opacity:.95;animation-delay:-.7s;animation-duration:1.9s}
 .hero-embers{position:absolute;right:var(--flame-x);top:var(--flame-y);width:var(--flame-width);height:35%}
 .hero-embers i{position:absolute;right:8%;top:calc(33% + var(--ember)*2%);width:3px;height:3px;border-radius:50%;background:#ffd69c;box-shadow:0 0 9px #ff8a3a;opacity:0;animation:ember-drift calc(3.7s + var(--ember)*.27s) linear infinite;animation-delay:calc(var(--ember)*-.83s)}
-.hero-pokeball{position:absolute;width:49px;height:49px;animation:pokeball-float 7s ease-in-out infinite;filter:drop-shadow(0 10px 12px #0007)}
+.hero-pokeball{display:none;position:absolute;width:49px;height:49px;animation:pokeball-float 7s ease-in-out infinite;filter:drop-shadow(0 10px 12px #0007)}
 .hero-pokeball-one{right:3%;top:28%;transform:rotate(22deg);opacity:.96}
 .hero-pokeball-two{right:47%;bottom:20%;width:34px;height:34px;transform:rotate(-24deg);opacity:.8;animation-delay:-3s;animation-duration:8s;z-index:1}
 .hero-pokeball-shell{position:absolute;inset:0;overflow:hidden;border:2px solid #11141d;border-radius:50%;background:linear-gradient(180deg,#ec5e5e 0,#ca303d 44%,#181b25 44%,#181b25 55%,#e1e5f1 55%,#9aa2bb 100%);box-shadow:inset -7px -4px 12px #050a234d,inset 5px 4px 7px #fff4}
