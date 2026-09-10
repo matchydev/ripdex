@@ -28,7 +28,7 @@ import type {
   CatalogIndex,
   PackConfig,
 } from '../../../packages/pokemon-core/src/index.ts';
-import { esc, money, layout, tile } from './render.ts';
+import { esc, money, layout, grailTile } from './render.ts';
 import { tokenSection, tokenHeroContract } from './token.ts';
 import { ripMark } from './brand.ts';
 import { packExplorer, EXPLORER_CSS } from './pack-explorer.ts';
@@ -182,8 +182,10 @@ const HOME_CSS = `
 .pack-detail{font-size:11px;color:var(--text-3);margin:7px 0 0}
 .grail-rail{gap:28px;padding:8px 3px 24px}
 .grail-rail .tile{flex-basis:190px;min-width:0}
-.grail-rail .shot{box-shadow:0 14px 35px rgba(0,0,0,.45),0 0 0 1px var(--line-hi)}
-.grail-rail .tile::before{opacity:.16}
+/* Let the grail treatment through: the gold rim from .gcard .shot and the card's
+   own art-glow both bloom on these hero cards (the rail's signature moment). */
+.grail-rail .tile::before{opacity:.5}
+.grail-rail .tile:hover::before{opacity:.82}
 .home-live{display:grid;grid-template-columns:240px 1fr;gap:40px;align-items:center}
 .home-live h2{font-size:28px}
 .home-live p{font-size:12px;color:var(--text-3)}
@@ -427,7 +429,7 @@ ${tokenSection()}
     <div><span class="section-index">THE WISHLIST</span><h2 id="grails-title">Worth the chase.</h2><p>The cards you never stopped thinking about.</p></div>
     <div class="rail-actions"><button type="button" data-rail-step="-1" aria-label="Previous featured cards">←</button><button type="button" data-rail-step="1" aria-label="Next featured cards">→</button><a class="text-link" href="/grails">All grails ↗</a></div>
   </div>
-  ${grails.length ? `<div class="rail grail-rail" id="grail-rail" tabindex="0" aria-label="Featured cards, scroll horizontally" data-reveal-group="45">${grails.slice(0, 8).map(tile).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
+  ${grails.length ? `<div class="rail grail-rail" id="grail-rail" tabindex="0" aria-label="Featured cards, scroll horizontally" data-reveal-group="45">${grails.slice(0, 8).map((c, i) => grailTile(c, i)).join('')}</div>` : '<div class="empty-state">The grail collection is waiting for its first card.</div>'}
 </section>
 <section class="section" aria-labelledby="how-title">
   <div class="section-head" data-reveal><div><span class="section-index">HOW IT WORKS</span><h2 id="how-title">A little anticipation.<br>A new addition.</h2></div></div>

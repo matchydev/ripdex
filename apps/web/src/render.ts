@@ -133,6 +133,21 @@ table.odds td.n,table.pulls td.n{text-align:right}
 .gcard .rank{position:absolute;bottom:8px;left:8px;z-index:2;font-size:10px;font-weight:600;
   letter-spacing:.03em;background:rgba(8,9,10,.8);backdrop-filter:blur(8px);color:var(--gold);
   padding:4px 9px;border-radius:6px;box-shadow:0 0 0 1px rgba(245,196,81,.3)}
+/* The prestige bloom — a soft gold halo pooling behind a grail, intensifying on
+   hover. Now implemented (was a dead no-op). Sits behind the art-glow (.tile::before
+   at z-index -1), so a grail is lit by both its own art AND its gold status. The
+   top three get a hotter halo via .g1/.g2/.g3 so #1 never looks like #40. */
+.gcard.halo::after{content:"";position:absolute;z-index:-2;inset:-5% -5% -11%;
+  background:radial-gradient(ellipse at 50% 62%,var(--gold-glow),transparent 68%);
+  opacity:.5;filter:blur(10px);transition:opacity .45s var(--ease);pointer-events:none}
+.gcard.halo:hover::after{opacity:1}
+.gcard.g1.halo::after{opacity:.9;background:radial-gradient(ellipse at 50% 60%,rgba(245,196,81,.3),transparent 66%)}
+.gcard.g2.halo::after{opacity:.72;background:radial-gradient(ellipse at 50% 61%,rgba(245,196,81,.22),transparent 67%)}
+.gcard.g3.halo::after{opacity:.62}
+.gcard.g1 .shot{box-shadow:0 0 0 1px rgba(245,196,81,.42),0 22px 56px -18px rgba(245,196,81,.34),var(--sh-1)}
+/* Styled empty state for the grails wall (was a bare unstyled div). */
+.empty{grid-column:1/-1;border-radius:var(--r-md);padding:44px 24px;text-align:center;
+  color:var(--text-3);font-size:14px;background:var(--glass);box-shadow:0 0 0 1px var(--line)}
 
 /* ---- live rip ticker (site-wide, under the header) ----
    A thin always-on strip of REAL recent pulls from the ledger. It is the social
@@ -391,22 +406,18 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
   return layout(`${c.name} — ${c.setName} ${c.number} — RIPDEX`, '/cards', body + extraBlock, extraHead);
 }
 
-export function grailsPage(cards: CardListing[], minValue: number): string {
-  const body = `
-<div class="eyebrow" data-reveal>THE VAULT</div>
-<h1 class="page" data-reveal>The Grails</h1>
-<p class="lede" data-reveal>Every card in the catalog worth ${money(
-    minValue,
-  )} or more, by reference value. <b class="mono" data-count="${cards.length}">0</b> of them.</p>
-<div class="catalog-shortcuts"><a href="/cards?sort=value-desc">Explore all cards by value ↗</a><a href="/packs">Find packs containing grails ↗</a></div>
-<div class="grails" data-reveal-group="45">
-  ${cards
-    .map(
-      (c, i) => `<a class="tile gcard halo" href="/pokemon/${encodeURIComponent(
-        c.setId,
-      )}/${encodeURIComponent(c.number)}" data-reveal data-tilt="0.8"${
-        cssUrl(c.imageSmall) ? ` style="--art:url(${cssUrl(c.imageSmall)})"` : ''
-      }>
+/**
+ * One grail card — the gold-rimmed, ranked, gold-value treatment. Shared by the
+ * grails wall and the home "Worth the chase" rail so the site's single licensed
+ * on-surface gold is consistent everywhere a grail appears. `i` drives the rank
+ * chip and the podium intensity (g1/g2/g3).
+ */
+export function grailTile(c: CardListing, i: number): string {
+  return `<a class="tile gcard halo${i < 3 ? ' g' + (i + 1) : ''}" href="/pokemon/${encodeURIComponent(
+    c.setId,
+  )}/${encodeURIComponent(c.number)}" data-reveal data-tilt="0.8"${
+    cssUrl(c.imageSmall) ? ` style="--art:url(${cssUrl(c.imageSmall)})"` : ''
+  }>
     <div class="shot">
       <img src="${esc(c.imageSmall)}" alt="${esc(c.name)}" loading="lazy" decoding="async">
       ${c.availableInPacks ? '<span class="rip-badge">AVAILABLE TO RIP</span>' : ''}
@@ -417,9 +428,19 @@ export function grailsPage(cards: CardListing[], minValue: number): string {
       <div class="sub">${esc(c.setName)} · ${esc(c.number)}</div>
       <div class="val t-GRAIL">${money(c.headlineValue)}</div>
     </div>
-  </a>`,
-    )
-    .join('')}
+  </a>`;
+}
+
+export function grailsPage(cards: CardListing[], minValue: number): string {
+  const body = `
+<div class="eyebrow" data-reveal>THE VAULT</div>
+<h1 class="page" data-reveal>The Grails</h1>
+<p class="lede" data-reveal>Every card in the catalog worth ${money(
+    minValue,
+  )} or more, by reference value. <b class="mono" data-count="${cards.length}">0</b> of them.</p>
+<div class="catalog-shortcuts"><a href="/cards?sort=value-desc">Explore all cards by value ↗</a><a href="/packs">Find packs containing grails ↗</a></div>
+<div class="grails" data-reveal-group="45">
+  ${cards.map((c, i) => grailTile(c, i)).join('')}
 </div>
 ${cards.length === 0 ? '<div class="empty">No cards above that value in the catalog yet. Ingest more sets.</div>' : ''}`;
 
