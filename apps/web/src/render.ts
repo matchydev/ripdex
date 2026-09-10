@@ -19,6 +19,7 @@ import { WORKSPACE_UI, WORKSPACE_CSS } from './workspace-ui.ts';
 import { tokenHeader, tokenUI, TOKEN_CSS } from './token.ts';
 import { profileHeader, profileUI, PROFILE_CSS } from './profile-ui.ts';
 import { ripMark, BRAND_HEAD, BRAND_CSS } from './brand.ts';
+import { PSA_GRADES, gradeColor } from './grades.ts';
 
 export function esc(value: unknown): string {
   return String(value ?? '')
@@ -102,6 +103,17 @@ button.reset:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
 .dv-sub{font-size:12px;color:var(--text-3)}
 .dv-actions{display:flex;align-items:center;gap:10px}
 .dv-chip{font-size:12px;color:var(--text-4);padding:9px 13px;border-radius:8px;background:var(--glass);box-shadow:0 0 0 1px var(--line)}
+/* PSA grade ladder — what the same card is worth at each pullable grade. */
+.psa-ladder{display:flex;flex-direction:column;gap:1px;border-radius:var(--r-md);overflow:hidden;background:var(--line);box-shadow:0 0 0 1px var(--line);margin:6px 0 4px;max-width:560px}
+.psa-row{display:grid;grid-template-columns:62px 1fr auto auto;gap:14px;align-items:center;padding:13px 16px;background:var(--panel);transition:background .2s var(--ease)}
+.psa-row:hover{background:var(--elevated)}
+.psa-row.g10{background:radial-gradient(150% 220% at 0% 0%,var(--gold-glow),transparent 54%),var(--panel)}
+.psa-badge{font:800 11px ui-monospace,Menlo,monospace;letter-spacing:-.02em;color:#08090a;background:var(--gc);padding:4px 8px;border-radius:6px;text-align:center}
+.psa-label{font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase}
+.psa-odds{font-size:11px;color:var(--text-4);font-variant-numeric:tabular-nums;white-space:nowrap}
+.psa-val{font:700 16px ui-monospace,Menlo,monospace;letter-spacing:-.02em;color:var(--text);font-variant-numeric:tabular-nums;text-align:right;min-width:72px}
+.psa-row.g10 .psa-val{color:var(--gold)}.psa-row.g9 .psa-val{color:var(--accent-hi)}
+@media(max-width:520px){.psa-row{grid-template-columns:54px 1fr auto;gap:10px}.psa-odds{display:none}}
 /* The hero card is a real slab: art at Z 0, gloss forward, so turning it
    parallaxes the highlight across the surface instead of sliding a gradient. */
 /* Same card-presentation rules as the grid tiles: true 63/88 ratio, cover,
@@ -452,6 +464,26 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
     <div class="facts">
       ${facts.map(([k, v]) => `<div class="fact"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join('')}
     </div>
+
+    ${
+      c.headlineValue !== null
+        ? `<h2 class="sec">PSA GRADES YOU CAN PULL</h2>
+    <p class="note">Every pull is graded. The same card is worth a premium gem-mint and a haircut played — here's what a ${esc(
+      c.name,
+    )} sells back at each PSA grade, and how often each grade hits.</p>
+    <div class="psa-ladder" data-reveal-group="40">
+      ${PSA_GRADES.map((g) => {
+        const gc = g.grade >= 10 ? 'g10' : g.grade >= 9 ? 'g9' : '';
+        return `<div class="psa-row ${gc}" data-reveal>
+        <span class="psa-badge" style="--gc:${gradeColor(g.grade)}">PSA ${g.grade}</span>
+        <span class="psa-label">${esc(g.label)}</span>
+        <span class="psa-odds">${g.weight}% of pulls</span>
+        <span class="psa-val">${money((c.headlineValue ?? 0) * g.multiplier)}</span>
+      </div>`;
+      }).join('')}
+    </div>`
+        : ''
+    }
 
     <h2 class="sec">VARIANTS &amp; REFERENCE PRICE</h2>
     <div class="table-scroll" role="region" aria-label="Variants table" tabindex="0"><table class="variants">
