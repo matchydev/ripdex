@@ -78,6 +78,30 @@ button.reset:hover{color:var(--text);box-shadow:0 0 0 1px var(--line-hi)}
 .detail>div{min-width:0}
 .detail{display:grid;grid-template-columns:minmax(280px,430px) 1fr;gap:52px;align-items:start}
 @media(max-width:860px){.detail{grid-template-columns:minmax(0,1fr);gap:30px}}
+/* The hero card is lit by its own artwork — a big soft bloom of the card's own
+   colour pooling behind it, the same trick the grid tiles use, scaled up. */
+.detail .tilt-wrap{position:relative}
+.detail .tilt-wrap[style*="--art"]::before{content:"";position:absolute;z-index:-1;
+  inset:0% -6% -10%;background-image:var(--art);background-size:cover;background-position:50% 40%;
+  filter:blur(48px) saturate(1.7);opacity:.42;transition:opacity .5s var(--ease)}
+.detail .tilt-wrap:hover[style*="--art"]::before{opacity:.6}
+.detail .grail-hero .hero-card{box-shadow:0 26px 64px rgba(245,196,81,.24),0 6px 16px rgba(0,0,0,.55),
+  0 0 0 1px var(--gold-rim),inset 0 1px 0 rgba(255,255,255,.2)}
+/* Value masthead — the card's worth, the whole point, shown at hero scale
+   instead of buried in a table cell. Gold when it is a grail. */
+.detail-value{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px;
+  margin:2px 0 8px;padding:20px 22px;border-radius:var(--r-md);background:var(--glass);box-shadow:0 0 0 1px var(--line)}
+.detail-value.is-grail{background:radial-gradient(120% 140% at 0% 0%,var(--gold-glow),transparent 60%),var(--glass);
+  box-shadow:0 0 0 1px var(--gold-rim),0 20px 48px -24px var(--gold-glow)}
+.dv-k{font-size:10px;font-weight:600;letter-spacing:.09em;color:var(--text-4)}
+.detail-value.is-grail .dv-k{color:var(--gold)}
+.dv-val{font:700 clamp(34px,4.2vw,52px)/1 ui-monospace,Menlo,monospace;letter-spacing:-.03em;
+  margin:9px 0 7px;font-variant-numeric:tabular-nums;color:var(--text)}
+.dv-val.t-GRAIL{color:var(--gold)}.dv-val.t-TIER_4{color:#e0b0ff}.dv-val.t-TIER_3{color:var(--em)}
+.dv-val.none{color:var(--text-4);font-weight:480;font-size:26px}
+.dv-sub{font-size:12px;color:var(--text-3)}
+.dv-actions{display:flex;align-items:center;gap:10px}
+.dv-chip{font-size:12px;color:var(--text-4);padding:9px 13px;border-radius:8px;background:var(--glass);box-shadow:0 0 0 1px var(--line)}
 /* The hero card is a real slab: art at Z 0, gloss forward, so turning it
    parallaxes the highlight across the surface instead of sliding a gradient. */
 /* Same card-presentation rules as the grid tiles: true 63/88 ratio, cover,
@@ -356,11 +380,14 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
 
   const unpriced = c.variants.filter((v) => v.referenceValue === null);
   const inferred = c.variants.filter((v) => v.confidence === 'inferred');
+  const art = cssUrl(c.imageSmall);
+  const tierClass = c.headlineValue === null ? 'none' : `t-${c.headlineTier}`;
+  const isGrail = c.headlineTier === 'GRAIL';
 
   const body = `
 <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/cards">Pokédex</a><span aria-hidden="true">/</span><a href="/cards?setId=${encodeURIComponent(c.setId)}">${esc(c.setName)}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(c.name)} #${esc(c.number)}</span></nav>
 <div class="detail" data-reveal-group="70">
-  <div class="tilt-wrap" data-reveal>
+  <div class="tilt-wrap${isGrail ? ' grail-hero' : ''}" data-reveal${art ? ` style="--art:url(${art})"` : ''}>
     <div class="hero-card" data-tilt="0.8">
       <img src="${esc(c.imageLarge)}" alt="${esc(c.name)}">
     </div>
@@ -368,6 +395,22 @@ export function detailPage(c: CardListing, extraBlock = '', extraHead = ''): str
   <div data-reveal>
     <h1 class="page">${esc(c.name)}</h1>
     <p class="lede">${esc(c.setSeries)} · ${esc(c.setName)} · ${esc(c.number)}</p>
+    <div class="detail-value${isGrail ? ' is-grail' : ''}">
+      <div>
+        <div class="dv-k">${isGrail ? 'GRAIL · REFERENCE VALUE' : 'REFERENCE VALUE'}</div>
+        <div class="dv-val ${tierClass}">${money(c.headlineValue)}</div>
+        <div class="dv-sub">${
+          c.headlineValue === null
+            ? 'No confirmed reference price'
+            : `Highest-priced printing${c.variants.length > 1 ? ` of ${c.variants.length} variants` : ''}`
+        }</div>
+      </div>
+      <div class="dv-actions">${
+        c.availableInPacks
+          ? '<a class="btn btn-primary btn-lg" href="/packs">Rip a pack <span aria-hidden="true">→</span></a>'
+          : '<span class="dv-chip">Not currently in any pack</span>'
+      }</div>
+    </div>
     <div class="facts">
       ${facts.map(([k, v]) => `<div class="fact"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>`).join('')}
     </div>
