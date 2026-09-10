@@ -63,6 +63,17 @@ export const DESIGN_CSS = `
 
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px;
 
+  /* Modular scales so rhythm is deliberate, not magic numbers. */
+  --fs-1:11px; --fs-2:12px; --fs-3:13px; --fs-4:15px; --fs-5:18px;
+  --fs-6:23px; --fs-7:32px; --fs-8:44px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px;
+  --sp-6:32px; --sp-7:48px; --sp-8:64px; --sp-9:80px;
+
+  /* Reusable gold-for-grail prestige (the one licensed exception to one-accent).
+     Ramp intensity by rank/value at the call site; these are the base inks. */
+  --gold-rim:rgba(245,196,81,.55);
+  --gold-glow:rgba(245,196,81,.16);
+
   /* Compatibility aliases for the previous palette.
      An undefined custom property does not fall back — the whole declaration is
      invalid and silently does nothing, so a page still referencing --ink or
@@ -106,19 +117,22 @@ img{max-width:100%}
 /* ========================== gradient mesh ========================== */
 /* Large, slow, heavily blurred blobs. Fixed behind everything so the page
    breathes without any element on it moving. */
-.mesh{position:fixed;inset:-30vmax;z-index:0;pointer-events:none;filter:blur(100px);opacity:.12}
+/* One violet blob only, pooled in the top-left corner; the rest are near-neutral
+   cool-grey so the field reads as LIT, not as a purple template. The owner's
+   rule "do not turn the site purple" is protected here at the ground level. */
+.mesh{position:fixed;inset:-30vmax;z-index:0;pointer-events:none;filter:blur(100px);opacity:.09}
 .mesh i{position:absolute;display:block;border-radius:50%;mix-blend-mode:screen}
-.mesh i:nth-child(1){width:62vmax;height:62vmax;left:-10%;top:-18%;
-  background:radial-gradient(circle,rgba(113,112,255,.62),transparent 62%);
+.mesh i:nth-child(1){width:60vmax;height:60vmax;left:-14%;top:-20%;
+  background:radial-gradient(circle,rgba(113,112,255,.5),transparent 62%);
   animation:mesh1 38s var(--ease) infinite alternate}
 .mesh i:nth-child(2){width:54vmax;height:54vmax;right:-12%;top:-6%;
-  background:radial-gradient(circle,rgba(64,90,255,.42),transparent 64%);
+  background:radial-gradient(circle,rgba(122,130,150,.34),transparent 64%);
   animation:mesh2 46s var(--ease) infinite alternate}
 .mesh i:nth-child(3){width:50vmax;height:50vmax;left:22%;bottom:-26%;
-  background:radial-gradient(circle,rgba(150,90,255,.34),transparent 66%);
+  background:radial-gradient(circle,rgba(96,112,140,.28),transparent 66%);
   animation:mesh3 56s var(--ease) infinite alternate}
 .mesh i:nth-child(4){width:38vmax;height:38vmax;right:6%;bottom:-16%;
-  background:radial-gradient(circle,rgba(40,180,220,.22),transparent 66%);
+  background:radial-gradient(circle,rgba(40,150,180,.18),transparent 66%);
   animation:mesh4 64s var(--ease) infinite alternate}
 @keyframes mesh1{to{transform:translate3d(16vmax,12vmax,0) scale(1.2)}}
 @keyframes mesh2{to{transform:translate3d(-18vmax,14vmax,0) scale(1.12)}}

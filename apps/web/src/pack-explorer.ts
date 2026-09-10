@@ -87,7 +87,7 @@ export const EXPLORER_CSS = `<style>
 .explorer-search>span{font-size:24px;line-height:1}.explorer-search input{width:100%;min-width:0;box-shadow:none;background:transparent;height:42px;font-size:12px}
 .explorer-toolbar select{font-size:11px;height:42px}.explorer-count{font-size:10px;color:var(--text-4);margin-left:auto;white-space:nowrap}
 .explorer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.explorer-pack{position:relative;min-width:0;background:linear-gradient(145deg,#171720,#0e0f14 70%);border-radius:14px;box-shadow:0 0 0 1px var(--line);overflow:hidden;transition:box-shadow .3s,transform .4s var(--ease);animation:explorerIn .45s var(--ease) both}
+.explorer-pack{position:relative;min-width:0;background:linear-gradient(150deg,var(--elevated),var(--panel) 70%);border-radius:14px;box-shadow:0 0 0 1px var(--line);overflow:hidden;transition:box-shadow .3s,transform .4s var(--ease);animation:explorerIn .45s var(--ease) both}
 .explorer-pack:hover{box-shadow:0 0 0 1px rgba(113,112,255,.35),0 16px 32px -24px rgba(113,112,255,.5);transform:translateY(-3px)}
 .explorer-pack[hidden]{display:none}.explorer-pack.is-compared{box-shadow:0 0 0 1px var(--accent)}
 .ep-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px 0;position:relative;z-index:2}
