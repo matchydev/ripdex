@@ -486,6 +486,10 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
 .reveal-meta{margin-top:28px;text-align:center;opacity:0;transform:translateY(10px);
   transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .reveal-meta.on{opacity:1;transform:none}
+/* Let the name and value land first; the grade breakdown and chips fade in a
+   beat later so the payoff breathes instead of arriving as a stat block. */
+.reveal-meta .basev,.reveal-meta .chips{opacity:0;transition:opacity .45s var(--ease) .55s}
+.reveal-meta.on .basev,.reveal-meta.on .chips{opacity:1}
 .reveal-meta .nm{font-size:clamp(21px,5.4vw,30px);font-weight:590;letter-spacing:-.038em;
   line-height:1.0}
 .reveal-meta .st{margin-top:7px;font-size:10.5px;font-weight:520;letter-spacing:.055em;
@@ -636,6 +640,19 @@ h1.ttl{margin:14px 0 0;font-weight:590;letter-spacing:-.042em;line-height:1.0;
 .spark{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff3d2;
   box-shadow:0 0 8px 2px rgba(245,196,81,.7);opacity:0}
 .spark.hot{background:var(--gold);box-shadow:0 0 13px 3px rgba(245,196,81,.9)}
+/* Tinted mid-tier sparks — a proportionate burst for a good-but-not-grail pull.
+   Accent for a RARE (TIER_4) pull, emerald for a GOOD (TIER_3) one. Never gold:
+   the gold spark stays reserved for the grail takeover. */
+.spark.t4{background:#cdd2ff;box-shadow:0 0 9px 2px rgba(130,143,255,.75)}
+.spark.t3{background:#c6f6df;box-shadow:0 0 9px 2px rgba(74,222,155,.7)}
+/* The card lands: overshoots down + in, then springs to rest — a visual 'thunk'
+   to match the audio hit after the long reel. */
+@keyframes cardLand{0%{transform:translateY(-26px) scale(1.14)}100%{transform:none}}
+@media(prefers-reduced-motion:no-preference){#s-card.on .holder{animation:cardLand .44s var(--spring) both}}
+/* One-frame tier impact flash on a rare/grail landing. */
+@keyframes tierFlash{0%{opacity:0}16%{opacity:.42}100%{opacity:0}}
+.tier-flash{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:0;
+  mix-blend-mode:screen;animation:tierFlash .4s ease-out forwards}
 @keyframes rise{
   0%{opacity:0;transform:translate3d(0,24px,0) scale(.4)}
   18%{opacity:1}70%{opacity:.85}
@@ -852,6 +869,18 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const show = (id) => document.querySelectorAll('.step').forEach(s => s.classList.toggle('on', s.id === id));
 const fmt = (n) => '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+// Roll a dollar value up to its target — the payoff counting up reads as a win.
+function countTo(el, target, ms){
+  if (reduceMotion || !(target > 0)){ el.textContent = fmt(target); return; }
+  const t0 = performance.now();
+  const step = (t) => {
+    const p = Math.min(1, (t - t0) / ms);
+    const e = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+    el.textContent = fmt(target * e);
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 const preload = (src) => new Promise(done => { const im = new Image(); im.onload = im.onerror = () => done(); im.src = src; });
 
 /* ------------------------------- sound -------------------------------
@@ -1251,6 +1280,8 @@ async function present(){
   document.getElementById('slabLabel').textContent = result.gradeLabel;
   document.getElementById('slabHead').classList.remove('on');
   show('s-card');
+  // The card slams in (CSS #s-card.on .holder); a rare/grail landing also flashes.
+  if (!reduceMotion && (result.tier === 'TIER_4' || result.tier === 'GRAIL')) flashTier(result.tier);
   reelTimers.push(setTimeout(() => {
     document.getElementById('slabHead').classList.add('on');
     if (!muted && !reduceMotion) sStamp();
@@ -1272,6 +1303,8 @@ async function present(){
     const fx = document.getElementById('grailFx');
     fx.style.background = 'radial-gradient(62% 62% at 50% 48%,rgba(6,7,12,.58),rgba(5,6,9,.9))';
     fx.classList.add('on');
+    // A rare/good pull earns its own proportionate spark burst, not the plain dim.
+    if (!reduceMotion && (result.tier === 'TIER_3' || result.tier === 'TIER_4')) miniSparks(result.tier);
   }
 
   // Hold on the card before the numbers land — suspense scaled by tier, the
@@ -1289,14 +1322,14 @@ function fill(){
   // colour the catalog uses. The base price sits under it.
   const gcls = result.grade >= 10 ? 'g10' : result.grade >= 9 ? 'g9' : 't-' + tierClass(result.tier);
   val.className = 'val ' + gcls;
-  val.textContent = fmt(result.gradedValue);
+  countTo(val, result.gradedValue, 900);
   document.getElementById('mBase').textContent =
     'PSA ' + result.grade + ' ' + result.gradeLabel + ' · base ' + fmt(result.referenceValue) +
     ' · ×' + result.gradeMultiplier;
+  // Two chips, not four: an excitement word (carried by the value colour too) and
+  // what kind of card it is. Tier-stat and odds are collector-sheet detail, not thrill.
   document.getElementById('mChips').innerHTML =
-    '<span class="chip t">' + result.tier.replace('_',' ') + '</span>' +
-    '<span class="chip" style="color:' + result.gradeColor + '">PSA ' + result.grade + '</span>' +
-    '<span class="chip">' + result.oddsLabel + ' ODDS</span>' +
+    '<span class="chip t" style="color:' + tierColor(result.tier) + '">' + tierWord(result.tier) + '</span>' +
     '<span class="chip">' + result.variantLabel.toUpperCase() + '</span>';
   const sb = document.getElementById('sellBtn');
   sb.classList.remove('sold', 'win'); sb.disabled = false;
@@ -1347,6 +1380,29 @@ function sparks(){
     s.style.animation='rise ' + (2.4+(i%7)*0.4) + 's linear ' + ((i%11)*0.22) + 's infinite';
     fx.appendChild(s);
   }
+}
+
+// A scaled-down, tier-tinted burst for a good-but-not-grail landing (~30 motes,
+// short life). Lives in #grailFx so reset() clears it. Never gold — gold is grail.
+function miniSparks(tier){
+  const fx = document.getElementById('grailFx');
+  const cls = tier === 'TIER_4' ? 'spark t4' : 'spark t3';
+  for(let i=0;i<30;i++){
+    const s=document.createElement('i'); s.className=cls;
+    const sz=1.2+(i%4)*0.6; s.style.width=sz+'px'; s.style.height=sz+'px';
+    s.style.left=(i*41%100)+'%'; s.style.top=(56+(i*23%40))+'%';
+    s.style.setProperty('--dx',(((i%7)-3)*9)+'px');
+    s.style.animation='rise '+(1.5+(i%5)*0.3)+'s ease-out '+((i%9)*0.12)+'s forwards';
+    fx.appendChild(s);
+  }
+}
+// A single tint flash across the viewport on a rare/grail landing — the visual
+// hit that matches the audio. Self-removes; nothing to clean up in reset().
+function flashTier(tier){
+  const f=document.createElement('div'); f.className='tier-flash';
+  f.style.background = tier === 'GRAIL' ? 'rgba(245,196,81,.5)' : 'rgba(130,143,255,.5)';
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(), 460);
 }
 
 function reset(){
