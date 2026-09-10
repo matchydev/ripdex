@@ -48,8 +48,11 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
   </div>
   <div class="explorer-grid" id="pack-results">
   ${models.map((p, i) => {
-    const unique = [...new Map(p.outcomes.map((o) => [o.image, o])).values()];
-    const side = unique.filter((o) => o.image !== p.art).slice(0, 2);
+    // Flank the pack with its two highest-VALUE cards (the chase), not the two
+    // most common — a case should show off the jackpot, like a CS:GO case.
+    const side = [...new Map(p.outcomes.filter((o) => o.image !== p.art && o.value != null).map((o) => [o.image, o])).values()]
+      .sort((a, b) => (b.value || 0) - (a.value || 0))
+      .slice(0, 2);
     const setNames = p.sets.map((id) => index.facets.sets.find((s) => s.id === id)?.name).filter(Boolean).join(' / ');
     const grail = (p.max ?? 0) >= 100;
     return `<article class="explorer-pack${grail ? ' has-grail' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}"${cssUrl(p.art) ? ` style="--art:url(${cssUrl(p.art)})"` : ''}>
@@ -107,8 +110,22 @@ export const EXPLORER_CSS = `<style>
 .compare-toggle{display:flex;align-items:center;justify-content:center;width:28px;height:28px;flex-shrink:0;font-size:18px;border-radius:6px;background:rgba(255,255,255,.04);color:var(--text-3)}
 .compare-toggle[aria-pressed=true]{background:var(--accent);color:var(--text)}
 .ep-art{position:relative;display:block;width:100%;height:210px;perspective:900px;overflow:hidden;isolation:isolate}
-.ep-orbit{position:absolute;left:8%;right:8%;bottom:12px;height:80px;border-radius:50%;box-shadow:0 0 0 1px rgba(113,112,255,.19),0 0 60px rgba(113,112,255,.09);transform:rotateX(65deg)}
-.ep-art img{position:absolute;left:50%;top:20px;border-radius:5px;object-fit:cover;box-shadow:0 15px 24px rgba(0,0,0,.5);transition:transform .65s var(--ease)}
+/* An energy burst behind the pack — bright rays + a radial core that swells on
+   hover, gold on a grail-bearing case. This is the CS:GO "featured item" glow. */
+.ep-art::before{content:"";position:absolute;left:50%;top:40%;width:150px;height:150px;z-index:0;pointer-events:none;
+  transform:translate(-50%,-50%);border-radius:50%;transition:width .45s var(--ease),height .45s var(--ease),opacity .45s var(--ease);
+  background:radial-gradient(circle,rgba(150,160,255,.16),transparent 60%)}
+.ep-art::after{content:"";position:absolute;left:50%;top:40%;width:230px;height:230px;z-index:0;pointer-events:none;opacity:.5;
+  transform:translate(-50%,-50%);transition:opacity .45s var(--ease),transform .6s var(--ease);
+  background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.05) 0deg 6deg,transparent 6deg 18deg);
+  -webkit-mask:radial-gradient(circle,#000 12%,transparent 64%);mask:radial-gradient(circle,#000 12%,transparent 64%)}
+.explorer-pack.has-grail .ep-art::before{background:radial-gradient(circle,rgba(245,196,81,.24),transparent 60%)}
+.explorer-pack.has-grail .ep-art::after{background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(245,196,81,.12) 0deg 6deg,transparent 6deg 18deg)}
+.ep-art:hover::before{width:200px;height:200px}
+.ep-art:hover::after{opacity:.85;transform:translate(-50%,-50%) rotate(24deg)}
+.ep-orbit{position:absolute;left:12%;right:12%;bottom:12px;height:72px;border-radius:50%;z-index:0;box-shadow:0 0 0 1px rgba(113,112,255,.15),0 0 60px rgba(113,112,255,.09);transform:rotateX(65deg)}
+.explorer-pack.has-grail .ep-orbit{box-shadow:0 0 0 1px rgba(245,196,81,.2),0 0 60px rgba(245,196,81,.12)}
+.ep-art img{position:absolute;left:50%;top:20px;z-index:1;border-radius:5px;object-fit:cover;box-shadow:0 15px 24px rgba(0,0,0,.5);transition:transform .65s var(--ease)}
 .ep-front{width:112px;height:156px;margin-left:-56px;z-index:2;transform:translateY(-5px) rotate(-6deg)}
 .ep-art .ep-wrapper{height:160px}.ep-side{width:92px;height:129px;margin-left:-46px;opacity:.78}
 .ep-side-0{transform:translate(-60px,27px) rotate(-19deg)}.ep-side-1{transform:translate(60px,25px) rotate(18deg)}
