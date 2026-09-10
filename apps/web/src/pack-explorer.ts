@@ -67,9 +67,10 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
         <img class="ep-front${p.wrapper ? ' ep-wrapper' : ''}" src="${esc(p.art)}" alt="${esc(p.name)}" loading="lazy">
         <span class="ep-inspect">Inspect contents <span aria-hidden="true">↗</span></span>
       </button>
-      <div class="ep-info"><h3>${esc(p.name)}</h3><p>${p.outcomes.length} outcomes <span>·</span> ${p.count} ${p.count === 1 ? 'card' : 'cards'}</p>
+      <div class="ep-info"><h3>${esc(p.name)}</h3>
+        <div class="ep-toppull"><span class="ep-tp-k">Top pull</span><b class="ep-tp-v${grail ? ' ep-jackpot' : ''}">${money(p.max)}</b></div>
         <div class="ep-distribution" aria-label="Outcome distribution by value tier">${p.buckets.map((b) => `<i class="bucket-${b.tier}" style="flex:${b.probability}" title="${esc(b.tier.replace('_', ' '))}: ${formatProbability(b.probability)}"></i>`).join('')}</div>
-        <div class="ep-range"><span>Card reference range</span><b>${money(p.min)}–<span class="${grail ? 'ep-jackpot' : ''}">${money(p.max)}</span></b></div>
+        <p class="ep-sub">${p.outcomes.length} outcomes <span>·</span> from ${money(p.min)}</p>
         <div class="ep-bottom"><span class="ep-price">${BigInt(p.price).toLocaleString()} <small>$RIP</small></span><a class="ep-view" href="/packs#odds-${encodeURIComponent(p.id)}" data-preview="${esc(p.id)}">View pack <span aria-hidden="true">→</span></a></div>
       </div>
     </article>`;
@@ -143,6 +144,12 @@ export const EXPLORER_CSS = `<style>
 .ep-distribution{height:3px;display:flex;gap:2px;border-radius:2px;overflow:hidden;background:var(--line)}
 .ep-distribution i{min-width:1px;background:#5b616e}.bucket-TIER_1{background:#5b616e!important}.bucket-TIER_2{background:#868d9c!important}.bucket-TIER_3{background:var(--em)!important}.bucket-TIER_4{background:var(--accent-hi)!important}.bucket-GRAIL{background:var(--gold)!important}
 .ep-range{display:flex;justify-content:space-between;gap:8px;margin:9px 0 18px;font-size:9px;color:var(--text-4)}.ep-range b{font-weight:500;color:var(--text-3)}
+/* The case shouts its jackpot: Top pull is the hero stat, the counts a caption. */
+.ep-toppull{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:9px 0 12px}
+.ep-tp-k{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text-4)}
+.ep-tp-v{font:800 21px/1 ui-monospace,Menlo,monospace;letter-spacing:-.02em;color:var(--text-2)}
+.ep-tp-v.ep-jackpot{color:var(--gold)}
+.ep-sub{font-size:9px;color:var(--text-4);margin:11px 0 14px}.ep-sub span{padding:0 5px}
 .ep-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}.ep-price{font:600 14px ui-monospace,monospace;letter-spacing:-.04em}.ep-price small{font-size:9px;color:var(--text-4);font-weight:450}
 .ep-view{display:flex;gap:12px;align-items:center;padding:9px 12px;border-radius:7px;background:var(--accent-dim);font-size:10px;color:var(--text-2);box-shadow:0 0 0 1px rgba(113,112,255,.18)}.ep-view:hover{background:var(--accent);color:var(--text)}
 .explorer-empty{text-align:center;padding:50px 20px;background:var(--glass);border-radius:14px}.explorer-empty>span{font-size:40px;color:var(--text-4)}.explorer-empty h3{font-weight:550}.explorer-empty p{font-size:13px;color:var(--text-3)}
@@ -161,6 +168,20 @@ export const EXPLORER_CSS = `<style>
 .preview-jackpot{display:flex;gap:30px;margin:16px 0 20px}
 .pj-label{display:block;font-size:9px;letter-spacing:.1em;color:var(--text-4);text-transform:uppercase;margin-bottom:5px}
 .pj-val{display:block;font:800 clamp(24px,3vw,30px) ui-monospace,Menlo,monospace;letter-spacing:-.03em;color:var(--gold);font-variant-numeric:tabular-nums}
+/* "The chase" — the top few pulls shown large before the searchable list, so the
+   preview opens on the knife, not a commons-first spreadsheet. */
+.preview-chase{padding:22px 32px;box-shadow:0 1px 0 var(--line)}
+.pc-k{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-hi);margin-bottom:14px}
+.pc-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pc-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;padding:14px 10px;background:var(--glass);border-radius:10px;box-shadow:0 0 0 1px var(--line);transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.pc-card:hover{transform:translateY(-3px);box-shadow:0 0 0 1px var(--line-hi),0 16px 30px -20px rgba(0,0,0,.7)}
+.pc-card.is-grail{box-shadow:0 0 0 1px rgba(245,196,81,.4);background:radial-gradient(150% 200% at 50% 0%,var(--gold-glow),transparent 55%),var(--glass)}
+.pc-card img{width:76px;height:106px;object-fit:cover;border-radius:5px;box-shadow:0 10px 20px rgba(0,0,0,.5)}
+.pc-nm{width:100%;font-size:11px;font-weight:560;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-od{font-size:9px;color:var(--text-4);font-variant-numeric:tabular-nums}
+.pc-v{font:800 15px ui-monospace,Menlo,monospace;letter-spacing:-.02em;color:var(--text-2)}
+.pc-v.pc-grail{color:var(--gold)}
+@media(max-width:560px){.preview-chase{padding:18px 20px}.pc-cards{gap:9px}.pc-card img{width:58px;height:81px}}
 .pj-odds{display:block;font:800 clamp(24px,3vw,30px) ui-monospace,Menlo,monospace;letter-spacing:-.03em;color:var(--accent-hi);font-variant-numeric:tabular-nums}
 .preview-open{width:fit-content}
 .outcome{position:relative}
@@ -255,11 +276,15 @@ const EXPLORER_JS = `<script>
   const p=byId.get(id);if(!p)return;
   const gc=p.outcomes.filter(o=>(o.value||0)>=100).reduce((s,o)=>s+o.probability,0);
   const gcLabel=gc<=0?'':(gc>=0.01?(gc*100).toFixed(1)+'%':'1 in '+Math.round(1/gc).toLocaleString());
+  // The chase: the top few by value, shown large up front so the reveal opens on
+  // what you actually want to hit, not the commons-first searchable list.
+  const topChase=[...p.outcomes].filter(o=>o.value!=null).sort((a,b)=>b.value-a.value).slice(0,3);
   document.getElementById('pack-dialog-body').innerHTML =
    '<div class="preview-scroll"><div class="preview-hero"><img src="'+esc(p.art)+'" alt=""><div><span class="preview-kicker">RIP THIS PACK · '+p.outcomes.length+' POSSIBLE PULLS</span><h2 id="pack-dialog-title">'+esc(p.name)+'</h2>'+
     '<div class="preview-jackpot"><div><span class="pj-label">TOP PULL</span><span class="pj-val">'+money(p.max)+'</span></div>'+(gcLabel?'<div><span class="pj-label">GRAIL CHANCE</span><span class="pj-odds">'+gcLabel+'</span></div>':'')+'</div>'+
     '<a class="btn btn-primary btn-lg preview-open" href="/rip/'+encodeURIComponent(p.id)+'">Open for '+esc(rip(p.price))+' <span aria-hidden="true">→</span></a></div></div>'+
-   '<div class="preview-body"><h3>Every card you could pull</h3><p class="preview-sub">Every printing has its own odds. Search or sort the '+p.outcomes.length+' outcomes below.</p>'+
+   (topChase.length?'<div class="preview-chase"><span class="pc-k">The chase</span><div class="pc-cards">'+topChase.map(function(o){var g=(o.value||0)>=100;return '<a class="pc-card'+(g?' is-grail':'')+'" href="'+esc(o.href||'#')+'"><img src="'+esc(o.image)+'" alt="" loading="lazy"><span class="pc-nm">'+esc(o.name)+'</span><span class="pc-od">'+esc(o.probabilityLabel)+'</span><span class="pc-v'+(g?' pc-grail':'')+'">'+money(o.value)+'</span></a>';}).join('')+'</div></div>':'')+
+   '<div class="preview-body"><h3>Browse all '+p.outcomes.length+' outcomes</h3><p class="preview-sub">Every printing has its own odds. Search or sort the full list below.</p>'+
    '<div class="outcome-controls"><label for="outcome-search">Search outcomes<input type="search" id="outcome-search" placeholder="Card, variant or number…" aria-controls="preview-outcomes" autocomplete="off"></label><label for="outcome-sort">Sort outcomes<select id="outcome-sort" aria-controls="preview-outcomes"><option value="probability">Probability: most likely</option><option value="value-desc">Value: high to low</option><option value="name">Name: A to Z</option></select></label></div>'+
    '<div class="outcome-result-bar"><span id="outcome-count" role="status" aria-live="polite" aria-atomic="true"></span><button type="button" class="outcome-reset" id="outcome-reset" hidden>Reset</button></div><div class="outcome-list" id="preview-outcomes"></div><div class="outcome-empty" id="outcome-empty" hidden><h4>No matching outcomes</h4><p>Try a different card name, printing or card number.</p><button type="button" class="btn btn-ghost" id="outcome-empty-reset">Show all outcomes</button></div>'+
    '<p class="preview-sub" style="margin-top:20px;margin-bottom:0">USD figures are card reference values, not guaranteed resale proceeds or a conversion rate for $RIP. Probabilities come from the published pack weights.</p></div></div><div class="preview-actions"><a class="text-link" href="/packs#odds-'+encodeURIComponent(p.id)+'">Full odds table ↗</a><a class="btn btn-primary" href="/rip/'+encodeURIComponent(p.id)+'">Go to pack →</a></div>';
