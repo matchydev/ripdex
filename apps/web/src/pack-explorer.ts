@@ -59,7 +59,7 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
     // reads near-black at card size while the flat-saturated wrappers stay bright.
     // Mark it so its foil gets a small brightness lift (see .is-featured below).
     const featured = /grail-pack\./.test(p.art);
-    return `<article class="explorer-pack${grail ? ' has-grail' : ''}${featured ? ' is-featured' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}"${cssUrl(p.art) ? ` style="--art:url(${cssUrl(p.art)})"` : ''}>
+    return `<article class="explorer-pack${grail ? ' has-grail' : ''}${featured ? ' is-featured' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}" style="--order:${i}${cssUrl(p.art) ? `;--art:url(${cssUrl(p.art)})` : ''}">
       <div class="ep-top"><span>${String(i + 1).padStart(2, '0')} / ${esc(setNames)}</span><button type="button" class="compare-toggle" data-compare="${esc(p.id)}" aria-label="Compare ${esc(p.name)}" aria-pressed="false" title="Add to comparison">⇄</button></div>
       <button type="button" class="ep-art" data-preview="${esc(p.id)}" aria-label="Preview ${esc(p.name)} contents">
         <span class="ep-orbit" aria-hidden="true"></span>
@@ -96,7 +96,7 @@ export const EXPLORER_CSS = `<style>
 .explorer-search>span{font-size:24px;line-height:1}.explorer-search input{width:100%;min-width:0;box-shadow:none;background:transparent;height:42px;font-size:12px}
 .explorer-toolbar select{font-size:11px;height:42px}.explorer-count{font-size:10px;color:var(--text-4);margin-left:auto;white-space:nowrap}
 .explorer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.explorer-pack{position:relative;min-width:0;background:linear-gradient(150deg,var(--elevated),var(--panel) 70%);border-radius:14px;box-shadow:0 0 0 1px var(--line);overflow:hidden;transition:box-shadow .3s,transform .4s var(--ease);animation:explorerIn .45s var(--ease) both}
+.explorer-pack{position:relative;min-width:0;background:linear-gradient(150deg,var(--elevated),var(--panel) 70%);border-radius:14px;box-shadow:0 0 0 1px var(--line);overflow:hidden;transition:box-shadow .3s,transform .4s var(--ease);animation:explorerIn .45s var(--ease) both;animation-delay:calc(var(--order,0)*38ms)}
 .explorer-pack:hover{box-shadow:0 0 0 1px rgba(113,112,255,.35),0 16px 32px -24px rgba(113,112,255,.5);transform:translateY(-3px)}
 .explorer-pack[hidden]{display:none}.explorer-pack.is-compared{box-shadow:0 0 0 1px var(--accent)}
 /* Each case is lit by its own themed wrapper art — a blurred bloom behind the
@@ -130,6 +130,11 @@ export const EXPLORER_CSS = `<style>
 .ep-art:hover::after{opacity:.85;transform:translate(-50%,-50%) rotate(24deg)}
 .ep-orbit{position:absolute;left:12%;right:12%;bottom:12px;height:72px;border-radius:50%;z-index:0;box-shadow:0 0 0 1px rgba(113,112,255,.15),0 0 60px rgba(113,112,255,.09);transform:rotateX(65deg)}
 .explorer-pack.has-grail .ep-orbit{box-shadow:0 0 0 1px rgba(245,196,81,.2),0 0 60px rgba(245,196,81,.12)}
+/* Ambient life on the case wall: cards deal in staggered, and the rare gold cases
+   breathe at rest (via the orbit ring, which has no hover transform to fight). */
+@keyframes orbitBreathe{0%,100%{box-shadow:0 0 0 1px rgba(245,196,81,.18),0 0 44px rgba(245,196,81,.1)}50%{box-shadow:0 0 0 1px rgba(245,196,81,.34),0 0 74px rgba(245,196,81,.22)}}
+.explorer-pack.has-grail .ep-orbit{animation:orbitBreathe 4.6s var(--ease) infinite}
+@media(prefers-reduced-motion:reduce){.explorer-pack{animation:none}.explorer-pack.has-grail .ep-orbit{animation:none}}
 .ep-art img{position:absolute;left:50%;top:20px;z-index:1;border-radius:5px;object-fit:cover;box-shadow:0 15px 24px rgba(0,0,0,.5);transition:transform .65s var(--ease)}
 .ep-front{width:112px;height:156px;margin-left:-56px;z-index:2;transform:translateY(-5px) rotate(-6deg)}
 .ep-art .ep-wrapper{height:160px}.ep-side{width:92px;height:129px;margin-left:-46px;opacity:.78}
