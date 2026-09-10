@@ -302,7 +302,12 @@ ${BRAND_HEAD}
   <button type="button" class="ticker-pause" id="ticker-pause" aria-pressed="false">Pause</button>
 </div>
 <main id="main-content" class="wrap${active === '/' ? ' home-wrap' : ''}">${body}</main>
-<footer class="site-footer"><a class="footer-wordmark" href="/">${ripMark()}RIPDEX</a><div class="footer-links"><a href="/packs#odds">Pack odds</a><a href="/cards">Pokédex</a><a href="/live">Live pulls</a><a href="/#rip-token">$RIP token</a><button type="button" data-footer-binder>Find a binder</button></div><span>For the love of the collection.</span></footer>
+<footer class="site-footer">
+  <div class="footer-brand"><a class="footer-wordmark" href="/">${ripMark()}RIPDEX</a><p class="footer-tag">The thrill of the pull — real Pokémon cards, provably-fair odds, one $RIP at a time.</p></div>
+  <nav class="footer-col" aria-label="Explore"><span class="footer-h">Explore</span><a href="/packs">Packs</a><a href="/cards">Pokédex</a><a href="/grails">Grails</a><a href="/live">Live pulls</a></nav>
+  <nav class="footer-col" aria-label="Learn"><span class="footer-h">Learn</span><a href="/packs#odds">Pack odds</a><a href="/#rip-token">$RIP token</a><button type="button" data-footer-binder>Find a binder</button></nav>
+  <div class="footer-meta"><span>For the love of the collection.</span><span>Demo $RIP — not an onchain balance.</span></div>
+</footer>
 ${MOTION_JS}
 ${TICKER_JS}
 ${WORKSPACE_UI}

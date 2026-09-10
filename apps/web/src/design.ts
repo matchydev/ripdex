@@ -458,9 +458,17 @@ h1.page{font-size:clamp(40px,6vw,64px);padding-top:4px;letter-spacing:-.05em;col
 input:focus-visible,select:focus-visible{outline-offset:2px}
 .skip-link{position:fixed;top:10px;left:16px;z-index:100;padding:12px 20px;background:var(--panel);transform:translateY(-180%)}
 .skip-link:focus{transform:translateY(0)}
-.site-footer{position:relative;z-index:2;max-width:1200px;margin:auto;padding:30px 32px 40px;display:flex;justify-content:space-between;gap:20px;box-shadow:0 -1px 0 var(--line);font-size:11px;color:var(--text-4)}
-.footer-wordmark{font-size:18px;letter-spacing:-.05em;color:var(--text-2);font-weight:650}
-.footer-links{display:flex;gap:22px;align-items:center}.footer-links a:hover{color:var(--accent-hi)}
+.site-footer{position:relative;z-index:2;max-width:var(--maxw);margin:auto;padding:54px 24px 46px;
+  display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:30px 40px;box-shadow:0 -1px 0 var(--line);
+  font-size:12px;color:var(--text-4)}
+.footer-wordmark{display:inline-flex;align-items:center;gap:8px;font-size:18px;letter-spacing:-.05em;color:var(--text-2);font-weight:650}
+.footer-tag{margin:14px 0 0;max-width:36ch;font-size:12px;line-height:1.7;color:var(--text-3)}
+.footer-col{display:flex;flex-direction:column;align-items:flex-start;gap:11px}
+.footer-h{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--text-4);font-weight:600;margin-bottom:2px}
+.footer-col a,.footer-col button{font-size:13px;color:var(--text-3);padding:0;transition:color .18s var(--ease)}
+.footer-col a:hover,.footer-col button:hover{color:var(--text)}
+.footer-meta{grid-column:1/-1;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  padding-top:26px;box-shadow:0 -1px 0 var(--line);font-size:11px;color:var(--text-4)}
 .table-scroll{overflow-x:auto;width:100%;margin:20px 0;overscroll-behavior-x:contain}
 .table-scroll table{min-width:600px}
 .marquee:focus-within .track{animation-play-state:paused}
@@ -471,7 +479,7 @@ input:focus-visible,select:focus-visible{outline-offset:2px}
  nav.links a{font-size:10px;padding:12px 7px;white-space:nowrap}
  nav.links a.on::after{bottom:0;left:7px;right:7px}
  .wrap{padding-top:30px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px}
- .site-footer{padding:25px 20px;flex-wrap:wrap}.footer-links{gap:16px}
+ .site-footer{grid-template-columns:1fr 1fr;padding:36px 20px 28px;gap:24px 20px}.footer-brand{grid-column:1/-1}
  .btn,.chk,input[type=search],input[type=number],select{min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){
