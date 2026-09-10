@@ -313,9 +313,17 @@ const WALLET_CSS = `
 .fe-title{font-size:22px;font-weight:640;letter-spacing:-.03em;color:var(--text)}
 .feed-empty p{margin:0;max-width:48ch;color:var(--text-3);font-size:14px;line-height:1.7}
 .feed-empty .btn{margin-top:6px}
-.wstats{gap:0;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line);margin:26px 0 30px}
-.wstats .b{border-radius:0;padding:24px 16px;background:none;box-shadow:none}
-.wstats .b:hover{box-shadow:none;transform:none}.wstats .k{font-size:9px}.wstats .v{margin-top:12px}
+/* A connected stat dashboard (1px-gap panels) rather than a flat borderless
+   strip, so the wallet's figures read as a real ledger with the best pull hero'd. */
+.wstats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);
+  border-radius:var(--r-md);overflow:hidden;box-shadow:0 0 0 1px var(--line);margin:24px 0 30px}
+.wstats .b{border-radius:0;padding:20px 18px;background:var(--panel);box-shadow:none}
+.wstats .b:hover{background:var(--elevated);box-shadow:none;transform:none}
+.wstats .b.best{background:linear-gradient(180deg,var(--accent-dim),transparent 60%),var(--panel)}
+.wstats .b.best::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent)}
+.wstats .k{font-size:9px}.wstats .v{margin-top:11px}
+.wstats .b-sub{margin-top:5px;font-size:11px;font-weight:500;color:var(--text-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
 .wallet-chip{overflow-wrap:anywhere;max-width:100%}
 @media(max-width:640px){
  .wstats{grid-template-columns:repeat(2,minmax(0,1fr))}.wstats .b{padding:20px 10px}.wstats .v{font-size:21px}
@@ -521,9 +529,11 @@ export function collectionPage(input: CollectionPageInput): string {
     <div class="v" data-count="${stats.totalReferenceValue}" data-count-dp="2" data-count-prefix="$">${money(
       stats.totalReferenceValue,
     )}</div></div>
-  <div class="b" data-reveal><div class="k">BEST PULL</div><div class="v sm">${
+  <div class="b best" data-reveal><div class="k">BEST PULL</div><div class="v sm">${
     stats.bestPull ? money(stats.bestPull.card.referenceValue) : '—'
-  }</div></div>
+  }</div>${
+    stats.bestPull ? `<div class="b-sub">${esc(stats.bestPull.card.name)}</div>` : ''
+  }</div>
   <div class="b" data-reveal><div class="k">ACHIEVEMENTS</div>
     <div class="v sm"><span data-count="${unlocked}">${unlocked}</span><span class="den"> / ${
       achievements.length
