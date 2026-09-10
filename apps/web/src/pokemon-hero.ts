@@ -30,14 +30,14 @@ export const POKEMON_HERO_TOGGLE = `<button class="hero-motion-toggle" type="but
 
 export const POKEMON_HERO_CSS = `<style>
 .hero .hero-inner{min-height:470px;padding-top:32px}
-.hero h1{position:relative;z-index:1;font-size:clamp(84px,8vw,112px);margin-top:24px}
-.hero-contract{position:relative;z-index:2;width:46%;max-width:460px;margin-top:16px;scroll-margin-top:130px}
+.hero h1{position:relative;z-index:1;font-size:clamp(76px,7vw,104px);margin-top:24px}
+.hero-contract{position:relative;z-index:2;width:min(100%,520px);margin-top:22px;scroll-margin-top:130px}
 .hero-contract:focus{outline:none}.hero-ca-button{display:flex;align-items:center;gap:12px;width:100%;min-height:44px;padding:11px 14px;border-radius:8px;box-shadow:0 0 0 1px var(--line-hi);background:var(--glass);color:var(--text-2);text-align:left;cursor:pointer;transition:box-shadow .2s var(--ease),background .2s var(--ease)}
 .hero-ca-button:hover{background:rgba(255,255,255,.05);box-shadow:0 0 0 1px var(--accent)}.hero-ca-button:focus-visible{outline:2px solid var(--accent-hi);outline-offset:3px}.hero-ca-label{font:650 12px ui-monospace,monospace;color:var(--text)}.hero-ca-address{min-width:0;overflow-wrap:anywhere;font:500 12px/1.5 ui-monospace,monospace}.hero-ca-button svg{margin-left:auto;flex-shrink:0;opacity:.75}
 .hero-contract-help{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .hero .hero-copy{position:relative;z-index:1;padding-top:30px;width:49%}
 .hero .hero-copy p{max-width:38ch}
-.hero .hero-copy h2{font-size:29px}
+.hero .hero-copy h2{font-size:clamp(31px,3.2vw,44px);letter-spacing:-.03em;line-height:1.1;font-weight:600}
 .hero .hero-actions .btn{height:44px;font-size:12px}
 .hero .hero-main{min-height:246px}
 .hero .pack-scene{top:203px;right:1%;width:49%;height:212px;--pw:128px;--ph:180px;--spread:112px}

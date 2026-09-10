@@ -385,7 +385,6 @@ export function homePage(
     ${POKEMON_HERO_TOGGLE}
     <div class="hero-top" data-reveal>${ripMark()}<span>THE POKÉMON COLLECTOR’S CLUB</span></div>
     <h1 id="home-title" data-reveal>RIP<span>DEX</span></h1>
-    ${tokenHeroContract()}
     <div class="hero-main">
       <div class="hero-copy" data-reveal-group="70">
         <h2 data-reveal>A world of Pokémon.<br>One card at a time.</h2>
@@ -400,6 +399,7 @@ export function homePage(
       </div></div></div>
     </div>
     <div class="hero-foot"><span><b>${packs.length}</b> CURATED PACKS</span><span><b>${index.cards.length.toLocaleString()}</b> CARDS</span><span><b>${index.facets.sets.length}</b> SETS TO EXPLORE</span></div>
+    ${tokenHeroContract()}
   </div>
 </section>
 <aside class="lobby-activity" aria-labelledby="activity-title">
