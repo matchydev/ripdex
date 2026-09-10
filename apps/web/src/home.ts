@@ -157,6 +157,12 @@ const HOME_CSS = `
 .hero .pack-scene::after{bottom:0}
 .hero .slot-l .plane-art,.hero .slot-r .plane-art{filter:brightness(.9) saturate(.95)}
 .hero .plane-veil{background:linear-gradient(180deg,transparent 46%,rgba(8,9,10,.42) 84%,rgba(8,9,10,.72))}
+/* The featured grail is the centrepiece — let it outshine the flankers instead
+   of reading as the darkest pack. A touch more light on its own foil, a fuller
+   themed glow behind it, and a lighter veil so its lower gold rays survive. */
+.hero .slot-c .plane-art{filter:brightness(1.08) saturate(1.1) contrast(1.03)}
+.hero .slot-c .plane-glow{opacity:.72;filter:blur(38px) saturate(2.3) brightness(1.34)}
+.hero .slot-c .plane-veil{background:linear-gradient(180deg,transparent 56%,rgba(8,9,10,.26) 86%,rgba(8,9,10,.56))}
 .hero .ghosts{display:none}
 .hero .pack3d{border-radius:10px}
 .hero .plate{background:rgba(10,11,12,.9)}
