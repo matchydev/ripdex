@@ -56,7 +56,7 @@ const LEDGER_DIR =
 // The $RIP balance + portfolio store (economy layer, not the provably-fair ledger).
 const WALLET_PATH =
   process.env.RIPDEX_WALLET_PATH ?? join(HERE, '..', '..', 'packages', 'pokemon-core', 'data', 'wallets.json');
-const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 500);
+const GRAIL_MIN = Number(process.env.RIPDEX_GRAIL_MIN ?? 100);
 // The homepage rail shows high-value cards rather than only cards over the grail
 // floor: with a small catalog the strict threshold leaves one card, and a rail
 // of one reads as broken. /grails still applies GRAIL_MIN.

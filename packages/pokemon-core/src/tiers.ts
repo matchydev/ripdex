@@ -31,11 +31,11 @@ export const DEFAULT_TIER_CONFIG: TierConfig = {
   version: 'tiers-v1',
   currency: 'USD',
   bands: [
-    { tier: PullTier.Tier1, label: 'Tier 1', minValue: 0, maxValue: 5 },
-    { tier: PullTier.Tier2, label: 'Tier 2', minValue: 5, maxValue: 25 },
-    { tier: PullTier.Tier3, label: 'Tier 3', minValue: 25, maxValue: 100 },
-    { tier: PullTier.Tier4, label: 'Tier 4', minValue: 100, maxValue: 500 },
-    { tier: PullTier.Grail, label: 'Grail', minValue: 500, maxValue: null },
+    { tier: PullTier.Tier1, label: 'Tier 1', minValue: 0, maxValue: 3 },
+    { tier: PullTier.Tier2, label: 'Tier 2', minValue: 3, maxValue: 15 },
+    { tier: PullTier.Tier3, label: 'Tier 3', minValue: 15, maxValue: 40 },
+    { tier: PullTier.Tier4, label: 'Tier 4', minValue: 40, maxValue: 100 },
+    { tier: PullTier.Grail, label: 'Grail', minValue: 100, maxValue: null },
   ],
 };
 

@@ -309,8 +309,8 @@ test('two printings of one card do not blur into each other', async (t) => {
   assert.equal(event.variant.variantId, CHARIZARD_UNLIMITED);
   assert.equal(event.variant.label, 'Holofoil', 'not "1st Edition Holofoil"');
   assert.equal(event.referenceValue, 95, 'not repriced at the sibling variant');
-  assert.equal(event.tier, PullTier.Tier3);
-  assert.equal(event.prominence, FeedProminence.Notable);
+  assert.equal(event.tier, PullTier.Tier4);
+  assert.equal(event.prominence, FeedProminence.Major);
 });
 
 test('a rip that arrives from two sources renders once', async (t) => {

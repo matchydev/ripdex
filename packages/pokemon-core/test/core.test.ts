@@ -159,8 +159,8 @@ test('1st Edition and Unlimited holofoil of the same card price independently', 
 });
 
 test('getting the printing wrong would change the displayed tier', () => {
-  assert.equal(classifyTier(258.06), PullTier.Tier4);
-  assert.equal(classifyTier(99.06), PullTier.Tier3);
+  assert.equal(classifyTier(258.06), PullTier.Grail);
+  assert.equal(classifyTier(99.06), PullTier.Tier4);
 });
 
 test('normal and reverse holo of the same card price independently', () => {

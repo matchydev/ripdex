@@ -51,7 +51,7 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
     const unique = [...new Map(p.outcomes.map((o) => [o.image, o])).values()];
     const side = unique.filter((o) => o.image !== p.art).slice(0, 2);
     const setNames = p.sets.map((id) => index.facets.sets.find((s) => s.id === id)?.name).filter(Boolean).join(' / ');
-    const grail = (p.max ?? 0) >= 500;
+    const grail = (p.max ?? 0) >= 100;
     return `<article class="explorer-pack${grail ? ' has-grail' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}"${cssUrl(p.art) ? ` style="--art:url(${cssUrl(p.art)})"` : ''}>
       <div class="ep-top"><span>${String(i + 1).padStart(2, '0')} / ${esc(setNames)}</span><button type="button" class="compare-toggle" data-compare="${esc(p.id)}" aria-label="Compare ${esc(p.name)}" aria-pressed="false" title="Add to comparison">⇄</button></div>
       <button type="button" class="ep-art" data-preview="${esc(p.id)}" aria-label="Preview ${esc(p.name)} contents">
