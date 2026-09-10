@@ -55,7 +55,11 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
       .slice(0, 2);
     const setNames = p.sets.map((id) => index.facets.sets.find((s) => s.id === id)?.name).filter(Boolean).join(' / ');
     const grail = (p.max ?? 0) >= 100;
-    return `<article class="explorer-pack${grail ? ' has-grail' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}"${cssUrl(p.art) ? ` style="--art:url(${cssUrl(p.art)})"` : ''}>
+    // The featured grail wrapper is a bright-gold-on-dark composition, so it
+    // reads near-black at card size while the flat-saturated wrappers stay bright.
+    // Mark it so its foil gets a small brightness lift (see .is-featured below).
+    const featured = /grail-pack\./.test(p.art);
+    return `<article class="explorer-pack${grail ? ' has-grail' : ''}${featured ? ' is-featured' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}"${cssUrl(p.art) ? ` style="--art:url(${cssUrl(p.art)})"` : ''}>
       <div class="ep-top"><span>${String(i + 1).padStart(2, '0')} / ${esc(setNames)}</span><button type="button" class="compare-toggle" data-compare="${esc(p.id)}" aria-label="Compare ${esc(p.name)}" aria-pressed="false" title="Add to comparison">⇄</button></div>
       <button type="button" class="ep-art" data-preview="${esc(p.id)}" aria-label="Preview ${esc(p.name)} contents">
         <span class="ep-orbit" aria-hidden="true"></span>
@@ -128,6 +132,8 @@ export const EXPLORER_CSS = `<style>
 .ep-art img{position:absolute;left:50%;top:20px;z-index:1;border-radius:5px;object-fit:cover;box-shadow:0 15px 24px rgba(0,0,0,.5);transition:transform .65s var(--ease)}
 .ep-front{width:112px;height:156px;margin-left:-56px;z-index:2;transform:translateY(-5px) rotate(-6deg)}
 .ep-art .ep-wrapper{height:160px}.ep-side{width:92px;height:129px;margin-left:-46px;opacity:.78}
+/* Lift the featured grail wrapper so its bright foil survives at card size. */
+.explorer-pack.is-featured .ep-wrapper{filter:brightness(1.14) saturate(1.12) contrast(1.04)}
 .ep-side-0{transform:translate(-60px,27px) rotate(-19deg)}.ep-side-1{transform:translate(60px,25px) rotate(18deg)}
 .ep-art:hover .ep-front,.ep-art:focus-visible .ep-front{transform:translateY(-12px) rotate(0)}
 .ep-art:hover .ep-side-0{transform:translate(-73px,28px) rotate(-23deg)}.ep-art:hover .ep-side-1{transform:translate(73px,28px) rotate(23deg)}
