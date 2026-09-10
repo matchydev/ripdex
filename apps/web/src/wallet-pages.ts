@@ -263,9 +263,21 @@ const WALLET_CSS = `
 .a.grail.on:hover{box-shadow:0 0 0 1px var(--gold-rim),0 14px 30px -16px var(--gold-glow)}
 .a .medal{width:66px;height:74px;object-fit:contain;display:block;filter:grayscale(1) brightness(.6);opacity:.8;
   transition:transform .3s var(--ease),filter .3s var(--ease),opacity .3s var(--ease)}
-.a.on .medal{filter:none;opacity:1}
-.a.grail.on .medal{filter:drop-shadow(0 0 12px rgba(245,196,81,.4))}
+.a.on .medal{filter:drop-shadow(0 0 10px rgba(130,143,255,.4));opacity:1}
+.a.grail.on .medal{filter:drop-shadow(0 0 12px rgba(245,196,81,.45))}
 .a:hover .medal{transform:translateY(-3px)}
+/* Earned medals feel alive — a slow idle bob and a one-time gleam across the
+   face on reveal (accent normally, gold for grail); locked ones sit dead still. */
+.medalw{position:relative;display:inline-block}
+@keyframes medalBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.a.on .medalw{animation:medalBob 3.4s var(--ease) infinite}
+.a.grail.on .medalw{animation-duration:3s}
+.a.on .medalw::after{content:"";position:absolute;inset:-4% -8%;pointer-events:none;opacity:0;
+  background:linear-gradient(115deg,transparent 40%,rgba(130,143,255,.5) 50%,transparent 60%);
+  background-size:260% 100%;background-position:200% 0}
+.a.grail.on .medalw::after{background:linear-gradient(115deg,transparent 40%,rgba(245,196,81,.6) 50%,transparent 60%);background-size:260% 100%}
+.a.on.in .medalw::after{animation:medalGleam 1s var(--ease) .35s 1}
+@keyframes medalGleam{0%{opacity:0;background-position:200% 0}22%{opacity:1}100%{opacity:0;background-position:-60% 0}}
 .a .achievement-status{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:.06em;
   text-transform:uppercase;font-weight:600;color:var(--text-4);margin-top:12px}
 .a.on .achievement-status{color:var(--accent-hi)}
@@ -303,7 +315,7 @@ const WALLET_CSS = `
 .collection-nav+.wstats{margin:16px 0 22px}.collection-nav+.wstats .b{padding-top:18px;padding-bottom:18px}
 .collection-nav+.wstats .v{margin-top:9px}
 @media(max-width:680px){.achv{grid-template-columns:repeat(2,minmax(0,1fr))}.collection-nav{gap:22px}.collection-heading{align-items:flex-start;flex-direction:column;gap:7px}.collection-heading p{text-align:left}}
-@media(prefers-reduced-motion:reduce){.a .medal,.collection-nav a{transition:none}.a:hover .medal{transform:none}.a.in .abar i{animation:none}}
+@media(prefers-reduced-motion:reduce){.a .medal,.collection-nav a{transition:none}.a:hover .medal{transform:none}.a.in .abar i{animation:none}.a.on .medalw,.a.on.in .medalw::after{animation:none}}
 
 .dupes{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
 /* A real 3-rung prominence ladder: commons stay a calm hairline list, notable
@@ -493,7 +505,7 @@ function achievementRow(a: AchievementStatus): string {
   const grail = a.def.id === 'GRAIL_HUNTER';
   const progress = progressDisplay(a.progress.current, a.progress.target);
   return `<div class="a${a.unlocked ? ' on' : ''}${grail ? ' grail' : ''}" data-achievement="${esc(a.def.id)}" data-reveal style="--pct:${progress.percent}%">
-    <img class="medal" src="/art/achievements/${grail ? 'grail-puller' : 'medal-base'}.png" alt="" width="76" height="84" loading="lazy" decoding="async">
+    <span class="medalw"><img class="medal" src="/art/achievements/${grail ? 'grail-puller' : 'medal-base'}.png" alt="" width="76" height="84" loading="lazy" decoding="async"></span>
     <div>
       <div class="achievement-status"><span aria-hidden="true">${a.unlocked ? '✓' : '○'}</span> ${a.unlocked ? 'Unlocked' : 'Locked'}</div>
       <h3 class="nm">${esc(a.def.name)}</h3>
