@@ -294,11 +294,25 @@ const WALLET_CSS = `
 @media(prefers-reduced-motion:reduce){.a .medal,.collection-nav a{transition:none}.a:hover .medal{transform:none}.a.in .abar i{animation:none}}
 
 .dupes{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-/* Match the catalog's quieter framing while retaining the binder geometry. */
-.feed{gap:0}.rip{border-radius:0;background:none;box-shadow:0 1px 0 var(--line);padding:20px 8px}
+/* A real 3-rung prominence ladder: commons stay a calm hairline list, notable
+   pulls get a green edge, and a grail/major breaks out as an elevated gold card
+   — so a $9k grail never reads like a $4 common in the same stream. */
+.feed{gap:5px}
+.rip{border-radius:0;background:none;box-shadow:0 1px 0 var(--line);padding:18px 8px}
 .rip:hover{background:var(--glass);transform:none;box-shadow:0 1px 0 var(--line-hi)}
-.rip.notable{box-shadow:0 1px 0 var(--line);background:none}
-.rip.major{border-radius:10px;margin:10px 0;background:rgba(245,196,81,.025);box-shadow:0 0 0 1px rgba(245,196,81,.2)}
+.rip.notable{border-radius:0 8px 8px 0;padding-left:15px;background:linear-gradient(90deg,rgba(74,222,155,.06),transparent 42%);
+  box-shadow:inset 3px 0 0 var(--em)}
+.rip.notable:hover{background:linear-gradient(90deg,rgba(74,222,155,.1),transparent 46%);box-shadow:inset 3px 0 0 var(--em),0 4px 10px rgba(0,0,0,.35)}
+.rip.major{border-radius:12px;margin:9px 0;padding:18px;
+  background:linear-gradient(118deg,rgba(245,196,81,.08),transparent 56%);
+  box-shadow:0 0 0 1px rgba(245,196,81,.34),0 12px 26px -14px rgba(245,196,81,.32)}
+.rip.major:hover{box-shadow:0 0 0 1px rgba(245,196,81,.5),0 16px 34px -14px rgba(245,196,81,.44)}
+/* The freshest pull carries a live accent tick. */
+.feed .rip:first-child .when{color:var(--accent-hi);font-weight:600}
+.feed-empty{display:flex;flex-direction:column;align-items:center;gap:14px;padding:60px 24px;text-align:center}
+.fe-title{font-size:22px;font-weight:640;letter-spacing:-.03em;color:var(--text)}
+.feed-empty p{margin:0;max-width:48ch;color:var(--text-3);font-size:14px;line-height:1.7}
+.feed-empty .btn{margin-top:6px}
 .wstats{gap:0;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line);margin:26px 0 30px}
 .wstats .b{border-radius:0;padding:24px 16px;background:none;box-shadow:none}
 .wstats .b:hover{box-shadow:none;transform:none}.wstats .k{font-size:9px}.wstats .v{margin-top:12px}
@@ -366,7 +380,7 @@ export function livePage(feed: FeedResult, now: Date): string {
 
 ${
   feed.events.length === 0
-    ? '<div class="empty-state">No rips yet.</div>'
+    ? `<div class="empty-state feed-empty" data-reveal><div class="fe-title">The feed is quiet — for now.</div><p>Every pack opened on RIPDEX lands here the moment it's ripped, newest first. Be the first pull of the session.</p><a class="btn btn-primary btn-lg" href="/packs">Open a pack <span aria-hidden="true">→</span></a></div>`
     : `<div class="feed" data-reveal-group="55">${feed.events
         .map((e) => feedRow(e, now))
         .join('')}</div>`
