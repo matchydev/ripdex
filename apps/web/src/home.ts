@@ -241,7 +241,7 @@ const HOME_CSS = `
 .op-soon{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--warn)}
 .op-card-art{position:relative;aspect-ratio:63/88;display:grid;place-items:center;background:radial-gradient(120% 120% at 50% 28%,rgba(216,164,78,.12),transparent 62%),var(--panel)}
 .op-q{font-size:48px;font-weight:800;color:var(--text-4);opacity:.32}
-.op-rank{position:absolute;top:8px;left:8px;font-size:8px;font-weight:800;letter-spacing:.05em;color:#08090a;background:var(--gold);padding:3px 7px;border-radius:5px;opacity:.85}
+.op-rank{position:absolute;top:8px;left:8px;font-size:8px;font-weight:800;letter-spacing:.05em;color:#08090a;background:var(--warn);padding:3px 7px;border-radius:5px;opacity:.85}
 .op-card-meta{padding:9px 11px}
 .op-name{display:block;font-size:12px;font-weight:600;letter-spacing:-.01em;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .op-sub{display:block;font-size:10px;color:var(--text-4);margin-top:2px}
@@ -435,15 +435,17 @@ export function homePage(
         <h2 data-reveal>A world of Pokémon.<br>One card at a time.</h2>
         <p data-reveal>From your first favorite to the iconic Charizard. <br>Explore the packs. Find your next addition.</p>
         <div class="hero-actions" data-reveal>
-          <a class="btn btn-primary" href="#discover">Discover packs <span aria-hidden="true">↓</span></a>
-          ${featured ? `<button type="button" class="hero-inspect" data-preview="${esc(featured.id)}">Inspect featured pack ↗</button>` : ''}
+          ${featured
+            ? `<button type="button" class="btn btn-primary" data-preview="${esc(featured.id)}">Rip the featured pack <span aria-hidden="true">→</span></button>
+          <a class="text-link" href="#discover">Browse all packs <span aria-hidden="true">↓</span></a>`
+            : `<a class="btn btn-primary" href="#discover">Discover packs <span aria-hidden="true">↓</span></a>`}
         </div>
       </div>
       <div class="pack-scene scene" aria-label="Featured packs"><div class="stage-drift" data-parallax="0.018"><div class="stage">
         ${arranged.map((a) => pack3d(a.pack, index, a.slot, a.slot === 'c', wrappers[a.pack.id])).join('')}
       </div></div></div>
     </div>
-    <div class="hero-foot"><span><b>${packs.length}</b> CURATED PACKS</span><span><b>${index.cards.length.toLocaleString()}</b> CARDS</span><span><b>${index.facets.sets.length}</b> SETS TO EXPLORE</span></div>
+    <div class="hero-foot"><span><b>${packs.length}</b> PACKS SEALED</span><span>EVERY PULL GRADED · PRICED · YOURS TO KEEP</span></div>
     ${tokenHeroContract()}
   </div>
 </section>
@@ -509,7 +511,7 @@ ${tokenSection()}
   </details>
 </section>
 <section class="section dex-outro" aria-labelledby="dex-title">
-  <div data-reveal><span class="section-index">THE COLLECTION STARTS HERE</span><h2 id="dex-title">Meet your next favorite.</h2><p>${index.cards.length.toLocaleString()} cards. ${index.byVariantId.size.toLocaleString()} variants. Every printing priced separately.</p></div>
+  <div data-reveal><span class="section-index">THE COLLECTION STARTS HERE</span><h2 id="dex-title">Meet your next favorite.</h2><p>Your next favorite is one pull away.</p></div>
   <a class="btn btn-primary btn-lg" href="/cards">Explore the Pokédex <span aria-hidden="true">↗</span></a>
 </section>
 </div><script>
