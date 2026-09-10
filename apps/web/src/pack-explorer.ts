@@ -1,7 +1,7 @@
 /** Pack discovery and comparison. All preview prices and odds are variant-exact. */
 import type { CatalogIndex, PackConfig } from '../../../packages/pokemon-core/src/index.ts';
 import { oddsTable, formatProbability } from '../../../packages/pokemon-core/src/index.ts';
-import { esc, money } from './render.ts';
+import { esc, money, cssUrl } from './render.ts';
 
 export function packPreview(pack: PackConfig, index: CatalogIndex, wrapper?: string) {
   const outcomes = oddsTable(pack.pool).map((row) => {
@@ -51,7 +51,8 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
     const unique = [...new Map(p.outcomes.map((o) => [o.image, o])).values()];
     const side = unique.filter((o) => o.image !== p.art).slice(0, 2);
     const setNames = p.sets.map((id) => index.facets.sets.find((s) => s.id === id)?.name).filter(Boolean).join(' / ');
-    return `<article class="explorer-pack" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}">
+    const grail = (p.max ?? 0) >= 500;
+    return `<article class="explorer-pack${grail ? ' has-grail' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}"${cssUrl(p.art) ? ` style="--art:url(${cssUrl(p.art)})"` : ''}>
       <div class="ep-top"><span>${String(i + 1).padStart(2, '0')} / ${esc(setNames)}</span><button type="button" class="compare-toggle" data-compare="${esc(p.id)}" aria-label="Compare ${esc(p.name)}" aria-pressed="false" title="Add to comparison">⇄</button></div>
       <button type="button" class="ep-art" data-preview="${esc(p.id)}" aria-label="Preview ${esc(p.name)} contents">
         <span class="ep-orbit" aria-hidden="true"></span>
@@ -61,7 +62,7 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
       </button>
       <div class="ep-info"><h3>${esc(p.name)}</h3><p>${p.outcomes.length} outcomes <span>·</span> ${p.count} ${p.count === 1 ? 'card' : 'cards'}</p>
         <div class="ep-distribution" aria-label="Outcome distribution by value tier">${p.buckets.map((b) => `<i class="bucket-${b.tier}" style="flex:${b.probability}" title="${esc(b.tier.replace('_', ' '))}: ${formatProbability(b.probability)}"></i>`).join('')}</div>
-        <div class="ep-range"><span>Card reference range</span><b>${money(p.min)}–${money(p.max)}</b></div>
+        <div class="ep-range"><span>Card reference range</span><b>${money(p.min)}–<span class="${grail ? 'ep-jackpot' : ''}">${money(p.max)}</span></b></div>
         <div class="ep-bottom"><span class="ep-price">${BigInt(p.price).toLocaleString()} <small>$RIP</small></span><a class="ep-view" href="/packs#odds-${encodeURIComponent(p.id)}" data-preview="${esc(p.id)}">View pack <span aria-hidden="true">→</span></a></div>
       </div>
     </article>`;
@@ -90,6 +91,17 @@ export const EXPLORER_CSS = `<style>
 .explorer-pack{position:relative;min-width:0;background:linear-gradient(150deg,var(--elevated),var(--panel) 70%);border-radius:14px;box-shadow:0 0 0 1px var(--line);overflow:hidden;transition:box-shadow .3s,transform .4s var(--ease);animation:explorerIn .45s var(--ease) both}
 .explorer-pack:hover{box-shadow:0 0 0 1px rgba(113,112,255,.35),0 16px 32px -24px rgba(113,112,255,.5);transform:translateY(-3px)}
 .explorer-pack[hidden]{display:none}.explorer-pack.is-compared{box-shadow:0 0 0 1px var(--accent)}
+/* Each case is lit by its own themed wrapper art — a blurred bloom behind the
+   pack so a crimson 151 glows crimson and a gold Base Set glows gold, instead of
+   every case being an identical flat panel. */
+.explorer-pack[style*="--art"]::before{content:"";position:absolute;z-index:0;left:0;right:0;top:0;height:64%;
+  background-image:var(--art);background-size:cover;background-position:50% 28%;
+  filter:blur(34px) saturate(1.55);opacity:.26;transition:opacity .4s var(--ease);pointer-events:none}
+.explorer-pack:hover[style*="--art"]::before{opacity:.42}
+.explorer-pack.has-grail{box-shadow:0 0 0 1px rgba(245,196,81,.26)}
+.explorer-pack.has-grail:hover{box-shadow:0 0 0 1px rgba(245,196,81,.45),0 16px 34px -22px rgba(245,196,81,.4)}
+.ep-jackpot{color:var(--gold)}
+.ep-art,.ep-info{position:relative;z-index:1}
 .ep-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px 0;position:relative;z-index:2}
 .ep-top>span{font-size:8px;letter-spacing:.06em;color:var(--text-4);text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .compare-toggle{display:flex;align-items:center;justify-content:center;width:28px;height:28px;flex-shrink:0;font-size:18px;border-radius:6px;background:rgba(255,255,255,.04);color:var(--text-3)}
