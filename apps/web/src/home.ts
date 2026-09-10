@@ -74,16 +74,21 @@ const HOME_CSS = `
    design system's .card3d .plane inset:0, hence the .pack3d prefix. */
 .pack3d .plane-slab{inset:-4px;border-radius:calc(var(--r-lg) + 4px);
   transform:translateZ(-16px);
-  background:linear-gradient(104deg,#191a1f,#0a0b0c 44%,#050607);
-  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 30px 60px -30px rgba(0,0,0,.9)}
+  background:linear-gradient(104deg,#17181d,#0b0c0e 46%,#060708);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 60px -30px rgba(0,0,0,.9)}
+/* A bright, blurred halo of the pack's OWN art, so every pack floats in its own
+   themed glow (crimson 151, gold Base Set) instead of reading as a black box. */
+.pack3d .plane-glow{inset:-28% -20% -16%;transform:translateZ(-46px);border-radius:50%;
+  background-size:cover;background-position:50% 42%;background-repeat:no-repeat;
+  filter:blur(40px) saturate(2.1) brightness(1.18);opacity:.5;pointer-events:none}
 .plane-art{background-size:176%;background-position:50% 32%;background-repeat:no-repeat;
   background-color:var(--panel)}
 /* A generated pack wrapper is already the right shape: fill the plane, don't
    crop a card into it. */
 .plane-art.has-wrapper{background-size:cover;background-position:50% 45%}
-.plane-veil{background:
-  linear-gradient(180deg,rgba(8,9,10,.06) 0%,rgba(8,9,10,.55) 58%,rgba(8,9,10,.94) 100%),
-  linear-gradient(128deg,rgba(113,112,255,.20),transparent 56%)}
+/* A much lighter veil — just enough to seat the name plate, not so much it dulls
+   the pack into a dark slab. */
+.plane-veil{background:linear-gradient(180deg,transparent 42%,rgba(8,9,10,.48) 82%,rgba(8,9,10,.8) 100%)}
 .plane-plate{display:flex;align-items:flex-end;justify-content:center;padding-bottom:15px;
   pointer-events:none}
 .plate{display:inline-flex;flex-direction:column;align-items:center;gap:4px;
@@ -100,9 +105,10 @@ const HOME_CSS = `
   box-shadow:0 0 0 1px rgba(255,255,255,.14),0 6px 20px -6px rgba(113,112,255,.9)}
 /* Flankers are dimmed on a leaf plane: a filter anywhere higher would flatten
    the whole 3D subtree. */
-.slot-l .plane-art,.slot-r .plane-art{filter:brightness(.56) saturate(.82)}
+.slot-l .plane-art,.slot-r .plane-art{filter:brightness(.74) saturate(.92)}
+.slot-l .plane-glow,.slot-r .plane-glow{opacity:.34}
 .slot-l .plane-veil,.slot-r .plane-veil{background:
-  linear-gradient(180deg,rgba(8,9,10,.34) 0%,rgba(8,9,10,.72) 58%,rgba(8,9,10,.96) 100%)}
+  linear-gradient(180deg,transparent 44%,rgba(8,9,10,.5) 80%,rgba(8,9,10,.85) 100%)}
 
 /* Grails drifting far behind the packs. */
 .ghosts{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
@@ -149,8 +155,8 @@ const HOME_CSS = `
 .hero-foot b{color:var(--text-2);font-weight:550}
 .hero .pack-scene{width:100%;--pw:170px;--ph:238px;--spread:154px;height:334px;margin:-30px 0 0}
 .hero .pack-scene::after{bottom:0}
-.hero .slot-l .plane-art,.hero .slot-r .plane-art{filter:brightness(.85) saturate(.85)}
-.hero .plane-veil{background:linear-gradient(180deg,transparent 35%,rgba(8,9,10,.7))}
+.hero .slot-l .plane-art,.hero .slot-r .plane-art{filter:brightness(.9) saturate(.95)}
+.hero .plane-veil{background:linear-gradient(180deg,transparent 46%,rgba(8,9,10,.42) 84%,rgba(8,9,10,.72))}
 .hero .ghosts{display:none}
 .hero .pack3d{border-radius:10px}
 .hero .plate{background:rgba(10,11,12,.9)}
@@ -252,7 +258,7 @@ const HOME_CSS = `
 }
 
 /* Compact showcase and a useful activity column share the first viewport. */
-.lobby-stage{display:grid;grid-template-columns:minmax(0,1fr) 250px;max-width:1440px;margin:0 auto;box-shadow:0 1px 0 var(--line)}
+.lobby-stage{display:block;max-width:1440px;margin:0 auto;box-shadow:0 1px 0 var(--line)}
 .hero{min-height:0;background:radial-gradient(ellipse at 70% 50%,rgba(113,112,255,.18),transparent 55%),linear-gradient(120deg,#11121b,#090a10)}
 .hero::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(113,112,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(113,112,255,.035) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(90deg,transparent,black)}
 .hero-inner{padding:30px 32px 22px;min-height:390px}.hero-top{font-size:9px;letter-spacing:.14em}.hero h1{font-size:100px;margin:16px 0 0;line-height:.9}.hero-main{display:block;min-height:200px}
@@ -335,6 +341,7 @@ function pack3d(
   <div class="bob floaty" style="${FLOAT[slot] ?? FLOAT.c}">
     <a class="pack3d card3d depth grounded" href="/rip/${encodeURIComponent(pack.id)}" data-depth="${featured ? '1.1' : '0.85'}"
        aria-label="Open ${esc(pack.name)}">
+      <span class="plane plane-glow" style="background-image:url('${esc(art)}')"></span>
       <span class="plane plane-slab" data-layer="-16"></span>
       <span class="plane plane-art${wrapper ? ' has-wrapper' : ''}" data-layer="0" style="background-image:url('${esc(art)}')"></span>
       <span class="plane plane-rim" data-layer="2"></span>
@@ -413,12 +420,6 @@ export function homePage(
     ${tokenHeroContract()}
   </div>
 </section>
-<aside class="lobby-activity" aria-labelledby="activity-title">
-  <div class="activity-head"><h2 id="activity-title"><span class="pulse-dot"></span>Recent pulls</h2><a href="/live" aria-label="View all recent pulls">↗</a></div>
-  <span class="activity-caption">FROM THE RIPDEX LEDGER</span>
-  <div class="activity-list">${feed.length ? feed.slice(0, 6).map((e) => `<a href="${esc(e.href)}" class="activity-row"><img src="${esc(e.imageSmall)}" alt="" loading="lazy"><span><b>${esc(e.cardName)}</b><small>${esc(e.wallet)}</small><em>${esc(e.when)}</em></span><strong>${money(e.value)}</strong></a>`).join('') : '<p class="activity-empty">No pulls yet. Pack openings will appear here.</p>'}</div>
-  <a class="activity-footer" href="/live">Explore the feed <span aria-hidden="true">→</span></a>
-</aside>
 </div>
 <div class="home-inner">
 <section class="section discovery-section" id="discover" aria-labelledby="packs-title">
