@@ -210,7 +210,7 @@ table.odds td.n,table.pulls td.n{text-align:right}
 @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
 @media(max-width:760px){.ticker{top:104px}.ticker-tag{padding:0 10px;font-size:9px}}
 .ticker:focus-within .ticker-track{animation-play-state:paused}
-.controls{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding:20px 0 24px;background:none;box-shadow:0 -1px 0 var(--line),0 1px 0 var(--line);border-radius:0;backdrop-filter:none;margin-bottom:36px}
+.controls{position:sticky;top:104px;z-index:30;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding:16px 18px;background:rgba(15,16,17,.72);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 0 0 1px var(--line),0 14px 32px -20px rgba(0,0,0,.75);border-radius:var(--r-md);margin-bottom:30px}
 .controls input:not([type=checkbox]),.controls select{min-width:0;width:100%}
 .controls #q{grid-column:span 3;height:46px;font-size:14px;background-color:var(--panel)}
 .controls #setId{grid-column:span 2;height:46px}.controls #sort{height:46px}
@@ -340,7 +340,9 @@ export function tile(c: CardListing): string {
   const href = `/pokemon/${encodeURIComponent(c.setId)}/${encodeURIComponent(c.number)}`;
   const tierClass = c.headlineValue === null ? 'none' : `t-${c.headlineTier}`;
   const art = cssUrl(c.imageSmall);
-  return `<a class="tile" href="${href}" data-reveal data-tilt="0.7"${
+  // A grail in the grid earns the same gold treatment it gets on the grails wall.
+  const grail = c.headlineTier === 'GRAIL' ? ' gcard halo' : '';
+  return `<a class="tile${grail}" href="${href}" data-reveal data-tilt="0.7"${
     art ? ` style="--art:url(${art})"` : ''
   }>
   <div class="shot">
