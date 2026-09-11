@@ -120,20 +120,24 @@ img{max-width:100%}
 /* One violet blob only, pooled in the top-left corner; the rest are near-neutral
    cool-grey so the field reads as LIT, not as a purple template. The owner's
    rule "do not turn the site purple" is protected here at the ground level. */
-.mesh{position:fixed;inset:-30vmax;z-index:0;pointer-events:none;filter:blur(100px);opacity:.09}
+.mesh{position:fixed;inset:-30vmax;z-index:0;pointer-events:none;filter:blur(100px);opacity:.15}
 .mesh i{position:absolute;display:block;border-radius:50%;mix-blend-mode:screen}
-.mesh i:nth-child(1){width:60vmax;height:60vmax;left:-14%;top:-20%;
-  background:radial-gradient(circle,rgba(113,112,255,.5),transparent 62%);
+.mesh i:nth-child(1){width:60vmax;height:60vmax;left:-12%;top:-22%;
+  background:radial-gradient(circle,rgba(113,112,255,.46),transparent 62%);
   animation:mesh1 38s var(--ease) infinite alternate}
-.mesh i:nth-child(2){width:54vmax;height:54vmax;right:-12%;top:-6%;
-  background:radial-gradient(circle,rgba(122,130,150,.34),transparent 64%);
+.mesh i:nth-child(2){width:52vmax;height:52vmax;right:-14%;top:-10%;
+  background:radial-gradient(circle,rgba(240,138,64,.34),transparent 64%);
   animation:mesh2 46s var(--ease) infinite alternate}
-.mesh i:nth-child(3){width:50vmax;height:50vmax;left:22%;bottom:-26%;
-  background:radial-gradient(circle,rgba(96,112,140,.28),transparent 66%);
+.mesh i:nth-child(3){width:52vmax;height:52vmax;left:18%;bottom:-28%;
+  background:radial-gradient(circle,rgba(94,110,152,.3),transparent 66%);
   animation:mesh3 56s var(--ease) infinite alternate}
-.mesh i:nth-child(4){width:38vmax;height:38vmax;right:6%;bottom:-16%;
-  background:radial-gradient(circle,rgba(40,150,180,.18),transparent 66%);
+.mesh i:nth-child(4){width:40vmax;height:40vmax;right:4%;bottom:-18%;
+  background:radial-gradient(circle,rgba(64,148,176,.2),transparent 66%);
   animation:mesh4 64s var(--ease) infinite alternate}
+/* A viewport vignette below the content, framing every page's dark stage so it
+   reads as a lit scene with depth, not flat black. */
+.atmos-vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(128% 96% at 50% 30%,transparent 46%,rgba(3,4,7,.72) 100%)}
 @keyframes mesh1{to{transform:translate3d(16vmax,12vmax,0) scale(1.2)}}
 @keyframes mesh2{to{transform:translate3d(-18vmax,14vmax,0) scale(1.12)}}
 @keyframes mesh3{to{transform:translate3d(12vmax,-16vmax,0) scale(1.24)}}

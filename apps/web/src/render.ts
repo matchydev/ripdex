@@ -307,6 +307,7 @@ ${BRAND_HEAD}
 </head><body>
 <a class="skip-link" href="#main-content">Skip to content</a>
 <div class="mesh" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="atmos-vignette" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="scrollbar-top" aria-hidden="true"></div>
 <header class="top">
