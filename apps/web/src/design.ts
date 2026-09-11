@@ -177,6 +177,11 @@ nav.links a.on::after{content:"";position:absolute;left:11px;right:11px;bottom:-
 @keyframes navIn{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
 
 .wrap{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:40px 22px 120px}
+/* A soft pool of accent light behind each content page's title, so the header
+   reads as a lit focal point like the hero, not text on flat black. */
+.wrap:not(.home-wrap)::before{content:"";position:absolute;z-index:-1;left:8px;top:-14px;
+  width:min(720px,80%);height:300px;pointer-events:none;
+  background:radial-gradient(56% 60% at 22% 32%,rgba(113,112,255,.13),transparent 72%)}
 
 /* ============================ typography =========================== */
 h1.page{margin:8px 0 10px;font-weight:590;letter-spacing:-.038em;line-height:1.0;
