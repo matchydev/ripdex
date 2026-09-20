@@ -74,18 +74,22 @@ const HOME_CSS = `
    design system's .card3d .plane inset:0, hence the .pack3d prefix. */
 .pack3d .plane-slab{inset:-4px;border-radius:calc(var(--r-lg) + 4px);
   transform:translateZ(-16px);
-  background:linear-gradient(104deg,#17181d,#0b0c0e 46%,#060708);
-  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 60px -30px rgba(0,0,0,.9)}
+  background:transparent;
+  box-shadow:0 34px 58px -34px rgba(0,0,0,.8)}
 /* A bright, blurred halo of the pack's OWN art, so every pack floats in its own
    themed glow (crimson 151, gold Base Set) instead of reading as a black box. */
 .pack3d .plane-glow{inset:-28% -20% -16%;transform:translateZ(-46px);border-radius:50%;
   background-size:cover;background-position:50% 42%;background-repeat:no-repeat;
   filter:blur(40px) saturate(2.1) brightness(1.18);opacity:.5;pointer-events:none}
-.plane-art{background-size:176%;background-position:50% 32%;background-repeat:no-repeat;
-  background-color:var(--panel)}
+.plane-art{background-size:176%;background-position:50% 32%;background-repeat:no-repeat}
 /* A generated pack wrapper is already the right shape: fill the plane, don't
    crop a card into it. */
-.plane-art.has-wrapper{background-size:cover;background-position:50% 45%}
+.plane-art.has-wrapper{background-size:cover;background-position:50% 45%;
+  -webkit-mask-image:radial-gradient(76% 82% at 50% 46%,#000 80%,transparent 100%);
+          mask-image:radial-gradient(76% 82% at 50% 46%,#000 80%,transparent 100%)}
+/* No slab, no frame: drop the rim's inset ring so the pack floats on its own glow
+   instead of sitting in a lit rounded-rectangle box. */
+.pack3d .plane.plane-rim{box-shadow:none}
 /* A much lighter veil — just enough to seat the name plate, not so much it dulls
    the pack into a dark slab. */
 .plane-veil{background:linear-gradient(180deg,transparent 42%,rgba(8,9,10,.48) 82%,rgba(8,9,10,.8) 100%)}
