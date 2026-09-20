@@ -152,7 +152,11 @@ export const EXPLORER_CSS = `<style>
 @media(prefers-reduced-motion:reduce){.explorer-pack{animation:none}.explorer-pack.has-grail .ep-orbit{animation:none}}
 .ep-art img{position:absolute;left:50%;top:20px;z-index:1;border-radius:5px;object-fit:cover;box-shadow:0 15px 24px rgba(0,0,0,.5);transition:transform .65s var(--ease)}
 .ep-front{width:118px;height:164px;margin-left:-59px;z-index:10;transform:translateY(2px) rotate(-4deg)}
-.ep-art .ep-wrapper{height:160px}
+/* The wrapper PNGs bake a dark rectangular glow behind the pack (the "invisible
+   box"). Fade the rectangle's edges so only the pack shape reads on the card. */
+.ep-art .ep-wrapper{height:160px;
+  -webkit-mask-image:radial-gradient(64% 86% at 50% 47%,#000 68%,transparent 100%);
+          mask-image:radial-gradient(64% 86% at 50% 47%,#000 68%,transparent 100%)}
 /* Lift the featured grail wrapper so its bright foil survives at card size. */
 .explorer-pack.is-featured .ep-wrapper{filter:brightness(1.14) saturate(1.12) contrast(1.04)}
 /* The fanned cards — the pack's chase spread around the wrapper like a case's
