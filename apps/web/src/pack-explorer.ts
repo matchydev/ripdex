@@ -35,6 +35,9 @@ export function packPreview(pack: PackConfig, index: CatalogIndex, wrapper?: str
 
 export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers: Record<string, string> = {}): string {
   const models = packs.map((p) => packPreview(p, index, wrappers[p.id]));
+  // Each case gets a DISTINCT signature Pokémon behind it (owner: "different
+  // pokemon") — track which card art is already spent so no two cases share one.
+  const usedMon = new Set();
   const scriptData = JSON.stringify(models).replace(/</g, '\\u003c');
   return `<div class="explorer" id="pack-explorer">
   <div class="explorer-tabs" role="group" aria-label="Filter packs by set">
@@ -59,9 +62,19 @@ export function packExplorer(packs: PackConfig[], index: CatalogIndex, wrappers:
     // reads near-black at card size while the flat-saturated wrappers stay bright.
     // Mark it so its foil gets a small brightness lift (see .is-featured below).
     const featured = /grail-pack\./.test(p.art);
-    return `<article class="explorer-pack${grail ? ' has-grail' : ''}${featured ? ' is-featured' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}" style="--order:${i}${cssUrl(p.art) ? `;--art:url(${cssUrl(p.art)})` : ''}">
+    // The backdrop mon: the highest-value card whose art no earlier case has
+    // claimed, so the six cases show six different Pokémon (Charizard is the top
+    // of several packs — this spreads it to Blastoise, Venusaur, Scyther, etc.).
+    const monCard =
+      [...p.outcomes]
+        .filter((o) => o.image && o.value != null && o.image !== p.art)
+        .sort((a, b) => (b.value || 0) - (a.value || 0))
+        .find((o) => !usedMon.has(o.image)) || side[0];
+    if (monCard) usedMon.add(monCard.image);
+    return `<article class="explorer-pack${grail ? ' has-grail' : ''}${featured ? ' is-featured' : ''}" data-pack-id="${esc(p.id)}" data-search="${esc([p.name, ...p.outcomes.map((o) => o.name)].join(' ').toLowerCase())}" data-sets="${esc(p.sets.join(' '))}" data-order="${i}" data-price="${p.price}" style="--order:${i}${cssUrl(p.art) ? `;--art:url(${cssUrl(p.art)})` : ''}${monCard && cssUrl(monCard.image) ? `;--mon:url(${cssUrl(monCard.image)})` : ''}">
       <div class="ep-top"><span>${String(i + 1).padStart(2, '0')} / ${esc(setNames)}</span><button type="button" class="compare-toggle" data-compare="${esc(p.id)}" aria-label="Compare ${esc(p.name)}" aria-pressed="false" title="Add to comparison">⇄</button></div>
       <button type="button" class="ep-art" data-preview="${esc(p.id)}" aria-label="Preview ${esc(p.name)} contents">
+        <span class="ep-mon" aria-hidden="true"></span>
         <span class="ep-orbit" aria-hidden="true"></span>
         ${side.map((o, n) => `<img class="ep-side ep-side-${n}" src="${esc(o.image)}" alt="" loading="lazy">`).join('')}
         <img class="ep-front${p.wrapper ? ' ep-wrapper' : ''}" src="${esc(p.art)}" alt="${esc(p.name)}" loading="lazy">
@@ -115,6 +128,18 @@ export const EXPLORER_CSS = `<style>
 .compare-toggle{display:flex;align-items:center;justify-content:center;width:28px;height:28px;flex-shrink:0;font-size:18px;border-radius:6px;background:rgba(255,255,255,.04);color:var(--text-3)}
 .compare-toggle[aria-pressed=true]{background:var(--accent);color:var(--text)}
 .ep-art{position:relative;display:block;width:100%;height:210px;perspective:900px;overflow:hidden;isolation:isolate}
+/* The pack's signature Pokémon looming large and dark behind the wrapper — an
+   atmospheric per-pack backdrop (--mon = the top chase card), like the hero's
+   dragon. Blurred, dimmed and edge-masked so it reads as mood, not a rectangle. */
+.ep-mon{position:absolute;z-index:0;left:50%;top:40%;transform:translate(-50%,-50%);
+  width:150%;height:150%;background:var(--mon) center 24%/168% no-repeat;
+  filter:brightness(.62) saturate(1) contrast(1.04) blur(2px);opacity:.5;
+  -webkit-mask-image:radial-gradient(74% 66% at 50% 40%,#000 40%,transparent 82%);
+          mask-image:radial-gradient(74% 66% at 50% 40%,#000 40%,transparent 82%);
+  transition:opacity .45s var(--ease),filter .45s var(--ease);pointer-events:none}
+.explorer-pack:not([style*="--mon"]) .ep-mon{display:none}
+.ep-art:hover .ep-mon{opacity:.62;filter:brightness(.72) saturate(1.08) contrast(1.04) blur(2px)}
+@media(prefers-reduced-motion:reduce){.ep-mon{transition:none}}
 /* An energy burst behind the pack — bright rays + a radial core that swells on
    hover, gold on a grail-bearing case. This is the CS:GO "featured item" glow. */
 .ep-art::before{content:"";position:absolute;left:50%;top:40%;width:150px;height:150px;z-index:0;pointer-events:none;
