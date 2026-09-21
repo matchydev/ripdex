@@ -14227,5 +14227,1569 @@
       "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/sv3-218",
       "sourceUpdatedAt": "2026-09-08T00:00:00.000Z"
     }
+  },
+  {
+    "variantId": "base5|1|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|1|holofoil|1st-edition",
+      "low": 72.2,
+      "mid": 155,
+      "high": 1223.86,
+      "market": 178.88,
+      "referenceValue": 178.88,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-1",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|1|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|1|holofoil|unlimited",
+      "low": 58.7,
+      "mid": 80,
+      "high": 9999,
+      "market": 79.36,
+      "referenceValue": 79.36,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-1",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|3|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|3|holofoil|1st-edition",
+      "low": 189.6,
+      "mid": 517.49,
+      "high": 4474.84,
+      "market": 488.59,
+      "referenceValue": 488.59,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-3",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|3|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|3|holofoil|unlimited",
+      "low": 142,
+      "mid": 168.89,
+      "high": 9999,
+      "market": 213.64,
+      "referenceValue": 213.64,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-3",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|4|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|4|holofoil|1st-edition",
+      "low": 726.86,
+      "mid": 740.42,
+      "high": 4999.99,
+      "market": 265.83,
+      "referenceValue": 265.83,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-4",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|4|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|4|holofoil|unlimited",
+      "low": 274.99,
+      "mid": 345,
+      "high": 505.49,
+      "market": 373.56,
+      "referenceValue": 373.56,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-4",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|7|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|7|holofoil|1st-edition",
+      "low": 35.8,
+      "mid": 90,
+      "high": 489.24,
+      "market": 73.79,
+      "referenceValue": 73.79,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-7",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|7|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|7|holofoil|unlimited",
+      "low": 25,
+      "mid": 29.76,
+      "high": 114.61,
+      "market": 29.79,
+      "referenceValue": 29.79,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-7",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|8|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|8|holofoil|1st-edition",
+      "low": 71.1,
+      "mid": 249.99,
+      "high": 3304.81,
+      "market": 228.87,
+      "referenceValue": 228.87,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-8",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|8|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|8|holofoil|unlimited",
+      "low": 55.32,
+      "mid": 68.21,
+      "high": 149.95,
+      "market": 74.27,
+      "referenceValue": 74.27,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-8",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|6|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|6|holofoil|1st-edition",
+      "low": 38.6,
+      "mid": 89.19,
+      "high": 749.96,
+      "market": 91.86,
+      "referenceValue": 91.86,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-6",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|6|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|6|holofoil|unlimited",
+      "low": 30.96,
+      "mid": 37.63,
+      "high": 542.59,
+      "market": 44.44,
+      "referenceValue": 44.44,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-6",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|2|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|2|holofoil|1st-edition",
+      "low": 35,
+      "mid": 65,
+      "high": 799.76,
+      "market": 65.31,
+      "referenceValue": 65.31,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-2",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|2|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|2|holofoil|unlimited",
+      "low": 8.84,
+      "mid": 14.97,
+      "high": 200,
+      "market": 16.04,
+      "referenceValue": 16.04,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-2",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|9|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|9|holofoil|1st-edition",
+      "low": 68.23,
+      "mid": 110.99,
+      "high": 726.91,
+      "market": 97.55,
+      "referenceValue": 97.55,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-9",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|9|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|9|holofoil|unlimited",
+      "low": 30.99,
+      "mid": 39.08,
+      "high": 99.99,
+      "market": 46.09,
+      "referenceValue": 46.09,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-9",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|12|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|12|holofoil|1st-edition",
+      "low": 45.2,
+      "mid": 100.8,
+      "high": 1279.46,
+      "market": 101.59,
+      "referenceValue": 101.59,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-12",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|12|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|12|holofoil|unlimited",
+      "low": 38,
+      "mid": 51.79,
+      "high": 299.99,
+      "market": 50.98,
+      "referenceValue": 50.98,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-12",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|13|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|13|holofoil|1st-edition",
+      "low": 35.2,
+      "mid": 72.7,
+      "high": 754.93,
+      "market": 69.48,
+      "referenceValue": 69.48,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-13",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|13|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|13|holofoil|unlimited",
+      "low": 27.49,
+      "mid": 33.74,
+      "high": 4317.07,
+      "market": 40.28,
+      "referenceValue": 40.28,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-13",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|14|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|14|holofoil|1st-edition",
+      "low": 21.2,
+      "mid": 45.27,
+      "high": 437.16,
+      "market": 45.9,
+      "referenceValue": 45.9,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-14",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|14|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|14|holofoil|unlimited",
+      "low": 4.55,
+      "mid": 9.09,
+      "high": 228.79,
+      "market": 11.83,
+      "referenceValue": 11.83,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-14",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|10|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|10|holofoil|1st-edition",
+      "low": 62.2,
+      "mid": 130,
+      "high": 1117.76,
+      "market": 143.19,
+      "referenceValue": 143.19,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-10",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|10|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|10|holofoil|unlimited",
+      "low": 29.4,
+      "mid": 59.93,
+      "high": 502.48,
+      "market": 63.36,
+      "referenceValue": 63.36,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-10",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|16|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|16|holofoil|1st-edition",
+      "low": 23.5,
+      "mid": 42.99,
+      "high": 444.76,
+      "market": 43.3,
+      "referenceValue": 43.3,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-16",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|16|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|16|holofoil|unlimited",
+      "low": 16.65,
+      "mid": 20.96,
+      "high": 219.76,
+      "market": 22.56,
+      "referenceValue": 22.56,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-16",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|15|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|15|holofoil|1st-edition",
+      "low": 52.98,
+      "mid": 73.49,
+      "high": 455.06,
+      "market": 68.53,
+      "referenceValue": 68.53,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-15",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|15|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|15|holofoil|unlimited",
+      "low": 21.84,
+      "mid": 26.63,
+      "high": 9999,
+      "market": 27.13,
+      "referenceValue": 27.13,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-15",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|17|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|17|holofoil|1st-edition",
+      "low": 27.1,
+      "mid": 43.02,
+      "high": 471.34,
+      "market": 40.97,
+      "referenceValue": 40.97,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-17",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|17|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|17|holofoil|unlimited",
+      "low": 18.5,
+      "mid": 24.16,
+      "high": 248.01,
+      "market": 28.63,
+      "referenceValue": 28.63,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-17",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|11|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|11|holofoil|1st-edition",
+      "low": 46.1,
+      "mid": 107,
+      "high": 95000,
+      "market": 97.22,
+      "referenceValue": 97.22,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-11",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|11|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|11|holofoil|unlimited",
+      "low": 31.19,
+      "mid": 38.17,
+      "high": 148.99,
+      "market": 47.59,
+      "referenceValue": 47.59,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-11",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|83|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|83|holofoil|1st-edition",
+      "low": 249.32,
+      "mid": 390,
+      "high": 1512.46,
+      "market": 360.16,
+      "referenceValue": 360.16,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-83",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|83|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|83|holofoil|unlimited",
+      "low": 90,
+      "mid": 149.99,
+      "high": 9999,
+      "market": 133.34,
+      "referenceValue": 133.34,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-83",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|5|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|5|holofoil|1st-edition",
+      "low": 390,
+      "mid": 534.99,
+      "high": 944.99,
+      "market": 370.11,
+      "referenceValue": 370.11,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-5",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base5|5|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base5|5|holofoil|unlimited",
+      "low": 158.99,
+      "mid": 180,
+      "high": 9999,
+      "market": 218.39,
+      "referenceValue": 218.39,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base5-5",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|2|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|2|holofoil|1st-edition",
+      "low": 135,
+      "mid": 199.99,
+      "high": 1949.86,
+      "market": 201.27,
+      "referenceValue": 201.27,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-2",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|2|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|2|holofoil|unlimited",
+      "low": 35.43,
+      "mid": 50,
+      "high": 306.43,
+      "market": 78.76,
+      "referenceValue": 78.76,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-2",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|1|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|1|holofoil|1st-edition",
+      "low": 70.08,
+      "mid": 105,
+      "high": 1247.5,
+      "market": 92.23,
+      "referenceValue": 92.23,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-1",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|1|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|1|holofoil|unlimited",
+      "low": 24.88,
+      "mid": 31,
+      "high": 455.4,
+      "market": 38.48,
+      "referenceValue": 38.48,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-1",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|4|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|4|holofoil|1st-edition",
+      "low": 429.99,
+      "mid": 549.98,
+      "high": 1000,
+      "market": 471.75,
+      "referenceValue": 471.75,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-4",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|4|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|4|holofoil|unlimited",
+      "low": 107.23,
+      "mid": 142.31,
+      "high": 973.36,
+      "market": 189.66,
+      "referenceValue": 189.66,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-4",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|3|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|3|holofoil|1st-edition",
+      "low": 104.99,
+      "mid": 172.47,
+      "high": 499.48,
+      "market": 118.71,
+      "referenceValue": 118.71,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-3",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|3|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|3|holofoil|unlimited",
+      "low": 26,
+      "mid": 38.22,
+      "high": 473.79,
+      "market": 49.64,
+      "referenceValue": 49.64,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-3",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|5|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|5|holofoil|1st-edition",
+      "low": 208.2,
+      "mid": 260.25,
+      "high": 799.99,
+      "market": 458.16,
+      "referenceValue": 458.16,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-5",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|5|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|5|holofoil|unlimited",
+      "low": 123.97,
+      "mid": 200,
+      "high": 1395.46,
+      "market": 217.08,
+      "referenceValue": 217.08,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-5",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|9|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|9|holofoil|1st-edition",
+      "low": 73.62,
+      "mid": 112,
+      "high": 1179.76,
+      "market": 119.72,
+      "referenceValue": 119.72,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-9",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|9|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|9|holofoil|unlimited",
+      "low": 19.99,
+      "mid": 35.5,
+      "high": 96.94,
+      "market": 39.79,
+      "referenceValue": 39.79,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-9",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|10|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|10|holofoil|1st-edition",
+      "low": 150,
+      "mid": 214.3,
+      "high": 9999,
+      "market": 210.44,
+      "referenceValue": 210.44,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-10",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|10|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|10|holofoil|unlimited",
+      "low": 12,
+      "mid": 15.19,
+      "high": 381,
+      "market": 29.5,
+      "referenceValue": 29.5,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-10",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|7|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|7|holofoil|1st-edition",
+      "low": 64.99,
+      "mid": 544.93,
+      "high": 9999,
+      "market": 95.34,
+      "referenceValue": 95.34,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-7",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|7|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|7|holofoil|unlimited",
+      "low": 23.36,
+      "mid": 28.79,
+      "high": 129.99,
+      "market": 42.67,
+      "referenceValue": 42.67,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-7",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|12|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|12|holofoil|1st-edition",
+      "low": 134.5,
+      "mid": 187.47,
+      "high": 1572.56,
+      "market": 196.25,
+      "referenceValue": 196.25,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-12",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|12|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|12|holofoil|unlimited",
+      "low": 36.99,
+      "mid": 49.2,
+      "high": 399.96,
+      "market": 63.02,
+      "referenceValue": 63.02,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-12",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|8|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|8|holofoil|1st-edition",
+      "low": 56.36,
+      "mid": 85,
+      "high": 567.46,
+      "market": 87.98,
+      "referenceValue": 87.98,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-8",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|8|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|8|holofoil|unlimited",
+      "low": 17.51,
+      "mid": 26.99,
+      "high": 307.49,
+      "market": 43.63,
+      "referenceValue": 43.63,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-8",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|14|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|14|holofoil|1st-edition",
+      "low": 104.89,
+      "mid": 133.68,
+      "high": 1012.96,
+      "market": 133.68,
+      "referenceValue": 133.68,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-14",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|14|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|14|holofoil|unlimited",
+      "low": 26.99,
+      "mid": 35.67,
+      "high": 236.6,
+      "market": 46.4,
+      "referenceValue": 46.4,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-14",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|11|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|11|holofoil|1st-edition",
+      "low": 40.74,
+      "mid": 45.49,
+      "high": 433.16,
+      "market": 63.09,
+      "referenceValue": 63.09,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-11",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|11|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|11|holofoil|unlimited",
+      "low": 10,
+      "mid": 15,
+      "high": 168.92,
+      "market": 20.05,
+      "referenceValue": 20.05,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-11",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|13|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|13|holofoil|1st-edition",
+      "low": 36.5,
+      "mid": 55.78,
+      "high": 428.31,
+      "market": 63.86,
+      "referenceValue": 63.86,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-13",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|13|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|13|holofoil|unlimited",
+      "low": 4.5,
+      "mid": 9.4,
+      "high": 97,
+      "market": 11.47,
+      "referenceValue": 11.47,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-13",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|6|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|6|holofoil|1st-edition",
+      "low": 79.99,
+      "mid": 160.59,
+      "high": 9999,
+      "market": 169.82,
+      "referenceValue": 169.82,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-6",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "base3|6|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "base3|6|holofoil|unlimited",
+      "low": 26.32,
+      "mid": 34.99,
+      "high": 1499.99,
+      "market": 51.69,
+      "referenceValue": 51.69,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/base3-6",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|1|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|1|holofoil|1st-edition",
+      "low": 95.6,
+      "mid": 109,
+      "high": 541.54,
+      "market": 95.64,
+      "referenceValue": 95.64,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-1",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|1|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|1|holofoil|unlimited",
+      "low": 29.78,
+      "mid": 40,
+      "high": 276.18,
+      "market": 40.13,
+      "referenceValue": 40.13,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-1",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|5|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|5|holofoil|1st-edition",
+      "low": 349.99,
+      "mid": 436.47,
+      "high": 524.99,
+      "market": 199.1,
+      "referenceValue": 199.1,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-5",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|5|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|5|holofoil|unlimited",
+      "low": 84.99,
+      "mid": 149.72,
+      "high": 1104.5,
+      "market": 145.12,
+      "referenceValue": 145.12,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-5",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|3|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|3|holofoil|1st-edition",
+      "low": 65,
+      "mid": 92.45,
+      "high": 1496.88,
+      "market": 90.98,
+      "referenceValue": 90.98,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-3",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|3|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|3|holofoil|unlimited",
+      "low": 21,
+      "mid": 27.59,
+      "high": 247.64,
+      "market": 27.11,
+      "referenceValue": 27.11,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-3",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|6|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|6|holofoil|1st-edition",
+      "low": 129,
+      "mid": 199.99,
+      "high": 1109.43,
+      "market": 201.13,
+      "referenceValue": 201.13,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-6",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|6|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|6|holofoil|unlimited",
+      "low": 22.72,
+      "mid": 35.29,
+      "high": 299.94,
+      "market": 46.15,
+      "referenceValue": 46.15,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-6",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|8|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|8|holofoil|1st-edition",
+      "low": 150,
+      "mid": 314.99,
+      "high": 549.96,
+      "market": 124,
+      "referenceValue": 124,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-8",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|8|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|8|holofoil|unlimited",
+      "low": 12.25,
+      "mid": 17.31,
+      "high": 178.43,
+      "market": 21.69,
+      "referenceValue": 21.69,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-8",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|9|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|9|holofoil|1st-edition",
+      "low": 2999.99,
+      "mid": 7999.75,
+      "high": 10000,
+      "market": 1079.79,
+      "referenceValue": 1079.79,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-9",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|9|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|9|holofoil|unlimited",
+      "low": 498.49,
+      "mid": 599,
+      "high": 1750.99,
+      "market": 518.99,
+      "referenceValue": 518.99,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-9",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|12|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|12|holofoil|1st-edition",
+      "low": 699.99,
+      "mid": 5750.01,
+      "high": 5999.99,
+      "market": 267.05,
+      "referenceValue": 267.05,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-12",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|12|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|12|holofoil|unlimited",
+      "low": 95,
+      "mid": 130,
+      "high": 1109.26,
+      "market": 126.94,
+      "referenceValue": 126.94,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-12",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|13|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|13|holofoil|1st-edition",
+      "low": 175,
+      "mid": 433.84,
+      "high": 852.88,
+      "market": 80.58,
+      "referenceValue": 80.58,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-13",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|13|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|13|holofoil|unlimited",
+      "low": 16.7,
+      "mid": 32.06,
+      "high": 239.96,
+      "market": 32.89,
+      "referenceValue": 32.89,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-13",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|14|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|14|holofoil|1st-edition",
+      "low": 191.78,
+      "mid": 399.99,
+      "high": 1469.99,
+      "market": 227.15,
+      "referenceValue": 227.15,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-14",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|14|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|14|holofoil|unlimited",
+      "low": 68,
+      "mid": 117.12,
+      "high": 498.84,
+      "market": 79.96,
+      "referenceValue": 79.96,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-14",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|15|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|15|holofoil|1st-edition",
+      "low": 149.99,
+      "mid": 249.97,
+      "high": 906,
+      "market": 117.51,
+      "referenceValue": 117.51,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-15",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|15|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|15|holofoil|unlimited",
+      "low": 28.5,
+      "mid": 38.23,
+      "high": 399.99,
+      "market": 52.44,
+      "referenceValue": 52.44,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-15",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|11|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|11|holofoil|1st-edition",
+      "low": 235,
+      "mid": 399.99,
+      "high": 1965.66,
+      "market": 234.46,
+      "referenceValue": 234.46,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-11",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|11|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|11|holofoil|unlimited",
+      "low": 70,
+      "mid": 103.5,
+      "high": 9999,
+      "market": 104.26,
+      "referenceValue": 104.26,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-11",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|19|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|19|holofoil|1st-edition",
+      "low": 16.1,
+      "mid": 24.66,
+      "high": 251.04,
+      "market": 27.75,
+      "referenceValue": 27.75,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-19",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|19|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|19|holofoil|unlimited",
+      "low": 9.75,
+      "mid": 11.35,
+      "high": 147.21,
+      "market": 16.62,
+      "referenceValue": 16.62,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-19",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|17|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|17|holofoil|1st-edition",
+      "low": 379.99,
+      "mid": 379.99,
+      "high": 379.99,
+      "market": 321,
+      "referenceValue": 321,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-17",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|17|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|17|holofoil|unlimited",
+      "low": 136.5,
+      "mid": 188.79,
+      "high": 2012.77,
+      "market": 199.78,
+      "referenceValue": 199.78,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-17",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|18|holofoil|1st-edition",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|18|holofoil|1st-edition",
+      "low": 241.35,
+      "mid": 385.6,
+      "high": 917.08,
+      "market": 699.99,
+      "referenceValue": 699.99,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-18",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
+  },
+  {
+    "variantId": "neo1|18|holofoil|unlimited",
+    "observedOn": "2026-09-21",
+    "quote": {
+      "variantId": "neo1|18|holofoil|unlimited",
+      "low": 101,
+      "mid": 200,
+      "high": 899.13,
+      "market": 146.24,
+      "referenceValue": 146.24,
+      "basis": "market",
+      "currency": "USD",
+      "source": "pokemontcg.io",
+      "sourceUrl": "https://prices.pokemontcg.io/tcgplayer/neo1-18",
+      "sourceUpdatedAt": "2026-09-21T00:00:00.000Z"
+    }
   }
 ]

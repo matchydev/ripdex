@@ -9511,5 +9511,2732 @@
     "finish": "holofoil",
     "printing": "unlimited",
     "confidence": "reported"
+  },
+  {
+    "variantId": "base5|1|holofoil|unlimited",
+    "cardId": "base5-1",
+    "setId": "base5",
+    "number": "1",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|2|holofoil|unlimited",
+    "cardId": "base5-2",
+    "setId": "base5",
+    "number": "2",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|3|holofoil|unlimited",
+    "cardId": "base5-3",
+    "setId": "base5",
+    "number": "3",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|4|holofoil|unlimited",
+    "cardId": "base5-4",
+    "setId": "base5",
+    "number": "4",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|5|holofoil|unlimited",
+    "cardId": "base5-5",
+    "setId": "base5",
+    "number": "5",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|6|holofoil|unlimited",
+    "cardId": "base5-6",
+    "setId": "base5",
+    "number": "6",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|7|holofoil|unlimited",
+    "cardId": "base5-7",
+    "setId": "base5",
+    "number": "7",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|8|holofoil|unlimited",
+    "cardId": "base5-8",
+    "setId": "base5",
+    "number": "8",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|9|holofoil|unlimited",
+    "cardId": "base5-9",
+    "setId": "base5",
+    "number": "9",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|10|holofoil|unlimited",
+    "cardId": "base5-10",
+    "setId": "base5",
+    "number": "10",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|11|holofoil|unlimited",
+    "cardId": "base5-11",
+    "setId": "base5",
+    "number": "11",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|12|holofoil|unlimited",
+    "cardId": "base5-12",
+    "setId": "base5",
+    "number": "12",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|13|holofoil|unlimited",
+    "cardId": "base5-13",
+    "setId": "base5",
+    "number": "13",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|14|holofoil|unlimited",
+    "cardId": "base5-14",
+    "setId": "base5",
+    "number": "14",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|15|holofoil|unlimited",
+    "cardId": "base5-15",
+    "setId": "base5",
+    "number": "15",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|16|holofoil|unlimited",
+    "cardId": "base5-16",
+    "setId": "base5",
+    "number": "16",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|17|holofoil|unlimited",
+    "cardId": "base5-17",
+    "setId": "base5",
+    "number": "17",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|18|non-foil|unlimited",
+    "cardId": "base5-18",
+    "setId": "base5",
+    "number": "18",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|19|non-foil|unlimited",
+    "cardId": "base5-19",
+    "setId": "base5",
+    "number": "19",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|20|non-foil|unlimited",
+    "cardId": "base5-20",
+    "setId": "base5",
+    "number": "20",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|21|non-foil|unlimited",
+    "cardId": "base5-21",
+    "setId": "base5",
+    "number": "21",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|22|non-foil|unlimited",
+    "cardId": "base5-22",
+    "setId": "base5",
+    "number": "22",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|23|non-foil|unlimited",
+    "cardId": "base5-23",
+    "setId": "base5",
+    "number": "23",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|24|non-foil|unlimited",
+    "cardId": "base5-24",
+    "setId": "base5",
+    "number": "24",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|25|non-foil|unlimited",
+    "cardId": "base5-25",
+    "setId": "base5",
+    "number": "25",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|26|non-foil|unlimited",
+    "cardId": "base5-26",
+    "setId": "base5",
+    "number": "26",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|27|non-foil|unlimited",
+    "cardId": "base5-27",
+    "setId": "base5",
+    "number": "27",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|28|non-foil|unlimited",
+    "cardId": "base5-28",
+    "setId": "base5",
+    "number": "28",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|29|non-foil|unlimited",
+    "cardId": "base5-29",
+    "setId": "base5",
+    "number": "29",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|30|non-foil|unlimited",
+    "cardId": "base5-30",
+    "setId": "base5",
+    "number": "30",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|31|non-foil|unlimited",
+    "cardId": "base5-31",
+    "setId": "base5",
+    "number": "31",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|32|non-foil|unlimited",
+    "cardId": "base5-32",
+    "setId": "base5",
+    "number": "32",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|33|non-foil|unlimited",
+    "cardId": "base5-33",
+    "setId": "base5",
+    "number": "33",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|34|non-foil|unlimited",
+    "cardId": "base5-34",
+    "setId": "base5",
+    "number": "34",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|35|non-foil|unlimited",
+    "cardId": "base5-35",
+    "setId": "base5",
+    "number": "35",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|36|non-foil|unlimited",
+    "cardId": "base5-36",
+    "setId": "base5",
+    "number": "36",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|37|non-foil|unlimited",
+    "cardId": "base5-37",
+    "setId": "base5",
+    "number": "37",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|38|non-foil|unlimited",
+    "cardId": "base5-38",
+    "setId": "base5",
+    "number": "38",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|39|non-foil|unlimited",
+    "cardId": "base5-39",
+    "setId": "base5",
+    "number": "39",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|40|non-foil|unlimited",
+    "cardId": "base5-40",
+    "setId": "base5",
+    "number": "40",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|41|non-foil|unlimited",
+    "cardId": "base5-41",
+    "setId": "base5",
+    "number": "41",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|42|non-foil|unlimited",
+    "cardId": "base5-42",
+    "setId": "base5",
+    "number": "42",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|43|non-foil|unlimited",
+    "cardId": "base5-43",
+    "setId": "base5",
+    "number": "43",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|44|non-foil|unlimited",
+    "cardId": "base5-44",
+    "setId": "base5",
+    "number": "44",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|45|non-foil|unlimited",
+    "cardId": "base5-45",
+    "setId": "base5",
+    "number": "45",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|46|non-foil|unlimited",
+    "cardId": "base5-46",
+    "setId": "base5",
+    "number": "46",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|47|non-foil|unlimited",
+    "cardId": "base5-47",
+    "setId": "base5",
+    "number": "47",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|48|non-foil|unlimited",
+    "cardId": "base5-48",
+    "setId": "base5",
+    "number": "48",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|49|non-foil|unlimited",
+    "cardId": "base5-49",
+    "setId": "base5",
+    "number": "49",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|50|non-foil|unlimited",
+    "cardId": "base5-50",
+    "setId": "base5",
+    "number": "50",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|51|non-foil|unlimited",
+    "cardId": "base5-51",
+    "setId": "base5",
+    "number": "51",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|52|non-foil|unlimited",
+    "cardId": "base5-52",
+    "setId": "base5",
+    "number": "52",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|53|non-foil|unlimited",
+    "cardId": "base5-53",
+    "setId": "base5",
+    "number": "53",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|54|non-foil|unlimited",
+    "cardId": "base5-54",
+    "setId": "base5",
+    "number": "54",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|55|non-foil|unlimited",
+    "cardId": "base5-55",
+    "setId": "base5",
+    "number": "55",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|56|non-foil|unlimited",
+    "cardId": "base5-56",
+    "setId": "base5",
+    "number": "56",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|57|non-foil|unlimited",
+    "cardId": "base5-57",
+    "setId": "base5",
+    "number": "57",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|58|non-foil|unlimited",
+    "cardId": "base5-58",
+    "setId": "base5",
+    "number": "58",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|59|non-foil|unlimited",
+    "cardId": "base5-59",
+    "setId": "base5",
+    "number": "59",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|60|non-foil|unlimited",
+    "cardId": "base5-60",
+    "setId": "base5",
+    "number": "60",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|61|non-foil|unlimited",
+    "cardId": "base5-61",
+    "setId": "base5",
+    "number": "61",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|62|non-foil|unlimited",
+    "cardId": "base5-62",
+    "setId": "base5",
+    "number": "62",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|63|non-foil|unlimited",
+    "cardId": "base5-63",
+    "setId": "base5",
+    "number": "63",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|64|non-foil|unlimited",
+    "cardId": "base5-64",
+    "setId": "base5",
+    "number": "64",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|65|non-foil|unlimited",
+    "cardId": "base5-65",
+    "setId": "base5",
+    "number": "65",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|66|non-foil|unlimited",
+    "cardId": "base5-66",
+    "setId": "base5",
+    "number": "66",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|67|non-foil|unlimited",
+    "cardId": "base5-67",
+    "setId": "base5",
+    "number": "67",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|68|non-foil|unlimited",
+    "cardId": "base5-68",
+    "setId": "base5",
+    "number": "68",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|69|non-foil|unlimited",
+    "cardId": "base5-69",
+    "setId": "base5",
+    "number": "69",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|70|non-foil|unlimited",
+    "cardId": "base5-70",
+    "setId": "base5",
+    "number": "70",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|71|non-foil|unlimited",
+    "cardId": "base5-71",
+    "setId": "base5",
+    "number": "71",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|72|non-foil|unlimited",
+    "cardId": "base5-72",
+    "setId": "base5",
+    "number": "72",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|73|non-foil|unlimited",
+    "cardId": "base5-73",
+    "setId": "base5",
+    "number": "73",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|74|non-foil|unlimited",
+    "cardId": "base5-74",
+    "setId": "base5",
+    "number": "74",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|75|non-foil|unlimited",
+    "cardId": "base5-75",
+    "setId": "base5",
+    "number": "75",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|76|non-foil|unlimited",
+    "cardId": "base5-76",
+    "setId": "base5",
+    "number": "76",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|77|non-foil|unlimited",
+    "cardId": "base5-77",
+    "setId": "base5",
+    "number": "77",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|78|non-foil|unlimited",
+    "cardId": "base5-78",
+    "setId": "base5",
+    "number": "78",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|79|non-foil|unlimited",
+    "cardId": "base5-79",
+    "setId": "base5",
+    "number": "79",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|80|non-foil|unlimited",
+    "cardId": "base5-80",
+    "setId": "base5",
+    "number": "80",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|81|non-foil|unlimited",
+    "cardId": "base5-81",
+    "setId": "base5",
+    "number": "81",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|82|non-foil|unlimited",
+    "cardId": "base5-82",
+    "setId": "base5",
+    "number": "82",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|83|non-foil|unlimited",
+    "cardId": "base5-83",
+    "setId": "base5",
+    "number": "83",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base5|1|holofoil|1st-edition",
+    "cardId": "base5-1",
+    "setId": "base5",
+    "number": "1",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|3|holofoil|1st-edition",
+    "cardId": "base5-3",
+    "setId": "base5",
+    "number": "3",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|4|holofoil|1st-edition",
+    "cardId": "base5-4",
+    "setId": "base5",
+    "number": "4",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|7|holofoil|1st-edition",
+    "cardId": "base5-7",
+    "setId": "base5",
+    "number": "7",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|8|holofoil|1st-edition",
+    "cardId": "base5-8",
+    "setId": "base5",
+    "number": "8",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|6|holofoil|1st-edition",
+    "cardId": "base5-6",
+    "setId": "base5",
+    "number": "6",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|2|holofoil|1st-edition",
+    "cardId": "base5-2",
+    "setId": "base5",
+    "number": "2",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|9|holofoil|1st-edition",
+    "cardId": "base5-9",
+    "setId": "base5",
+    "number": "9",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|12|holofoil|1st-edition",
+    "cardId": "base5-12",
+    "setId": "base5",
+    "number": "12",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|13|holofoil|1st-edition",
+    "cardId": "base5-13",
+    "setId": "base5",
+    "number": "13",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|14|holofoil|1st-edition",
+    "cardId": "base5-14",
+    "setId": "base5",
+    "number": "14",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|10|holofoil|1st-edition",
+    "cardId": "base5-10",
+    "setId": "base5",
+    "number": "10",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|16|holofoil|1st-edition",
+    "cardId": "base5-16",
+    "setId": "base5",
+    "number": "16",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|15|holofoil|1st-edition",
+    "cardId": "base5-15",
+    "setId": "base5",
+    "number": "15",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|17|holofoil|1st-edition",
+    "cardId": "base5-17",
+    "setId": "base5",
+    "number": "17",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|11|holofoil|1st-edition",
+    "cardId": "base5-11",
+    "setId": "base5",
+    "number": "11",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|83|holofoil|1st-edition",
+    "cardId": "base5-83",
+    "setId": "base5",
+    "number": "83",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|83|holofoil|unlimited",
+    "cardId": "base5-83",
+    "setId": "base5",
+    "number": "83",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base5|5|holofoil|1st-edition",
+    "cardId": "base5-5",
+    "setId": "base5",
+    "number": "5",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|1|holofoil|unlimited",
+    "cardId": "base3-1",
+    "setId": "base3",
+    "number": "1",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|2|holofoil|unlimited",
+    "cardId": "base3-2",
+    "setId": "base3",
+    "number": "2",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|3|holofoil|unlimited",
+    "cardId": "base3-3",
+    "setId": "base3",
+    "number": "3",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|4|holofoil|unlimited",
+    "cardId": "base3-4",
+    "setId": "base3",
+    "number": "4",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|5|holofoil|unlimited",
+    "cardId": "base3-5",
+    "setId": "base3",
+    "number": "5",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|6|holofoil|unlimited",
+    "cardId": "base3-6",
+    "setId": "base3",
+    "number": "6",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|7|holofoil|unlimited",
+    "cardId": "base3-7",
+    "setId": "base3",
+    "number": "7",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|8|holofoil|unlimited",
+    "cardId": "base3-8",
+    "setId": "base3",
+    "number": "8",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|9|holofoil|unlimited",
+    "cardId": "base3-9",
+    "setId": "base3",
+    "number": "9",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|10|holofoil|unlimited",
+    "cardId": "base3-10",
+    "setId": "base3",
+    "number": "10",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|11|holofoil|unlimited",
+    "cardId": "base3-11",
+    "setId": "base3",
+    "number": "11",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|12|holofoil|unlimited",
+    "cardId": "base3-12",
+    "setId": "base3",
+    "number": "12",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|13|holofoil|unlimited",
+    "cardId": "base3-13",
+    "setId": "base3",
+    "number": "13",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|14|holofoil|unlimited",
+    "cardId": "base3-14",
+    "setId": "base3",
+    "number": "14",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|15|holofoil|unlimited",
+    "cardId": "base3-15",
+    "setId": "base3",
+    "number": "15",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|16|non-foil|unlimited",
+    "cardId": "base3-16",
+    "setId": "base3",
+    "number": "16",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|17|non-foil|unlimited",
+    "cardId": "base3-17",
+    "setId": "base3",
+    "number": "17",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|18|non-foil|unlimited",
+    "cardId": "base3-18",
+    "setId": "base3",
+    "number": "18",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|19|non-foil|unlimited",
+    "cardId": "base3-19",
+    "setId": "base3",
+    "number": "19",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|20|non-foil|unlimited",
+    "cardId": "base3-20",
+    "setId": "base3",
+    "number": "20",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|21|non-foil|unlimited",
+    "cardId": "base3-21",
+    "setId": "base3",
+    "number": "21",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|22|non-foil|unlimited",
+    "cardId": "base3-22",
+    "setId": "base3",
+    "number": "22",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|23|non-foil|unlimited",
+    "cardId": "base3-23",
+    "setId": "base3",
+    "number": "23",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|24|non-foil|unlimited",
+    "cardId": "base3-24",
+    "setId": "base3",
+    "number": "24",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|25|non-foil|unlimited",
+    "cardId": "base3-25",
+    "setId": "base3",
+    "number": "25",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|26|non-foil|unlimited",
+    "cardId": "base3-26",
+    "setId": "base3",
+    "number": "26",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|27|non-foil|unlimited",
+    "cardId": "base3-27",
+    "setId": "base3",
+    "number": "27",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|28|non-foil|unlimited",
+    "cardId": "base3-28",
+    "setId": "base3",
+    "number": "28",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|29|non-foil|unlimited",
+    "cardId": "base3-29",
+    "setId": "base3",
+    "number": "29",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|30|non-foil|unlimited",
+    "cardId": "base3-30",
+    "setId": "base3",
+    "number": "30",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|31|non-foil|unlimited",
+    "cardId": "base3-31",
+    "setId": "base3",
+    "number": "31",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|32|non-foil|unlimited",
+    "cardId": "base3-32",
+    "setId": "base3",
+    "number": "32",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|33|non-foil|unlimited",
+    "cardId": "base3-33",
+    "setId": "base3",
+    "number": "33",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|34|non-foil|unlimited",
+    "cardId": "base3-34",
+    "setId": "base3",
+    "number": "34",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|35|non-foil|unlimited",
+    "cardId": "base3-35",
+    "setId": "base3",
+    "number": "35",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|36|non-foil|unlimited",
+    "cardId": "base3-36",
+    "setId": "base3",
+    "number": "36",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|37|non-foil|unlimited",
+    "cardId": "base3-37",
+    "setId": "base3",
+    "number": "37",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|38|non-foil|unlimited",
+    "cardId": "base3-38",
+    "setId": "base3",
+    "number": "38",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|39|non-foil|unlimited",
+    "cardId": "base3-39",
+    "setId": "base3",
+    "number": "39",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|40|non-foil|unlimited",
+    "cardId": "base3-40",
+    "setId": "base3",
+    "number": "40",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|41|non-foil|unlimited",
+    "cardId": "base3-41",
+    "setId": "base3",
+    "number": "41",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|42|non-foil|unlimited",
+    "cardId": "base3-42",
+    "setId": "base3",
+    "number": "42",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|43|non-foil|unlimited",
+    "cardId": "base3-43",
+    "setId": "base3",
+    "number": "43",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|44|non-foil|unlimited",
+    "cardId": "base3-44",
+    "setId": "base3",
+    "number": "44",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|45|non-foil|unlimited",
+    "cardId": "base3-45",
+    "setId": "base3",
+    "number": "45",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|46|non-foil|unlimited",
+    "cardId": "base3-46",
+    "setId": "base3",
+    "number": "46",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|47|non-foil|unlimited",
+    "cardId": "base3-47",
+    "setId": "base3",
+    "number": "47",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|48|non-foil|unlimited",
+    "cardId": "base3-48",
+    "setId": "base3",
+    "number": "48",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|49|non-foil|unlimited",
+    "cardId": "base3-49",
+    "setId": "base3",
+    "number": "49",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|50|non-foil|unlimited",
+    "cardId": "base3-50",
+    "setId": "base3",
+    "number": "50",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|51|non-foil|unlimited",
+    "cardId": "base3-51",
+    "setId": "base3",
+    "number": "51",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|52|non-foil|unlimited",
+    "cardId": "base3-52",
+    "setId": "base3",
+    "number": "52",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|53|non-foil|unlimited",
+    "cardId": "base3-53",
+    "setId": "base3",
+    "number": "53",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|54|non-foil|unlimited",
+    "cardId": "base3-54",
+    "setId": "base3",
+    "number": "54",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|55|non-foil|unlimited",
+    "cardId": "base3-55",
+    "setId": "base3",
+    "number": "55",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|56|non-foil|unlimited",
+    "cardId": "base3-56",
+    "setId": "base3",
+    "number": "56",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|57|non-foil|unlimited",
+    "cardId": "base3-57",
+    "setId": "base3",
+    "number": "57",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|58|non-foil|unlimited",
+    "cardId": "base3-58",
+    "setId": "base3",
+    "number": "58",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|59|non-foil|unlimited",
+    "cardId": "base3-59",
+    "setId": "base3",
+    "number": "59",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|60|non-foil|unlimited",
+    "cardId": "base3-60",
+    "setId": "base3",
+    "number": "60",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|61|non-foil|unlimited",
+    "cardId": "base3-61",
+    "setId": "base3",
+    "number": "61",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|62|non-foil|unlimited",
+    "cardId": "base3-62",
+    "setId": "base3",
+    "number": "62",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "base3|2|holofoil|1st-edition",
+    "cardId": "base3-2",
+    "setId": "base3",
+    "number": "2",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|1|holofoil|1st-edition",
+    "cardId": "base3-1",
+    "setId": "base3",
+    "number": "1",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|4|holofoil|1st-edition",
+    "cardId": "base3-4",
+    "setId": "base3",
+    "number": "4",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|3|holofoil|1st-edition",
+    "cardId": "base3-3",
+    "setId": "base3",
+    "number": "3",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|5|holofoil|1st-edition",
+    "cardId": "base3-5",
+    "setId": "base3",
+    "number": "5",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|9|holofoil|1st-edition",
+    "cardId": "base3-9",
+    "setId": "base3",
+    "number": "9",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|10|holofoil|1st-edition",
+    "cardId": "base3-10",
+    "setId": "base3",
+    "number": "10",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|7|holofoil|1st-edition",
+    "cardId": "base3-7",
+    "setId": "base3",
+    "number": "7",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|12|holofoil|1st-edition",
+    "cardId": "base3-12",
+    "setId": "base3",
+    "number": "12",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|8|holofoil|1st-edition",
+    "cardId": "base3-8",
+    "setId": "base3",
+    "number": "8",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|14|holofoil|1st-edition",
+    "cardId": "base3-14",
+    "setId": "base3",
+    "number": "14",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|11|holofoil|1st-edition",
+    "cardId": "base3-11",
+    "setId": "base3",
+    "number": "11",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|13|holofoil|1st-edition",
+    "cardId": "base3-13",
+    "setId": "base3",
+    "number": "13",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "base3|6|holofoil|1st-edition",
+    "cardId": "base3-6",
+    "setId": "base3",
+    "number": "6",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|1|holofoil|unlimited",
+    "cardId": "neo1-1",
+    "setId": "neo1",
+    "number": "1",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|2|holofoil|unlimited",
+    "cardId": "neo1-2",
+    "setId": "neo1",
+    "number": "2",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|3|holofoil|unlimited",
+    "cardId": "neo1-3",
+    "setId": "neo1",
+    "number": "3",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|4|holofoil|unlimited",
+    "cardId": "neo1-4",
+    "setId": "neo1",
+    "number": "4",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|5|holofoil|unlimited",
+    "cardId": "neo1-5",
+    "setId": "neo1",
+    "number": "5",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|6|holofoil|unlimited",
+    "cardId": "neo1-6",
+    "setId": "neo1",
+    "number": "6",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|7|holofoil|unlimited",
+    "cardId": "neo1-7",
+    "setId": "neo1",
+    "number": "7",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|8|holofoil|unlimited",
+    "cardId": "neo1-8",
+    "setId": "neo1",
+    "number": "8",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|9|holofoil|unlimited",
+    "cardId": "neo1-9",
+    "setId": "neo1",
+    "number": "9",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|10|holofoil|unlimited",
+    "cardId": "neo1-10",
+    "setId": "neo1",
+    "number": "10",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|11|holofoil|unlimited",
+    "cardId": "neo1-11",
+    "setId": "neo1",
+    "number": "11",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|12|holofoil|unlimited",
+    "cardId": "neo1-12",
+    "setId": "neo1",
+    "number": "12",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|13|holofoil|unlimited",
+    "cardId": "neo1-13",
+    "setId": "neo1",
+    "number": "13",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|14|holofoil|unlimited",
+    "cardId": "neo1-14",
+    "setId": "neo1",
+    "number": "14",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|15|holofoil|unlimited",
+    "cardId": "neo1-15",
+    "setId": "neo1",
+    "number": "15",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|16|holofoil|unlimited",
+    "cardId": "neo1-16",
+    "setId": "neo1",
+    "number": "16",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|17|holofoil|unlimited",
+    "cardId": "neo1-17",
+    "setId": "neo1",
+    "number": "17",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|18|holofoil|unlimited",
+    "cardId": "neo1-18",
+    "setId": "neo1",
+    "number": "18",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|19|holofoil|unlimited",
+    "cardId": "neo1-19",
+    "setId": "neo1",
+    "number": "19",
+    "finish": "holofoil",
+    "printing": "unlimited",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|20|non-foil|unlimited",
+    "cardId": "neo1-20",
+    "setId": "neo1",
+    "number": "20",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|21|non-foil|unlimited",
+    "cardId": "neo1-21",
+    "setId": "neo1",
+    "number": "21",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|22|non-foil|unlimited",
+    "cardId": "neo1-22",
+    "setId": "neo1",
+    "number": "22",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|23|non-foil|unlimited",
+    "cardId": "neo1-23",
+    "setId": "neo1",
+    "number": "23",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|24|non-foil|unlimited",
+    "cardId": "neo1-24",
+    "setId": "neo1",
+    "number": "24",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|25|non-foil|unlimited",
+    "cardId": "neo1-25",
+    "setId": "neo1",
+    "number": "25",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|26|non-foil|unlimited",
+    "cardId": "neo1-26",
+    "setId": "neo1",
+    "number": "26",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|27|non-foil|unlimited",
+    "cardId": "neo1-27",
+    "setId": "neo1",
+    "number": "27",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|28|non-foil|unlimited",
+    "cardId": "neo1-28",
+    "setId": "neo1",
+    "number": "28",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|29|non-foil|unlimited",
+    "cardId": "neo1-29",
+    "setId": "neo1",
+    "number": "29",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|30|non-foil|unlimited",
+    "cardId": "neo1-30",
+    "setId": "neo1",
+    "number": "30",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|31|non-foil|unlimited",
+    "cardId": "neo1-31",
+    "setId": "neo1",
+    "number": "31",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|32|non-foil|unlimited",
+    "cardId": "neo1-32",
+    "setId": "neo1",
+    "number": "32",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|33|non-foil|unlimited",
+    "cardId": "neo1-33",
+    "setId": "neo1",
+    "number": "33",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|34|non-foil|unlimited",
+    "cardId": "neo1-34",
+    "setId": "neo1",
+    "number": "34",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|35|non-foil|unlimited",
+    "cardId": "neo1-35",
+    "setId": "neo1",
+    "number": "35",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|36|non-foil|unlimited",
+    "cardId": "neo1-36",
+    "setId": "neo1",
+    "number": "36",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|37|non-foil|unlimited",
+    "cardId": "neo1-37",
+    "setId": "neo1",
+    "number": "37",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|38|non-foil|unlimited",
+    "cardId": "neo1-38",
+    "setId": "neo1",
+    "number": "38",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|39|non-foil|unlimited",
+    "cardId": "neo1-39",
+    "setId": "neo1",
+    "number": "39",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|40|non-foil|unlimited",
+    "cardId": "neo1-40",
+    "setId": "neo1",
+    "number": "40",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|41|non-foil|unlimited",
+    "cardId": "neo1-41",
+    "setId": "neo1",
+    "number": "41",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|42|non-foil|unlimited",
+    "cardId": "neo1-42",
+    "setId": "neo1",
+    "number": "42",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|43|non-foil|unlimited",
+    "cardId": "neo1-43",
+    "setId": "neo1",
+    "number": "43",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|44|non-foil|unlimited",
+    "cardId": "neo1-44",
+    "setId": "neo1",
+    "number": "44",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|45|non-foil|unlimited",
+    "cardId": "neo1-45",
+    "setId": "neo1",
+    "number": "45",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|46|non-foil|unlimited",
+    "cardId": "neo1-46",
+    "setId": "neo1",
+    "number": "46",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|47|non-foil|unlimited",
+    "cardId": "neo1-47",
+    "setId": "neo1",
+    "number": "47",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|48|non-foil|unlimited",
+    "cardId": "neo1-48",
+    "setId": "neo1",
+    "number": "48",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|49|non-foil|unlimited",
+    "cardId": "neo1-49",
+    "setId": "neo1",
+    "number": "49",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|50|non-foil|unlimited",
+    "cardId": "neo1-50",
+    "setId": "neo1",
+    "number": "50",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|51|non-foil|unlimited",
+    "cardId": "neo1-51",
+    "setId": "neo1",
+    "number": "51",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|52|non-foil|unlimited",
+    "cardId": "neo1-52",
+    "setId": "neo1",
+    "number": "52",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|53|non-foil|unlimited",
+    "cardId": "neo1-53",
+    "setId": "neo1",
+    "number": "53",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|54|non-foil|unlimited",
+    "cardId": "neo1-54",
+    "setId": "neo1",
+    "number": "54",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|55|non-foil|unlimited",
+    "cardId": "neo1-55",
+    "setId": "neo1",
+    "number": "55",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|56|non-foil|unlimited",
+    "cardId": "neo1-56",
+    "setId": "neo1",
+    "number": "56",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|57|non-foil|unlimited",
+    "cardId": "neo1-57",
+    "setId": "neo1",
+    "number": "57",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|58|non-foil|unlimited",
+    "cardId": "neo1-58",
+    "setId": "neo1",
+    "number": "58",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|59|non-foil|unlimited",
+    "cardId": "neo1-59",
+    "setId": "neo1",
+    "number": "59",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|60|non-foil|unlimited",
+    "cardId": "neo1-60",
+    "setId": "neo1",
+    "number": "60",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|61|non-foil|unlimited",
+    "cardId": "neo1-61",
+    "setId": "neo1",
+    "number": "61",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|62|non-foil|unlimited",
+    "cardId": "neo1-62",
+    "setId": "neo1",
+    "number": "62",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|63|non-foil|unlimited",
+    "cardId": "neo1-63",
+    "setId": "neo1",
+    "number": "63",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|64|non-foil|unlimited",
+    "cardId": "neo1-64",
+    "setId": "neo1",
+    "number": "64",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|65|non-foil|unlimited",
+    "cardId": "neo1-65",
+    "setId": "neo1",
+    "number": "65",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|66|non-foil|unlimited",
+    "cardId": "neo1-66",
+    "setId": "neo1",
+    "number": "66",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|67|non-foil|unlimited",
+    "cardId": "neo1-67",
+    "setId": "neo1",
+    "number": "67",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|68|non-foil|unlimited",
+    "cardId": "neo1-68",
+    "setId": "neo1",
+    "number": "68",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|69|non-foil|unlimited",
+    "cardId": "neo1-69",
+    "setId": "neo1",
+    "number": "69",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|70|non-foil|unlimited",
+    "cardId": "neo1-70",
+    "setId": "neo1",
+    "number": "70",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|71|non-foil|unlimited",
+    "cardId": "neo1-71",
+    "setId": "neo1",
+    "number": "71",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|72|non-foil|unlimited",
+    "cardId": "neo1-72",
+    "setId": "neo1",
+    "number": "72",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|73|non-foil|unlimited",
+    "cardId": "neo1-73",
+    "setId": "neo1",
+    "number": "73",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|74|non-foil|unlimited",
+    "cardId": "neo1-74",
+    "setId": "neo1",
+    "number": "74",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|75|non-foil|unlimited",
+    "cardId": "neo1-75",
+    "setId": "neo1",
+    "number": "75",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|76|non-foil|unlimited",
+    "cardId": "neo1-76",
+    "setId": "neo1",
+    "number": "76",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|77|non-foil|unlimited",
+    "cardId": "neo1-77",
+    "setId": "neo1",
+    "number": "77",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|78|non-foil|unlimited",
+    "cardId": "neo1-78",
+    "setId": "neo1",
+    "number": "78",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|79|non-foil|unlimited",
+    "cardId": "neo1-79",
+    "setId": "neo1",
+    "number": "79",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|80|non-foil|unlimited",
+    "cardId": "neo1-80",
+    "setId": "neo1",
+    "number": "80",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|81|non-foil|unlimited",
+    "cardId": "neo1-81",
+    "setId": "neo1",
+    "number": "81",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|82|non-foil|unlimited",
+    "cardId": "neo1-82",
+    "setId": "neo1",
+    "number": "82",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|83|non-foil|unlimited",
+    "cardId": "neo1-83",
+    "setId": "neo1",
+    "number": "83",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|84|non-foil|unlimited",
+    "cardId": "neo1-84",
+    "setId": "neo1",
+    "number": "84",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|85|non-foil|unlimited",
+    "cardId": "neo1-85",
+    "setId": "neo1",
+    "number": "85",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|86|non-foil|unlimited",
+    "cardId": "neo1-86",
+    "setId": "neo1",
+    "number": "86",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|87|non-foil|unlimited",
+    "cardId": "neo1-87",
+    "setId": "neo1",
+    "number": "87",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|88|non-foil|unlimited",
+    "cardId": "neo1-88",
+    "setId": "neo1",
+    "number": "88",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|89|non-foil|unlimited",
+    "cardId": "neo1-89",
+    "setId": "neo1",
+    "number": "89",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|90|non-foil|unlimited",
+    "cardId": "neo1-90",
+    "setId": "neo1",
+    "number": "90",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|91|non-foil|unlimited",
+    "cardId": "neo1-91",
+    "setId": "neo1",
+    "number": "91",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|92|non-foil|unlimited",
+    "cardId": "neo1-92",
+    "setId": "neo1",
+    "number": "92",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|93|non-foil|unlimited",
+    "cardId": "neo1-93",
+    "setId": "neo1",
+    "number": "93",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|94|non-foil|unlimited",
+    "cardId": "neo1-94",
+    "setId": "neo1",
+    "number": "94",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|95|non-foil|unlimited",
+    "cardId": "neo1-95",
+    "setId": "neo1",
+    "number": "95",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|96|non-foil|unlimited",
+    "cardId": "neo1-96",
+    "setId": "neo1",
+    "number": "96",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|97|non-foil|unlimited",
+    "cardId": "neo1-97",
+    "setId": "neo1",
+    "number": "97",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|98|non-foil|unlimited",
+    "cardId": "neo1-98",
+    "setId": "neo1",
+    "number": "98",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|99|non-foil|unlimited",
+    "cardId": "neo1-99",
+    "setId": "neo1",
+    "number": "99",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|100|non-foil|unlimited",
+    "cardId": "neo1-100",
+    "setId": "neo1",
+    "number": "100",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|101|non-foil|unlimited",
+    "cardId": "neo1-101",
+    "setId": "neo1",
+    "number": "101",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|102|non-foil|unlimited",
+    "cardId": "neo1-102",
+    "setId": "neo1",
+    "number": "102",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|103|non-foil|unlimited",
+    "cardId": "neo1-103",
+    "setId": "neo1",
+    "number": "103",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|104|non-foil|unlimited",
+    "cardId": "neo1-104",
+    "setId": "neo1",
+    "number": "104",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|105|non-foil|unlimited",
+    "cardId": "neo1-105",
+    "setId": "neo1",
+    "number": "105",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|106|non-foil|unlimited",
+    "cardId": "neo1-106",
+    "setId": "neo1",
+    "number": "106",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|107|non-foil|unlimited",
+    "cardId": "neo1-107",
+    "setId": "neo1",
+    "number": "107",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|108|non-foil|unlimited",
+    "cardId": "neo1-108",
+    "setId": "neo1",
+    "number": "108",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|109|non-foil|unlimited",
+    "cardId": "neo1-109",
+    "setId": "neo1",
+    "number": "109",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|110|non-foil|unlimited",
+    "cardId": "neo1-110",
+    "setId": "neo1",
+    "number": "110",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|111|non-foil|unlimited",
+    "cardId": "neo1-111",
+    "setId": "neo1",
+    "number": "111",
+    "finish": "non-foil",
+    "printing": "unlimited",
+    "confidence": "inferred"
+  },
+  {
+    "variantId": "neo1|1|holofoil|1st-edition",
+    "cardId": "neo1-1",
+    "setId": "neo1",
+    "number": "1",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|5|holofoil|1st-edition",
+    "cardId": "neo1-5",
+    "setId": "neo1",
+    "number": "5",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|3|holofoil|1st-edition",
+    "cardId": "neo1-3",
+    "setId": "neo1",
+    "number": "3",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|6|holofoil|1st-edition",
+    "cardId": "neo1-6",
+    "setId": "neo1",
+    "number": "6",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|8|holofoil|1st-edition",
+    "cardId": "neo1-8",
+    "setId": "neo1",
+    "number": "8",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|9|holofoil|1st-edition",
+    "cardId": "neo1-9",
+    "setId": "neo1",
+    "number": "9",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|12|holofoil|1st-edition",
+    "cardId": "neo1-12",
+    "setId": "neo1",
+    "number": "12",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|13|holofoil|1st-edition",
+    "cardId": "neo1-13",
+    "setId": "neo1",
+    "number": "13",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|14|holofoil|1st-edition",
+    "cardId": "neo1-14",
+    "setId": "neo1",
+    "number": "14",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|15|holofoil|1st-edition",
+    "cardId": "neo1-15",
+    "setId": "neo1",
+    "number": "15",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|11|holofoil|1st-edition",
+    "cardId": "neo1-11",
+    "setId": "neo1",
+    "number": "11",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|19|holofoil|1st-edition",
+    "cardId": "neo1-19",
+    "setId": "neo1",
+    "number": "19",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|17|holofoil|1st-edition",
+    "cardId": "neo1-17",
+    "setId": "neo1",
+    "number": "17",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
+  },
+  {
+    "variantId": "neo1|18|holofoil|1st-edition",
+    "cardId": "neo1-18",
+    "setId": "neo1",
+    "number": "18",
+    "finish": "holofoil",
+    "printing": "1st-edition",
+    "confidence": "reported"
   }
 ]

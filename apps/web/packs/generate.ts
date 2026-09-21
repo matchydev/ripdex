@@ -34,6 +34,9 @@ interface PackRecipe {
   version: string;
   priceRip: string;
   setId?: string;
+  /** Restrict to cards from these sets (allowlist). Use with nameMatches to keep a
+   *  cross-set themed pool stable as new sets are ingested. */
+  sets?: string[];
   /** Restrict to cards whose name contains one of these (case-insensitive). */
   nameMatches?: string[];
   /** How many outcomes the pool should hold. */
@@ -121,6 +124,9 @@ const RECIPES: PackRecipe[] = [
     name: 'KANTO STARTERS',
     version: '2',
     priceRip: '90000',
+    // Pinned to the sets that existed when this pool was cut, so newly ingested
+    // sets (Team Rocket's Dark Charizard, etc.) don't silently rewrite its odds.
+    sets: ['base1', 'base2', 'sv3', 'sv3pt5'],
     nameMatches: [
       'Charizard', 'Charmeleon', 'Charmander',
       'Blastoise', 'Wartortle', 'Squirtle',
@@ -135,6 +141,61 @@ const RECIPES: PackRecipe[] = [
       backgroundColor: '#0A0806',
       foilTone: 'warm',
       texture: 'clean',
+    },
+  },
+  {
+    // Team Rocket: the villain set. Dark Charizard / Blastoise / Dragonite —
+    // every headline is a corrupted Kanto grail.
+    id: 'team-rocket-rip',
+    name: 'TEAM ROCKET',
+    version: '1',
+    priceRip: '100000',
+    setId: 'base5',
+    size: 30,
+    heroCardId: 'base5-4',
+    artwork: {
+      wrapperAssetKey: 'wrapper/team-rocket',
+      heroAssetKey: 'hero/team-rocket',
+      accentColor: '#C0392B',
+      backgroundColor: '#0A0505',
+      foilTone: 'crimson',
+      texture: 'gloss',
+    },
+  },
+  {
+    // Fossil: the ancient case — Dragonite, Gengar, Lapras, the legendary birds.
+    id: 'fossil-rip',
+    name: 'FOSSIL',
+    version: '1',
+    priceRip: '80000',
+    setId: 'base3',
+    size: 24,
+    heroCardId: 'base3-4',
+    artwork: {
+      wrapperAssetKey: 'wrapper/fossil',
+      heroAssetKey: 'hero/fossil',
+      accentColor: '#B98A3E',
+      backgroundColor: '#0A0806',
+      foilTone: 'warm',
+      texture: 'aged',
+    },
+  },
+  {
+    // Neo Genesis: Gen 2 arrives — Lugia headlines, with Typhlosion & the trio.
+    id: 'neo-genesis-rip',
+    name: 'NEO GENESIS',
+    version: '1',
+    priceRip: '120000',
+    setId: 'neo1',
+    size: 28,
+    heroCardId: 'neo1-9',
+    artwork: {
+      wrapperAssetKey: 'wrapper/neo-genesis',
+      heroAssetKey: 'hero/neo-genesis',
+      accentColor: '#7FA8C9',
+      backgroundColor: '#060A0E',
+      foilTone: 'cool',
+      texture: 'gloss',
     },
   },
 ];
@@ -157,6 +218,7 @@ function weightFor(value: number): number {
 function eligible(index: CatalogIndex, recipe: PackRecipe): CardListing[] {
   return index.cards.filter((c) => {
     if (recipe.setId && c.setId !== recipe.setId) return false;
+    if (recipe.sets && !recipe.sets.includes(c.setId)) return false;
     if (c.headlineValue === null) return false;
     // Only variants a pricing provider confirmed can enter a pool: an inferred
     // variant has no trustworthy price and therefore no trustworthy odds.

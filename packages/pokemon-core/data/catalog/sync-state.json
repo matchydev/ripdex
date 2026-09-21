@@ -52,5 +52,41 @@
     "lastRunAt": "2026-09-09T01:13:52.900Z",
     "lastCursor": "2026-09-09",
     "note": "346 priced, 0 unpriced, 33 failed"
+  },
+  {
+    "key": "cards:base5",
+    "lastRunAt": "2026-09-21T18:11:36.520Z",
+    "lastCursor": null,
+    "note": "83 cards"
+  },
+  {
+    "key": "prices:base5",
+    "lastRunAt": "2026-09-21T18:13:22.925Z",
+    "lastCursor": "2026-09-21",
+    "note": "34 priced, 61 unpriced, 5 failed"
+  },
+  {
+    "key": "cards:base3",
+    "lastRunAt": "2026-09-21T18:17:45.886Z",
+    "lastCursor": null,
+    "note": "62 cards"
+  },
+  {
+    "key": "prices:base3",
+    "lastRunAt": "2026-09-21T18:17:56.317Z",
+    "lastCursor": "2026-09-21",
+    "note": "28 priced, 42 unpriced, 6 failed"
+  },
+  {
+    "key": "cards:neo1",
+    "lastRunAt": "2026-09-21T18:21:02.722Z",
+    "lastCursor": null,
+    "note": "111 cards"
+  },
+  {
+    "key": "prices:neo1",
+    "lastRunAt": "2026-09-21T18:21:12.078Z",
+    "lastCursor": "2026-09-21",
+    "note": "28 priced, 89 unpriced, 8 failed"
   }
 ]
