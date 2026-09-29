@@ -307,3 +307,59 @@ celebration · `9242297` #9 pack jackpot + "The Chase" · `1fab197` #7/#8/#3/#2 
 3. Reduced-motion safe.
 4. No economy/odds/pricing/ledger logic changed.
 5. Both test suites green.
+
+---
+
+## 8. Session update — 2026-09-28 (latest; start here)
+
+All on `ripdex-upgrades`, pushed, tests green (186 core + 25 web).
+
+### 8a. Pack-library cards are now CS:GO cases
+`apps/web/src/pack-explorer.ts` — each case shows the pack wrapper as a prominent central "case"
+with the pack's top-5 pull-able cards **fanned around it** (var-driven `--x/--a` rest + `--xh/--ah`
+hover spread, `--fs` shrinks on mobile). Commits `0d4a70c` (fan), `2c90136` (earlier backdrop attempt).
+Gotcha fixed: `.ep-art img{z-index:1}` out-specifies `.ep-front`, so the wrapper pinned its z inline.
+
+### 8b. The wrapper "baked box" — masked, not regenerated
+The wrapper PNGs (`public/art/packs/*.png`) bake a dark rectangular background behind the pack
+(generated "transparent" but the model painted a box). Rather than regenerate, we **radial-mask the
+wrapper edges** so only the pack shows:
+- `/packs` cards: `.ep-art .ep-wrapper` mask (`cd98d12`).
+- Hero 3D packs: stripped `.plane-slab` fill+ring, dropped the pack plane's `--panel` bg, masked
+  `.plane-art.has-wrapper`, neutralised the `.plane-rim` inset ring (`f2faea7`).
+- **NOT yet done on the rip page** (`rip-page.ts`, the big wrapper on the pre-rip screen) — same fix applies.
+
+### 8c. Content expansion — 7 sets / 859 cards / 9 packs (`6465069`)
+Ingested three classic sets and pinned a themed case for each:
+- **Team Rocket** (base5) — Dark Charizard/Blastoise ($489)/Dragonite/Raichu.
+- **Fossil** (base3) — Dragonite ($472), Gengar ($458), Lapras, the birds.
+- **Neo Genesis** (neo1) — **Lugia $1,079.79** (catalog's new top grail), Typhlosion, Meganium.
+
+How it was done (repeat this to add more sets):
+```bash
+cd packages/pokemon-core
+node scripts/sync-cards.ts  --set=<setId>   # set metadata already in sets.json for dozens of sets
+node scripts/sync-prices.ts --set=<setId>   # flaky: ~⅓ of cards 5xx; re-run, or accept (grails usually price)
+# then add a recipe to apps/web/packs/generate.ts and:
+cd ../.. && node apps/web/packs/generate.ts # pins pools; bump `version` if an EXISTING pool changes
+```
+Added a `sets: string[]` allowlist to `PackRecipe` + pinned KANTO STARTERS to its four original sets,
+so a name-matched pool can't silently absorb newly-ingested cards (odds unchanged → no version bump).
+The catalog is committed (expected). The provably-fair contract: **never change a shipped pack's pinned
+odds without bumping its `version`.**
+
+### 8d. What's LEFT (prioritised)
+1. **Wrappers for the 3 new packs** — Team Rocket / Fossil / Neo Genesis currently fall back to their
+   hero card (Dark Charizard / Dragonite / Lugia) instead of a foil wrapper. Generate three vibrant
+   wrappers via the OpenAI pipeline to match the other six. **Uses the owner's OpenAI credits — confirm
+   first.** How: `bash tools/generate-vibrant-packs.sh`-style calls (`node tools/openai-art.ts
+   --prompt "…" --out public/art/packs/<packId>.png --size pack --transparent --quality high`), themed
+   crimson-black / amber-bronze / silver-celestial. Files must be named `<pack.id>.png`
+   (`team-rocket-rip.png`, `fossil-rip.png`, `neo-genesis-rip.png`) — server.ts `packWrappers()` keys on
+   pack id. **Regenerating won't fix the baked box — mask it like §8b, or prompt harder for true transparency.**
+2. **Rip page baked-box** (§8b) — apply the wrapper mask to `rip-page.ts`'s pre-rip pack.
+3. **#10 Best Pull card-art trophy** (§7c) — still deferred; needs the bestPull enrichment described there.
+4. Optional: apply the CS:GO fan / consistency to the **home "pack library"** section, and keep pushing
+   the premium polish (rip page, binder).
+
+Everything in §1–§6 (invariants, design rules, traps) still holds — read them.
